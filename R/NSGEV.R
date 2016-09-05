@@ -15,6 +15,9 @@
 ##' returned as an attribute of the results. It is an array with
 ##' dimension \code{c(n, p, 3L)}
 ##'
+##' @param checkNames Logical. If \code{TRUE}, the names of the vector
+##' \code{psi} are checked against the parnames of the model.
+##' 
 ##' @return A vector of parameters for the \code{NSGEV} model.
 ##' 
 ##' @author Yves Deville
@@ -213,6 +216,9 @@ rho2psi <- function(rho, nm1, psi_m1, model, data = NULL,
 ##' of the negative log-likelihood w.r.t. the parameters of the model
 ##' will be returned. In this case, a list will be returned.
 ##'
+##' @param checkNames Logical. If \code{TRUE}, the names of the vector
+##' \code{psi} are checked against the parnames of the model.
+##' 
 ##' @return The negative log-likelihood (to be minimized) or a list
 ##' with two elements corresponding to the value of the log-likelihood
 ##' and its gradient.
@@ -333,7 +339,6 @@ NSGEV <- function(formulas,
                   response = NULL,
                   psi = NULL,
                   ## parLower = , parUpper =
-                  fixed = NULL,
                   est = c("none", "optim", "nloptr"),
                   trace = 0) {
    
@@ -431,7 +436,7 @@ NSGEV <- function(formulas,
                          deriv = TRUE,
                          checkNames = FALSE,
                          y = y,
-                         opt = opts)
+                         opts = opts)
            
            estimates <- fit$solution
            names(estimates) <- parNames
@@ -451,8 +456,9 @@ NSGEV <- function(formulas,
        }  
    } else {
        if (is.null(psi)) {
-           ns$estimates <- rep(NA, ns$p)
-           names(ns$estimates) <- parNames
+           psi <-rep(NA, ns$p)
+           names(psi) <- parNames
+           ns$estimates <- psi 
        } else if (!setequal(names(psi), parNames)) {
            stop("'psi' must be a named vector with suitable names")
        } else {
@@ -478,7 +484,7 @@ NSGEV <- function(formulas,
 ##'
 ##' @title Compute NSGEV quantiles
 ##'
-##' @param object A \code{NSGEV} object. 
+##' @param x A \code{NSGEV} object. 
 ##'
 ##' @param probs Vector of probabilities.
 ##' 
@@ -507,7 +513,7 @@ NSGEV <- function(formulas,
 ##'         main = "model quantiles")
 ##' legend("bottomright", legend = colnames(q), lty = 1:3, col = 1:3,
 ##'         lwd = 2)
-quantile.NSGEV <- function(object, probs = c(0.90, 0.95, 0.99),
+quantile.NSGEV <- function(x, probs = c(0.90, 0.95, 0.99),
                            data = NULL,
                            psi = NULL, ...) {
     
@@ -517,11 +523,11 @@ quantile.NSGEV <- function(object, probs = c(0.90, 0.95, 0.99),
     eps <- 100 * .Machine$double.eps
     if (any(probs < -eps | probs > 1 + eps))  stop("'probs' outside [0,1]")
     
-    if (is.null(data)) data <- object$data
-    if (is.null(psi)) psi <- object$estimate
+    if (is.null(data)) data <- x$data
+    if (is.null(psi)) psi <- x$estimate
     
     n <- nrow(data)
-    theta <- psi2theta(psi, model = object, data = data)
+    theta <- psi2theta(psi, model = x, data = data)
     quant <- array(NA, dim = c(n, length(probs)),
                    dimnames = list(rownames(data),
                        paste("Q", stats:::format_perc(probs), sep = "")))
@@ -553,6 +559,8 @@ quantile.NSGEV <- function(object, probs = c(0.90, 0.95, 0.99),
 ##'
 ##' @param psi Vector of model coefficients.
 ##'
+##' @param log Logical. If \code{TRUE} the log-density is returned.
+##' 
 ##' @param ... Not used yet.
 ##'
 ##' @return A matrix of density values, with one row for each observation
@@ -624,7 +632,7 @@ density.NSGEV <- function(x,
 ##' @param psi Vector of model parameters. By default, the model
 ##' parameters are used.
 ##'
-##' @param ... 
+##' @param ... Not used yet.
 ##'
 ##' @return A matrix with \code{nrow(data)} rows and \code{nsim}
 ##' columns, each column representing a time.

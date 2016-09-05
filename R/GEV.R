@@ -46,7 +46,7 @@ reshapeGEV <- function (x, loc, scale, shape, matrix = FALSE) {
 
 ##' Density, distribution function, quantile function and random
 ##' generation for the Generalized Extreme Value (GEV) distribution
-##' with parameters 'loc', ‘scale’ and ‘shape’.
+##' with parameters \code{loc}, \code{scale} and \code{shape}.
 ##'
 ##' @name GEV
 ##' @rdname GEV
@@ -59,6 +59,8 @@ reshapeGEV <- function (x, loc, scale, shape, matrix = FALSE) {
 ##'
 ##' @param p Vector of probabilities.
 ##'
+##' @param n Sample size.
+##' 
 ##' @param loc Location parameter. Numeric vector with suitable
 ##' length, see \bold{Details}.
 ##'
@@ -68,10 +70,10 @@ reshapeGEV <- function (x, loc, scale, shape, matrix = FALSE) {
 ##' @param shape Shape parameter. Numeric vector with suitable length,
 ##' see \bold{Details}.
 ##'
-##' @param log,log.p Logical; if ‘TRUE’, probabilities/densities p
-##' are returned as log(p).
-##'
-##' @param lower.tail Logical; if TRUE (default), probabilities are
+##' @param log Logical; if \code{TRUE}, densities \code{p} are
+##' returned as \code{log(p)}.
+##' 
+##' @param lower.tail Logical; if \code{TRUE} (default), probabilities are
 ##' P[X <= x], otherwise, P[X > x].
 ##'
 ##' @param deriv Logical. If \code{TRUE}, the gradient of each

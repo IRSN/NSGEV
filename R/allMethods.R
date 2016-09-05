@@ -17,7 +17,7 @@
 ##' quantiles for these probabilites are computed and added to the
 ##' range used to choose \code{ylim}.
 ##'
-##' @param showQuant
+##' @param showQuant Not used yet.
 ##' 
 ##' @param ... Other arguments to be passed to methods.
 ##' 
@@ -38,7 +38,7 @@ plot.NSGEV <- function(x, y, which = 1,
     if (which == 1L) {
 
         n <- 60
-        ysim <- simulate(x, n = n)
+        ysim <- simulate(x, nsim = n)
         
         if (!is.null(x$response)) {
             r <- range(x$response, ysim)
@@ -80,7 +80,7 @@ plot.NSGEV <- function(x, y, which = 1,
             ylab <- x$reponseName
         } else {
             r <-range(x$response, q0)
-            y <- drop(simulate(x, n = 1))
+            y <- drop(simulate(x, nsim = 1))
             main <- "simulated responses"
             ylab <- x$reponseName
         }
@@ -136,7 +136,18 @@ parNames <- function(object, ...) {
    UseMethod("parNames")
 }
 
-parNames.default <- function(object) {
+##' Names of the parameters of a model.
+##'
+##' @title  Names of the parameters of a model
+##'
+##' @param object A parameteric statistical model for which the
+##' parameters must have names.
+##'
+##' @param ... Not used yet.
+##'
+##' @return The character vector of the names of the parameters of the
+##' model.
+parNames.default <- function(object, ...) {
 
     if (is.list(object)) {
       nm <- names(object)
@@ -147,7 +158,17 @@ parNames.default <- function(object) {
    invisible(NULL)
    
 }
-
+##' Summary method for \code{NSGEV} objects.
+##'
+##' @title Summary method for NSGEV objects
+##'
+##' @param object A \code{NSGEV} object.
+##'
+##' @param ... Not used yet.
+##'
+##' @return A list with the elements of \code{objects}
+##' and some more that can be displayed when \code{summary}
+##' is invoked.
 summary.NSGEV <- function(object, ...) {
     
     res <- object
@@ -179,10 +200,10 @@ print.summary.NSGEV <- function(x, ...) {
     cat("\n")
 
     cat("o GEV parameters:\n")
-    d <- max(-ceiling(log(apply(ns$theta, 2,
+    d <- max(-ceiling(log(apply(x$theta, 2,
                            function(x) max(abs(x))) / 100, base = 10)))
-    mat <- rbind(apply(ns$theta, 2, range),
-                 apply(ns$theta, 2, mean))
+    mat <- rbind(apply(x$theta, 2, range),
+                 apply(x$theta, 2, mean))
     mat <- round(mat, digits = d)
     rownames(mat) <- c("min", "max", "mean")
     colnames(mat) <- sprintf("    %4s :", colnames(mat))

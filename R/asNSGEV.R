@@ -23,7 +23,7 @@ as.NSGEV <- function(x, ...) {
 ##'
 ##' @param data The matrix of covariates that was used.
 ##' 
-##' @param ... 
+##' @param ... Not used yet.
 ##'
 ##' @return An object with class code{"NSGEV"}.
 ##'
@@ -72,7 +72,7 @@ as.NSGEV.gev.fit <- function(x, data, ...) {
             parNames <- c(parNames, symNames.GEV[i])
         } else {
             parNames <- c(parNames, symNames.GEV[i])
-            nm <- colnames(dat)[x$model[[i]]]
+            nm <- colnames(data)[x$model[[i]]]
             nterms <- length(nm)
             pars <- paste(symNames.GEV[i], nm, sep = "_")
             parNames <- c(parNames, pars)

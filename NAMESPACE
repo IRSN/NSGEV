@@ -1,1 +1,12 @@
+import("stats")
+importFrom("graphics", "abline", "lines", "matlines", "matplot",
+           "mtext", "plot")
+import("methods")
+
+import("Renext")
+importFrom("ismev", "gev.fit")
+import("extRemes")
+import("numDeriv")
+import("nloptr")
+
 exportPattern("^[[:alpha:]]+")

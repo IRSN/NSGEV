@@ -26,6 +26,8 @@
 ##'
 ##' @param trace Level of verbosity.
 ##'
+##' @param ... Not used yet.
+##'
 ##' @return A list with several elements.
 ##' 
 ##' \item{RL}{A data frame with the predicted RLs and the related CIs,
@@ -38,7 +40,7 @@
 ##' T_i} under the constraint on the log-likelihood. Since most often
 ##' the rows are close enough, a significant reduction of the
 ##' computing time could be achieved in the near future by using the
-##' same value of \eqn{\bolsymbol{\psi}}{\psi} for all the Return
+##' same value of \eqn{\boldsymbol{\psi}}{\psi} for all the Return
 ##' Periods.  }
 ##'  
 ##' @author Yves Deville
@@ -73,7 +75,8 @@ predict.NSGEV <- function(object, period = NULL,
                           RLType = c("exceed", "average"),
                           confInt = c("delta", "none", "proflik"),
                           confLevel = 0.95,
-                          trace = 0) {
+                          trace = 0,
+                          ...) {
 
     RLType <- match.arg(RLType)
     confInt <- match.arg(confInt)
@@ -155,7 +158,6 @@ predict.NSGEV <- function(object, period = NULL,
         
     } else if (confInt == "proflik") {
 
-        require(nloptr)
         
         if (length(confLevel) > 1L) {
             stop("when 'confInt' is \"proflik\", 'confLev' must be ",
@@ -163,7 +165,7 @@ predict.NSGEV <- function(object, period = NULL,
         }   
         
         ## this is the NEGATIVE LogLik
-        ellL  <-  fit$results$value + qchisq(confLevel, df = 1) / 2.0
+        ellL  <-  object$negLogLik + qchisq(confLevel, df = 1) / 2.0
         
         ##=====================================================================
         ## This is the objective function, shipping the gradient with
@@ -196,14 +198,14 @@ predict.NSGEV <- function(object, period = NULL,
         
         ## structures to save the results
         res <- list()
-        PsiStar <- array(NA, dim = c(length(period), ns$p),
-                         dimnames = list(period, parNames(ns)))
+        PsiStar <- array(NA, dim = c(length(period), object$p),
+                         dimnames = list(period, parNames(object)))
      
         Rho <- rep(NA, length(period))
         names(Rho) <- period
         
         ## Initial 
-        psi <- ns$estimates
+        psi <- object$estimates
         
         for (i in seq_along(period)) {
             if (period[i] <= nrow(newdata)) {
@@ -214,7 +216,7 @@ predict.NSGEV <- function(object, period = NULL,
                                    eval_f = f,
                                    eval_g_ineq = g,
                                    period = period[i],
-                                   opt = opts1)
+                                   opts = opts1)
                 
                 psi <- res[[i]][["solution"]]
                 Rho[i] <- -res[[i]][["objective"]]
