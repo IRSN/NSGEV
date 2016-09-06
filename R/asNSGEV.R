@@ -158,6 +158,7 @@ as.NSGEV.fevd <- function(x, ...) {
                 psi = psi,
                 est = "none")
     ns$response <- x$x
+    ns$negLogLik <- x$results$value
     vcov <- parcov.fevd(x)
     rownames(vcov) <- colnames(vcov) <- parNames
     ns$vcov <- vcov
