@@ -1,0 +1,11 @@
+2016-09-19  yves  <deville.yves@alpestat.com>
+
+	* Copied 'stats:::format_perc' to avoid importing a non-exported
+	function.
+
+2016-09-09  yves  <deville.yves@alpestat.com>
+ 
+	* Fixed In as.NSGEV.fevd, the mimised negative log-lik was not
+	attached to the object making the profile-likelihood impossible in
+	'predict'.
+

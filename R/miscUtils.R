@@ -58,3 +58,19 @@ rnames <- function(n, nchar = 3L) {
                  FUN = function(x) x[sample(1L:3L, sample(1L:3L))])
     paste0(sapply(LET, paste0, collapse = ""), "")
 }
+
+## copy of stats:::format_perc
+
+formatPerc <- function (x,
+                         digits = max(2L, getOption("digits")),
+                         probability = TRUE, 
+                         use.fC = length(x) < 100,
+                         ...) {
+    if (length(x)) {
+        if (probability)  x <- 100 * x
+        paste0(if (use.fC) 
+                   formatC(x, format = "fg", width = 1, digits = digits)
+               else format(x, trim = TRUE, digits = digits, ...), "%")
+    }
+    else character(0)
+}

@@ -530,7 +530,7 @@ quantile.NSGEV <- function(x, probs = c(0.90, 0.95, 0.99),
     theta <- psi2theta(psi, model = x, data = data)
     quant <- array(NA, dim = c(n, length(probs)),
                    dimnames = list(rownames(data),
-                       paste("Q", stats:::format_perc(probs), sep = "")))
+                       paste("Q", formatPerc(probs), sep = "")))
 
     for (i in seq_along(probs)) {
         quant[ , i] <- qGEV(probs[i], loc = theta[ , 1L], scale = theta[, 2L],
