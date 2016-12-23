@@ -339,6 +339,7 @@ rGEV <- function (n, loc = 0.0, scale = 1.0, shape = 0.0) {
         nl <- sum(ind)
         n_ind <- nl * n
         U <- array(runif(n_ind), dim = c(nl, n))
+        U <- -log(U)
         r[ind, ] <- loc[ind, drop = FALSE] +
             scale[ind, drop = FALSE] * (U^(-shape[ind, , drop = FALSE]) - 1.0) /
                 shape[ind, drop = FALSE]

@@ -1,3 +1,8 @@
+2016-12-23  yves  <deville.yves@alpestat.com>
+
+	* Fixed bug: with a non-zero shape the 'rGEV' returned
+	simulations from the GPD with the same parameters.
+
 2016-09-19  yves  <deville.yves@alpestat.com>
 
 	* Copied 'stats:::format_perc' to avoid importing a non-exported
