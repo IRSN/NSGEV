@@ -160,7 +160,9 @@ as.NSGEV.fevd <- function(x, ...) {
     ns$response <- x$x
     ns$negLogLik <- x$results$value
     vcov <- parcov.fevd(x)
-    rownames(vcov) <- colnames(vcov) <- parNames
+    if (!is.null(vcov)) {
+        rownames(vcov) <- colnames(vcov) <- parNames
+    }
     ns$vcov <- vcov
     ns
 

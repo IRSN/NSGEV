@@ -11,7 +11,7 @@ import("nloptr")
 
 exportPattern("^[[:alpha:]]+")
 S3method(as.NSGEV, fevd)
-S3method(as.NSGEV, fgev.fit)
+S3method(as.NSGEV, gev.fit)
 S3method(coef, NSGEV)
 S3method(density, NSGEV)
 S3method(plot, NSGEV)
