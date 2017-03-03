@@ -41,4 +41,3 @@ plot(ns1, which = 2)
 \author{
 Yves Deville
 }
-

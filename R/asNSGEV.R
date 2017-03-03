@@ -25,7 +25,7 @@ as.NSGEV <- function(x, ...) {
 ##' 
 ##' @param ... Not used yet.
 ##'
-##' @return An object with class code{"NSGEV"}.
+##' @return An object with class \code{"NSGEV"}.
 ##'
 ##' @note A \code{gev.fit} object does not embed the set of covariates
 ##' used nor a even a call. Thus the set of covariates must be given.
@@ -160,9 +160,13 @@ as.NSGEV.fevd <- function(x, ...) {
     ns$response <- x$x
     ns$negLogLik <- x$results$value
     vcov <- parcov.fevd(x)
-    if (!is.null(vcov)) {
-        rownames(vcov) <- colnames(vcov) <- parNames
+    ## patch because some problems are met with hessian evaluation is
+    ## package 'extRemes'. Use 'numDeriv' instead.
+    if (is.null(vcov)) {
+        hessian <- hessian(negLogLik, psi, model = ns)
+        vcov <- solve(hessian)
     }
+    rownames(vcov) <- colnames(vcov) <- parNames
     ns$vcov <- vcov
     ns
 

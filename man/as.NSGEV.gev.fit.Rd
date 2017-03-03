@@ -14,7 +14,7 @@
 \item{...}{Not used yet.}
 }
 \value{
-An object with class code{"NSGEV"}.
+An object with class \code{"NSGEV"}.
 }
 \description{
 Coerce a 'gev.fit' object into a 'NSGEV' object.
@@ -52,4 +52,3 @@ ns <- as.NSGEV(fit, data = dat)
 \author{
 Yves Deville
 }
-

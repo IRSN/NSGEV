@@ -42,7 +42,7 @@ is designed for use with the \code{nloptr} package.
  The class of the result may be changed in future
 versions.
 }
+
 \author{
 Yves Deville
 }
-

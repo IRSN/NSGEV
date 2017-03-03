@@ -83,4 +83,3 @@ lines(quant ~ period, data = L.proflik$RL)
 \author{
 Yves Deville
 }
-

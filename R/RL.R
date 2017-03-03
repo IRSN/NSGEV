@@ -67,7 +67,7 @@
 ##' linear trend time for the GEV location parameter \eqn{\mu} with a
 ##' constant scale \eqn{sigma} and a constant shape \eqn{\xi}. If the
 ##' observations in \code{data} are the expectations for future blocks
-##' conditional on past blocks, these
+##' conditional on past blocks, these XXX.
 ##'
 ##' @section Caution: For now, \code{period} can only be a numeric
 ##' vector with length 1.
@@ -94,7 +94,7 @@ RL <- function(period, model, data = NULL, psi = NULL,
     
     if (is.null(psi)) psi <- model$estimates
     if (is.null(data)) data <- model$data
-    theta <- psi2theta(psi, model = model, data = data, deriv = deriv,
+    theta <- psi2theta(model = model, psi = psi, data = data, deriv = deriv,
                        checkNames = FALSE)
     ## SOG: Save Our Gradient
     if (deriv) dtheta_dpsi <- attr(theta, "gradient")

@@ -43,4 +43,3 @@ legend("bottomright", legend = colnames(q), lty = 1:3, col = 1:3,
 \author{
 Yves Deville
 }
-

@@ -7,7 +7,7 @@ Author: Yves Deville <deville.yves@alpestat.com>
 Maintainer: Yves Deville <deville.yves@alpestat.com>
 Description: Utility functions for Non-Stationary time series with GEV margins.
 License: GPL-3
-Imports: methods
-Depends: Renext, ismev, extRemes, numDeriv, nloptr
+Imports: methods, numDeriv, nloptr
+Depends: Renext, ismev, extRemes
 Suggests: reshape2, ggplot2
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

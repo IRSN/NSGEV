@@ -112,7 +112,9 @@ plot.NSGEV <- function(x, y, which = 1,
 ##'
 ##' @param ... Not used yet.
 ##' 
-##' @return Vector of coefficients or matrix of GEV parameters/
+##' @return Vector \eqn{\mathbf{\psi}}{\psi} of coefficients, or
+##' matrix with the GEV parameters \eqn{\mathbf{\theta}_i}{\theta_i}
+##' as its rows.
 ##' 
 coef.NSGEV <- function(object, type = c("psi", "theta"),  ...) {
     type <- match.arg(type)
@@ -124,7 +126,7 @@ coef.NSGEV <- function(object, type = c("psi", "theta"),  ...) {
 ##'
 ##' @title Names of the parameters of a statistical model
 ##'
-##' @param object A parameteric statistical model for which the
+##' @param object A parametric statistical model for which the
 ##' parameters must have names.
 ##'
 ##' @param ... Not used yet.
@@ -140,7 +142,7 @@ parNames <- function(object, ...) {
 ##'
 ##' @title  Names of the parameters of a model
 ##'
-##' @param object A parameteric statistical model for which the
+##' @param object A parametric statistical model for which the
 ##' parameters must have names.
 ##'
 ##' @param ... Not used yet.

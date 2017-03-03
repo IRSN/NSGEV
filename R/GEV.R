@@ -81,11 +81,11 @@ reshapeGEV <- function (x, loc, scale, shape, matrix = FALSE) {
 ##'
 ##' @return A numeric vector with length equal to the length of the
 ##' first argument or of the parameters. When \code{deriv} is
-##' \code{TRUE}, the returned value has an attribute \code{Gradient}
-##' which is a matrix with \eqn{n} lines and \eqn{3} columns
-##' containing the derivatives. A row contains the partial derivatives
-##' of the corresponding element w.r.t. the three parameters \code{loc}
-##' \code{scale} and \code{shape} in that order.
+##' \code{TRUE}, the returned value has an attribute named
+##' \code{"gradient"} which is a matrix with \eqn{n} lines and \eqn{3}
+##' columns containing the derivatives. A row contains the partial
+##' derivatives of the corresponding element w.r.t. the three
+##' parameters \code{loc} \code{scale} and \code{shape} in that order.
 ##'
 ##' @details For the \code{d}, \code{p} and \code{q} functions, let
 ##' \code{n} be the length of the first element. If \code{n > 1}, then

@@ -184,7 +184,7 @@ predict.NSGEV <- function(object, period = NULL,
         g <- function(psi, period) {
             res <- negLogLik(psi = psi, model = object, data = newdata,
                              deriv = TRUE, checkNames = FALSE)
-            theta <- psi2theta(psi = psi, model = object, data = newdata,
+            theta <- psi2theta(model = object, psi = psi, data = newdata,
                                deriv = TRUE, checkNames = FALSE)
             list("constraints" = res$objective - ellL, "jacobian" = res$gradient)
         }

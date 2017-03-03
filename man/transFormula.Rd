@@ -7,7 +7,7 @@
 transFormula(formula, parnm)
 }
 \arguments{
-\item{formula}{The formula to be tranlated.}
+\item{formula}{The formula to be translated.}
 
 \item{parnm}{The name of the parameter to use, i.e.
 "mu,""sigma" or "xi".}
@@ -28,4 +28,3 @@ transFormula(~time, parnm = "mu")
 \author{
 Yves Deville
 }
-

@@ -47,4 +47,3 @@ matplot(x = attr(d, "x"), y = t(d), type = "l")
 \author{
 Yves Deville
 }
-

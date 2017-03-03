@@ -19,4 +19,3 @@ a Non-Stationary GEV model.
 \description{
 Coerce into a \code{NSGEV} object.
 }
-

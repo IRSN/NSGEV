@@ -48,11 +48,11 @@ P[X <= x], otherwise, P[X > x].}
 \value{
 A numeric vector with length equal to the length of the
 first argument or of the parameters. When \code{deriv} is
-\code{TRUE}, the returned value has an attribute \code{Gradient}
-which is a matrix with \eqn{n} lines and \eqn{3} columns
-containing the derivatives. A row contains the partial derivatives
-of the corresponding element w.r.t. the three parameters \code{loc}
-\code{scale} and \code{shape} in that order.
+\code{TRUE}, the returned value has an attribute named
+\code{"gradient"} which is a matrix with \eqn{n} lines and \eqn{3}
+columns containing the derivatives. A row contains the partial
+derivatives of the corresponding element w.r.t. the three
+parameters \code{loc} \code{scale} and \code{shape} in that order.
 }
 \description{
 Density, distribution function, quantile function and random
@@ -81,4 +81,3 @@ lines(ti, apply(y, 1, mean))
 \author{
 Yves Deville
 }
-

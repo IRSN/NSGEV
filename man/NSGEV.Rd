@@ -29,7 +29,7 @@ values given in \code{psi}.}
 An object with class \code{"NSGEV"}
 }
 \description{
-Non-Stationnary GEV.
+Non-Stationary GEV.
 }
 \details{
 The model involves a vector \eqn{\boldsymbol{\psi}}{\psi} of
@@ -78,10 +78,9 @@ ns2.ismev <- gev.fit(xdat = df2$y, ydat = as.matrix(df), mul = 1, mulink = exp, 
 rbind("NSGEV" = c(ns2$estimates, "negLogL" = ns2$negLogL),
        "ismev" = c(ns2.ismev$mle, "negLogL" = ns2.ismev$nllh))
 }
-\author{
-Yves Deville
-}
 \seealso{
 \code{\link{simulate.NSGEV}}
 }
-
+\author{
+Yves Deville
+}

@@ -77,12 +77,13 @@ Consider the special case of a model simply defining a
 linear trend time for the GEV location parameter \eqn{\mu} with a
 constant scale \eqn{sigma} and a constant shape \eqn{\xi}. If the
 observations in \code{data} are the expectations for future blocks
-conditional on past blocks, these
+conditional on past blocks, these XXX.
 }
 \section{Caution}{
  For now, \code{period} can only be a numeric
 vector with length 1.
 }
+
 \examples{
 example(NSGEV)
 RL(ns1, period = 10, type = "average")
@@ -97,4 +98,3 @@ RL(ns1, period = 10, type = "exceed", deriv = TRUE, plot = TRUE)
 \author{
 Yves Deville
 }
-

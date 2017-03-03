@@ -46,11 +46,10 @@ matplot(df$t, ysim, type = "l", xlab = "t",
         col = "orange", xlim = c(1, 20))
 matlines(df.new$t, ysim.new, type = "l", col = "firebrick")
 }
-\author{
-Yves Deville
-}
 \seealso{
 \code{\link{rGEV}} to simulate from varying GEV
 parameters.
 }
-
+\author{
+Yves Deville
+}

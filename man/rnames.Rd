@@ -26,4 +26,3 @@ set.seed(31415)
 rnames(4)
 rnames(4, nchar = 6)
 }
-

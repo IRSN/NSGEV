@@ -21,6 +21,7 @@ Coerce a 'gev.fit' object into a 'NSGEV' object.
 \section{Caution}{
  For now, only simple formulas can be used.
 }
+
 \examples{
 require(extRemes)
 
@@ -39,4 +40,3 @@ ns <- as.NSGEV(fit)
 \author{
 Yves Deville
 }
-

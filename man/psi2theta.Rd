@@ -5,12 +5,12 @@
 \title{Compute the matrix of GEV parameters from the vector of
 model parameters 'psi' and the data}
 \usage{
-psi2theta(psi, model, data = NULL, deriv = TRUE, checkNames = TRUE)
+psi2theta(model, psi, data = NULL, deriv = TRUE, checkNames = TRUE)
 }
 \arguments{
-\item{psi}{The vector of model parameters.}
-
 \item{model}{The GEV model: an object with class \code{"NSGEV"}.}
+
+\item{psi}{The vector of model parameters.}
 
 \item{data}{The data frame of covariates. By default, the data
 frame attached to the model is used.}
@@ -35,10 +35,9 @@ fit <- NSGEV(formulas = list("loc" = ~ alpha + beta * t, "scale" = ~ delta, "sha
 data = df)
 df.new <- data.frame(t = 11:20)
 psi <- c("alpha" = 1, "beta" = 0.01, "delta" = 0.6, "xi" = 0.06)
-theta.new <- psi2theta(psi, model = fit, data = df.new)
+theta.new <- psi2theta(model = fit, psi = psi, data = df.new)
 matplot(df.new$t, theta.new, type = "b")
 }
 \author{
 Yves Deville
 }
-

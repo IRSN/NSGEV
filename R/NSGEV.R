@@ -28,9 +28,9 @@
 ##' data = df)
 ##' df.new <- data.frame(t = 11:20)
 ##' psi <- c("alpha" = 1, "beta" = 0.01, "delta" = 0.6, "xi" = 0.06)
-##' theta.new <- psi2theta(psi, model = fit, data = df.new)
+##' theta.new <- psi2theta(model = fit, psi = psi, data = df.new)
 ##' matplot(df.new$t, theta.new, type = "b")
-psi2theta <- function(psi, model, data = NULL, deriv = TRUE, checkNames = TRUE) {
+psi2theta <- function(model, psi, data = NULL, deriv = TRUE, checkNames = TRUE) {
    
    ## add one NAMES column for each parameter psi_1
    p <- length(psi)
@@ -176,7 +176,7 @@ rho2psi <- function(rho, nm1, psi_m1, model, data = NULL,
       psi[ind] <- psi_1
       psi[-ind] <- psi_m1
       names(psi) <- pnms
-      theta <- psi2theta(psi, model = model, data = data)
+      theta <- psi2theta(model = model, psi = psi, data = data)
       F <- pGEV(rho, loc = theta[ , 1L], scale = theta[ , 2L], shape = theta[ , 3L])
       s <- sum(F) - (n - 1.0)
       attr(s, "psi") <- psi
@@ -238,7 +238,7 @@ negLogLik <- function(psi, model, data = NULL, y = NULL,
     if (is.null(data)) data <- model$data
     if (is.null(y)) y <- model$response
     
-    theta <- psi2theta(psi = psi, model = model, data = data, deriv = deriv,
+    theta <- psi2theta(model = model, psi = psi, data = data, deriv = deriv,
                        checkNames = checkNames) 
     n <- nrow(data)
     p <- length(psi)
@@ -261,7 +261,7 @@ negLogLik <- function(psi, model, data = NULL, y = NULL,
     }
    
 }
-##' Non-Stationnary GEV.
+##' Non-Stationary GEV.
 ##'
 ##' The model involves a vector \eqn{\boldsymbol{\psi}}{\psi} of
 ##' \eqn{p} parameters which are called the \emph{coefficients} of the
@@ -467,7 +467,7 @@ NSGEV <- function(formulas,
        }
    }
    
-   theta <- psi2theta(psi, model = ns, data = ns$data, deriv = TRUE)
+   theta <- psi2theta(model = ns, psi = psi, data = ns$data, deriv = TRUE)
    thetaGrad <- attr(theta, "gradient")
    attr(theta, "gradient") <- NULL
    ns$theta <- theta
@@ -527,7 +527,7 @@ quantile.NSGEV <- function(x, probs = c(0.90, 0.95, 0.99),
     if (is.null(psi)) psi <- x$estimate
     
     n <- nrow(data)
-    theta <- psi2theta(psi, model = x, data = data)
+    theta <- psi2theta(model = x, psi = psi, data = data)
     quant <- array(NA, dim = c(n, length(probs)),
                    dimnames = list(rownames(data),
                        paste("Q", formatPerc(probs), sep = "")))
@@ -601,7 +601,7 @@ density.NSGEV <- function(x,
     }
     
     n <- nrow(data)
-    theta <- psi2theta(psi, model = x, data = data)
+    theta <- psi2theta(model = x, psi = psi, data = data)
     dens <- array(NA, dim = c(n, length(xValue)),
                   dimnames = list(rownames(data), NULL))
     
@@ -663,7 +663,7 @@ simulate.NSGEV <- function(object, nsim = 1, seed = NULL,
    if (is.null(psi)) psi <- object$estimate
    
    n <- nrow(data)
-   theta <- psi2theta(psi, model = object, data = data) 
+   theta <- psi2theta(model = object, psi = psi, data = data) 
    sim <- rGEV(nsim, loc = theta[ , 1L], scale = theta[, 2L],
                shape = theta[, 3L])
    dimnames(sim) <- list(rownames(data), paste("sim", 1L:nsim, sep = ""))

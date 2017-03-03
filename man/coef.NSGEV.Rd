@@ -18,9 +18,10 @@ the matrix of GEV parameters is returned, with one row by block
 \item{...}{Not used yet.}
 }
 \value{
-Vector of coefficients or matrix of GEV parameters/
+Vector \eqn{\mathbf{\psi}}{\psi} of coefficients, or
+matrix with the GEV parameters \eqn{\mathbf{\theta}_i}{\theta_i}
+as its rows.
 }
 \description{
 Extract the vector of coefficients from a NSGEV object.
 }
-

@@ -2,7 +2,7 @@
 ##'
 ##' @title Translate a formula into a NSGEV formula
 ##' 
-##' @param formula The formula to be tranlated.
+##' @param formula The formula to be translated.
 ##'
 ##' @param parnm The name of the parameter to use, i.e.
 ##' "mu,""sigma" or "xi".

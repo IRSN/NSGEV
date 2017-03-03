@@ -60,4 +60,3 @@ rho2psi(rho = 40, nm1 = "alpha", psi_m1 = psi[-1], model = fit, data = df.new)
 \author{
 Yves Deville
 }
-
