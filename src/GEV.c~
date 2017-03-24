@@ -1,0 +1,96 @@
+#include <R.h>
+#include <Rdefines.h>
+#include <Rmath.h>
+#define NODEBUG
+
+SEXP dGEV(SEXP x,       
+	  SEXP loc,  
+	  SEXP scale,
+	  SEXP shape, 
+          SEXP log,
+          SEXP deriv) {
+  
+  int n, nx, nloc, nscale, nshape;
+  
+  double eps = 1e-8, z, emz, V, xi, rx = REAL(x), 
+    rloc = REAL(loc), rscale = REAL(scale), rshape = REAL(shape);
+  
+  SEXP val;
+  
+  x = coerceVector(x, REALSXP);
+  loc = coerceVector(loc, REALSXP);
+  scale = coerceVector(scale, REALSXP);
+  shape = coerceVector(scale, REALSXP);
+  
+  nx = LENGTH(x);						
+  nloc = LENGTH(loc);						
+  nscale = LENGTH(scale);		
+  nshape = LENGTH(shape);
+  
+  if ((nx == 0) || (nloc == 0) || (nscale == 0) || (nshape == 0)) 			
+    return(allocVector(REALSXP, 0));				
+  
+  n = nx;							
+  if (n < nloc) n = nloc;						
+  if (n < nscale) n = nscale;
+  if (n < nshape) n = nshape;
+  
+  PROTECT(val = allocVector(INTSXP, n));
+  
+  for (i = ix = iloc = iscale = ishape = 0;  i < n; 
+       ix = (++ix == nx) ? 0 : ix,	       
+	 iloc = (++iloc == nloc) ? 0 : iloc,
+	 iscale = (++iscale == nscale) ? 0 : iscale,
+	 ishape = (++ishape == nshape) ? 0 : ishape,
+	 ++i) {
+    
+    if (ISNA(rx[ix]) || (scale[iscale] < 0.0)) {
+      
+      rval[i] = NA_REAL; 
+      
+    } else {
+      
+      z = (rx[ix] - rloc[iloc]) / rscale[iscale];
+      
+      if (fabs(z) < eps) {
+	
+	emz = exp(-z);
+	rval[i] = -log(rscale[iscale]) - z - emz;
+	
+	if (deriv) {
+	  rgrad[i] = (1.0 - emz) / rscale[iscale];
+	  rgrad[i + n] =  (-1.0 + z * (1.0 - emz)) / rscale[iscale];
+	  grad[i + 2 * n] <- z * z * (1 - emz) / 2.0 - z;
+	
+	}
+	
+      } else {
+	
+	xi = rshape[ishape];
+	V = 1.0 + xi * z;
+	
+	if (V > 0.0) {
+	  rval[i] = -log(rscale[iscale]) - V^(- 1.0 / xi) -
+	    (1.0 / xi + 1.0) * log(V);
+	} else {
+	  rval[i] = 0.0;
+	}
+	
+	if (deriv) {
+	  
+	  W = V^(-1.0 / xi);
+	  U =  (1.0 + xi - W) / V / rscale[iscale];
+	  
+	  rgrad[i] = U;
+	  rgrad[i + n] = -1.0 / rscale[iscale] + z * U;
+	  rgrad[i + 2 * n] = log(V) * (1.0 - W) / xi / xi - 
+	    z * U * rscale[iscale] / xi;
+	  
+	}
+	  
+	}
+	  
+    
+	}
+  
+	}
