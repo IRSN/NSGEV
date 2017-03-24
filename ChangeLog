@@ -1,3 +1,7 @@
+2017-03-24  yves  <deville.yves@alepstat.com>
+
+	* New class "TVGEV" for Time-Varying objects. 
+
 2016-12-23  yves  <deville.yves@alpestat.com>
 
 	* Fixed bug: with a non-zero shape the 'rGEV' returned

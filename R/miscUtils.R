@@ -74,3 +74,50 @@ formatPerc <- function (x,
     }
     else character(0)
 }
+
+## pos <- function(date, br = "1970-01-01") {
+##     res <- as.numeric(as.Date(date) - as.Date(br))
+##     res[res < 0] <- 0
+##     res
+## }
+
+##' Find block duration in years.
+##'
+##' This is simply a wrapper for the \code{diff} method.
+##' 
+##' @title Find Block Duration 
+##' 
+##' @param date A vector with class \code{"Date"} or that can be
+##' coerced to this class.
+##'
+##' @return A duration in years.
+##'
+##' @note For most applications of Time Varying GEV models with
+##' \code{TVGEV}, the block duration will be one year. Yet it can be
+##' sometimes needed to form blocks with longer duration (e.g. two
+##' years, five years).
+##'
+##' @examples
+##'
+##' date <- as.Date(sprintf("%4d-01-01", TXMax_Dijon$Year))
+##' n <- length(date)
+##' blockDuration(date)
+##' blockDuration(date[seq(from = 1, to = n, by = 2)])
+blockDuration <- function(date) {
+
+    date <- as.Date(date)
+    d <- as.numeric(diff(date), units = "days")
+    
+    if (sd(d) / mean(d) > 0.005) {
+        warning("unevenly spaced dates")
+    }
+
+    round(mean(d) / 365.25, digits = 3)
+    
+}
+
+
+
+formatLevel <- function(level) {
+    paste(gsub("\\.0$", "", sprintf("%4.1f", 100 * level)), "%", sep = "")
+}

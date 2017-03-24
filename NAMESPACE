@@ -1,7 +1,10 @@
+useDynLib(NSGEV)
+
 import("stats")
 importFrom("graphics", "abline", "lines", "matlines", "matplot",
            "mtext", "plot")
 import("methods")
+importFrom("reshape2", "melt")
 
 import("Renext")
 importFrom("ismev", "gev.fit")
@@ -17,7 +20,26 @@ S3method(density, NSGEV)
 S3method(plot, NSGEV)
 S3method(predict, NSGEV)
 S3method(print, NSGEV)
+S3method(psi2theta, NSGEV)
 S3method(quantile, NSGEV)
 S3method(simulate, NSGEV)
 S3method(summary, NSGEV)
 S3method(print, summary.NSGEV)
+
+## S3method(AIC, TVGEV)
+S3method(anova, TVGEV)
+## S3method(BIC, TVGEV)
+S3method(bs, TVGEV)
+S3method(coef, TVGEV)
+S3method(confint, TVGEV)
+## S3method(density, NSGEV)
+## S3method(plot, NSGEV)
+## S3method(predict, TVGEV)
+S3method(print, TVGEV)
+S3method(psi2theta, TVGEV)
+## S3method(quantile, TVGEV)
+S3method(simulate, TVGEV)
+S3method(summary, TVGEV)
+S3method(print, summary.TVGEV)
+
+

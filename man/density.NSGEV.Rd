@@ -2,7 +2,7 @@
 % Please edit documentation in R/NSGEV.R
 \name{density.NSGEV}
 \alias{density.NSGEV}
-\title{Compute NSGEV densities}
+\title{Compute NSGEV Densities}
 \usage{
 \method{density}{NSGEV}(x, xValue = NULL, data = NULL, psi = NULL,
   log = FALSE, ...)
@@ -30,7 +30,7 @@ A matrix of density values, with one row for each observation
 of \code{data} and one column by quantile.
 }
 \description{
-Compute NSGEV dnesities.
+Compute NSGEV densities.
 }
 \examples{
 df <- data.frame(t = 1:10)

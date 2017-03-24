@@ -17,6 +17,8 @@
 ##'
 ##' @param checkNames Logical. If \code{TRUE}, the names of the vector
 ##' \code{psi} are checked against the parnames of the model.
+##'
+##' @param ... Not used yet.
 ##' 
 ##' @return A vector of parameters for the \code{NSGEV} model.
 ##' 
@@ -30,7 +32,8 @@
 ##' psi <- c("alpha" = 1, "beta" = 0.01, "delta" = 0.6, "xi" = 0.06)
 ##' theta.new <- psi2theta(model = fit, psi = psi, data = df.new)
 ##' matplot(df.new$t, theta.new, type = "b")
-psi2theta <- function(model, psi, data = NULL, deriv = TRUE, checkNames = TRUE) {
+psi2theta.NSGEV <- function(model, psi, data = NULL, deriv = TRUE,
+                            checkNames = TRUE, ...) {
    
    ## add one NAMES column for each parameter psi_1
    p <- length(psi)
@@ -395,6 +398,8 @@ NSGEV <- function(formulas,
               predNames = allVars,
               p = length(parNames),
               parNames = parNames)
+
+   class(ns) <- "NSGEV"
    
    ##==========================================================================
    ## Perform Maximum Likelihood estimation
@@ -466,15 +471,14 @@ NSGEV <- function(formulas,
            names(ns$estimates) <- parNames
        }
    }
+
    
    theta <- psi2theta(model = ns, psi = psi, data = ns$data, deriv = TRUE)
    thetaGrad <- attr(theta, "gradient")
    attr(theta, "gradient") <- NULL
    ns$theta <- theta
    ns$thetaGrad <- thetaGrad
-
    
-   class(ns) <- "NSGEV"
    ns
    
 }
@@ -541,10 +545,10 @@ quantile.NSGEV <- function(x, probs = c(0.90, 0.95, 0.99),
     quant
 }
 
-##' Compute NSGEV dnesities.
+##' Compute NSGEV densities.
 ##'
 ##'
-##' @title Compute NSGEV densities
+##' @title Compute NSGEV Densities
 ##'
 ##' @param x A \code{NSGEV} object.  Note that the name of this formal
 ##' is imposed by the S3 generic, it would otherwise probably have

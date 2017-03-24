@@ -10,7 +10,8 @@
 random generation for the Generalized Extreme Value (GEV)
 distribution}
 \usage{
-dGEV(x, loc = 0, scale = 1, shape = 0, log = FALSE, deriv = FALSE)
+dGEV(x, loc = 0, scale = 1, shape = 0, log = FALSE, deriv = FALSE,
+  impl = c("C", "R"))
 
 pGEV(q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
   deriv = FALSE)
@@ -37,6 +38,10 @@ returned as \code{log(p)}.}
 
 \item{deriv}{Logical. If \code{TRUE}, the gradient of each
 computed value w.r.t. the parameter vector is computed.}
+
+\item{impl}{Character. Choose between a R implementation and a C
+implementation. The second one should be faster but less checks
+have been done on it for now.}
 
 \item{lower.tail}{Logical; if \code{TRUE} (default), probabilities are
 P[X <= x], otherwise, P[X > x].}
