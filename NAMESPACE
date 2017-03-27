@@ -4,6 +4,7 @@ import("stats")
 importFrom("graphics", "abline", "lines", "matlines", "matplot",
            "mtext", "plot")
 import("methods")
+import("ggplot2")
 importFrom("reshape2", "melt")
 
 import("Renext")
@@ -28,18 +29,26 @@ S3method(print, summary.NSGEV)
 
 ## S3method(AIC, TVGEV)
 S3method(anova, TVGEV)
+
 ## S3method(BIC, TVGEV)
+
 S3method(bs, TVGEV)
 S3method(coef, TVGEV)
 S3method(confint, TVGEV)
+
 ## S3method(density, NSGEV)
 ## S3method(plot, NSGEV)
-## S3method(predict, TVGEV)
+
+S3method(predict, TVGEV)
 S3method(print, TVGEV)
 S3method(psi2theta, TVGEV)
 ## S3method(quantile, TVGEV)
 S3method(simulate, TVGEV)
 S3method(summary, TVGEV)
+
+## predictions iherits from data.frame
+S3method(plot, predict.TVGEV)
+
 S3method(print, summary.TVGEV)
 
 

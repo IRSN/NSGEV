@@ -9,7 +9,7 @@ breaksX(date, degree = 1L, origin = NULL, breaks = NULL,
 }
 \arguments{
 \item{date}{A vector with class \code{"Date"} or a vector that can
-be coerced to the \code{"Date"} class, typically an unambigous
+be coerced to the \code{"Date"} class, typically an unambiguous
 character vector.}
 
 \item{degree}{The degree used for spline functions.}
@@ -31,8 +31,13 @@ columns.
 Build a design matrix to describe breaks in a linear trend.
 }
 \details{
-The design matrix is a Truncated Power Basis of splines. It
-can be extended to a degree differing from the default value \eqn{1}.
+The design matrix is a Truncated Power Basis of splines. It can be
+extended to a degree differing from the default value \eqn{1}.
+The provided date is converted into a numeric variable \eqn{t}
+corresponding to the number of years from the origin. The basis
+functions are functions of this variable \eqn{t}. A year is
+defined as \code{365.25} days, so \eqn{t} can not take only
+integer values.
 
 
 
@@ -50,7 +55,7 @@ part of \eqn{x} (so \eqn{x_+ = 0} when \eqn{x < 0}).
 
 }
 
-The power zero will be discarded when \code{contant} is
+The power zero will be discarded when \code{constant} is
 \code{FALSE}.
 }
 \note{

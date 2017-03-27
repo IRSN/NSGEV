@@ -11,13 +11,16 @@
 \arguments{
 \item{object}{An object with S3 class \code{"TVGEV"}}
 
-\item{newdate}{A vector with class \code{"Date"} ot that can be
+\item{newdate}{A vector with class \code{"Date"} or that can be
 coerced to this class.}
 
 \item{period}{Numeric vector of periods expressed as multiple of
-the block duration. Usually the block duration is one year and
-a value 100 will correspond to a 100-year return level, i.e.
-to the GEV quantile with probability 0.99.}
+the block duration. Usually the block duration is one year and a
+value \code{100} will correspond to a 100-year return level, i.e.
+to the GEV quantile with probability 0.99. The default value
+allows the construction of an acceptable RL plot, but if a smother
+RL curve and/or Confidence Band is needed, more values whould be
+used.}
 
 \item{level}{Numeric vector of confidence level(s).}
 
@@ -54,14 +57,15 @@ qfor these. The results are not predictions in the usual
 acceptance.  The CIs can be obtained by the usual delta method,
 provided that the approximate covariance for the estimated
 parameters is found in \code{object}. They also can be obtained by
-bootstrap, using by default the bootstrap results embeded in
-\code{object} if any. The bootstrap can be parametric or
-non-parametric, see \code{\link{bs.TVGEV}}. Finally, the profile-
-likelihood method can be used: the Confidence limits for a RL are
-obtained by maximising and minimising this RL under the constraint
-that the log-likelihood is greater than a suitable value. This
-method avoids the usual re-parameterisation of the model which can
-is tedious for the general form of model allowed in \code{TVGEV}.
+bootstrap, using by default the bootstrap distribution embeded in
+\code{object} if any or by computing it else. The bootstrap can be
+parametric or non-parametric, see \code{\link{bs.TVGEV}}. Finally,
+the profile- ikelihood method can be used: the confidence limits
+for a RL are obtained by maximising and minimising this RL under
+the constraint that the log-likelihood is greater than a suitable
+value. This method avoids the usual re-parameterisation of the
+model which can is tedious for the general form of model allowed
+in \code{TVGEV}.
 }
 \note{
 Despite of its positive sounding name, the "bias correction"

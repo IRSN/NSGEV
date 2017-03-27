@@ -1,6 +1,7 @@
+## ***********************************************************************
 ##' Translate a standard formula into a NSGEV formula.
 ##'
-##' @title Translate a formula into a NSGEV formula
+##' @title Translate a Formula into a NSGEV Formula
 ##' 
 ##' @param formula The formula to be translated.
 ##'
@@ -34,12 +35,13 @@ transFormula <- function(formula, parnm) {
     res
 }
 
+## ***********************************************************************
 ##' Generates random names.
 ##'
-##' This function is a utilisty function for tests concerning the
+##' This function is a utility function for tests concerning the
 ##' parsing of formulas.
 ##' 
-##' @title Generates random names
+##' @title Generates Random Names
 ##'
 ##' @param n Number of names.
 ##'
@@ -49,9 +51,9 @@ transFormula <- function(formula, parnm) {
 ##'
 ##' @examples
 ##' set.seed(31415)
-##' rnames(4)
-##' rnames(4, nchar = 6)
-rnames <- function(n, nchar = 3L) {
+##' rNames(4)
+##' rNames(4, nchar = 6)
+rNames <- function(n, nchar = 3L) {
     df <- expand.grid(LETTERS, LETTERS, LETTERS)
     LET <- apply(X = df[sample(1:676, n) ,],
                  MARGIN = 1L,
@@ -81,6 +83,7 @@ formatPerc <- function (x,
 ##     res
 ## }
 
+## ***********************************************************************
 ##' Find block duration in years.
 ##'
 ##' This is simply a wrapper for the \code{diff} method.
@@ -117,7 +120,62 @@ blockDuration <- function(date) {
 }
 
 
-
 formatLevel <- function(level) {
     paste(gsub("\\.0$", "", sprintf("%4.1f", 100 * level)), "%", sep = "")
+}
+
+## copy of stats:::format_perc
+
+formatPerc <- function (x,
+                         digits = max(2L, getOption("digits")),
+                         probability = TRUE, 
+                         use.fC = length(x) < 100,
+                         ...) {
+    if (length(x)) {
+        if (probability)  x <- 100 * x
+        paste0(if (use.fC) 
+                   formatC(x, format = "fg", width = 1, digits = digits)
+               else format(x, trim = TRUE, digits = digits, ...), "%")
+    }
+    else character(0)
+}
+
+## pos <- function(date, br = "1970-01-01") {
+##     res <- as.numeric(as.Date(date) - as.Date(br))
+##     res[res < 0] <- 0
+##     res
+## }
+
+# ***********************************************************************
+##' Select (nearly) a given number of dates.
+##' 
+##' @title Select (nearly) a Given Number of Dates
+##'
+##' @param date A vector with class\code{"Date"} or that can be coerced
+##' to this class.
+##'
+##' @param n Target number of selected dates.
+##'
+##' @return A vector of 'round' dates having nearly length \code{n}
+##' and covering approximately the range of \code{date}.
+##' 
+selectDate <- function(date, n = 3L) {
+
+    date <- as.Date(date)
+    
+    rd <- range(date)
+    W <- as.numeric(diff(rd, unit = "days") ) / 365
+    ints <- c(1, 5, 10, 20, 25, 50, 100, 200, 500)
+    nw <- round(W / ints)
+    n - 1
+    i <- which.min(abs(outer(n - 1, nw, "-")))
+    w <- ints[i]
+    y <- as.numeric(format(rd, "%Y"))
+    
+    if (W > 30) {
+        y1 <- 10 * floor(y[1] / 10)
+        ys <- seq(from = y1, by = w, length.out = n)
+    }
+
+    as.Date(sprintf("%4d-01-01", ys))
 }

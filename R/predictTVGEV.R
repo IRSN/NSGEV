@@ -6,26 +6,30 @@
 ##' acceptance.  The CIs can be obtained by the usual delta method,
 ##' provided that the approximate covariance for the estimated
 ##' parameters is found in \code{object}. They also can be obtained by
-##' bootstrap, using by default the bootstrap results embeded in
-##' \code{object} if any. The bootstrap can be parametric or
-##' non-parametric, see \code{\link{bs.TVGEV}}. Finally, the profile-
-##' likelihood method can be used: the Confidence limits for a RL are
-##' obtained by maximising and minimising this RL under the constraint
-##' that the log-likelihood is greater than a suitable value. This
-##' method avoids the usual re-parameterisation of the model which can
-##' is tedious for the general form of model allowed in \code{TVGEV}.
+##' bootstrap, using by default the bootstrap distribution embeded in
+##' \code{object} if any or by computing it else. The bootstrap can be
+##' parametric or non-parametric, see \code{\link{bs.TVGEV}}. Finally,
+##' the profile- ikelihood method can be used: the confidence limits
+##' for a RL are obtained by maximising and minimising this RL under
+##' the constraint that the log-likelihood is greater than a suitable
+##' value. This method avoids the usual re-parameterisation of the
+##' model which can is tedious for the general form of model allowed
+##' in \code{TVGEV}.
 ##' 
 ##' @title  Predict Method for \code{TVGEV} Objects.
 ##'
 ##' @param object An object with S3 class \code{"TVGEV"} 
 ##'
-##' @param newdate A vector with class \code{"Date"} ot that can be
+##' @param newdate A vector with class \code{"Date"} or that can be
 ##' coerced to this class.
 ##'
 ##' @param period Numeric vector of periods expressed as multiple of
-##' the block duration. Usually the block duration is one year and
-##' a value 100 will correspond to a 100-year return level, i.e.
-##' to the GEV quantile with probability 0.99.
+##' the block duration. Usually the block duration is one year and a
+##' value \code{100} will correspond to a 100-year return level, i.e.
+##' to the GEV quantile with probability 0.99. The default value
+##' allows the construction of an acceptable RL plot, but if a smother
+##' RL curve and/or Confidence Band is needed, more values whould be
+##' used.
 ##'
 ##' @param level Numeric vector of confidence level(s).
 ##'
@@ -115,20 +119,30 @@ predict.TVGEV <- function(object,
     nLevel <- length(level)
     
     if (is.null(newdate)) {
+        newdate <- selectDate(object$data[ , object$date])
+    }
+
+    ## OLD CODE working with else
+
+    if (FALSE) {
+            
         X <- object$X
         n <- object$n
         ind <- object$ind
         newdate <- object$data[ , object$date]
         fDate <- object$fDate
-    } else {
-        n <- length(newdate)
-        ## special case for non TV model
-        if (!all(object$isCst)) {
-            L <- modelMatrices.TSGEV(object, date = newdate)
-            X <- L$X
-        } else X <- NULL
-        fDate <- format(newdate)
     }
+    ## OLD else 
+
+    ## } else {
+    n <- length(newdate)
+    ## special case for non TV model
+    if (!all(object$isCst)) {
+        L <- modelMatrices.TSGEV(object, date = newdate)
+        X <- L$X
+    } else X <- NULL
+    fDate <- format(newdate)
+    ## }
     
     theta <- psi2theta(object, date = newdate, deriv = TRUE)
 
@@ -397,7 +411,6 @@ predict.TVGEV <- function(object,
                      if (trace == 1L) {
                          names(resL$solution) <- object$parNames
                          cat(sprintf("%7.2f\n", resL[["objective"]]))
-                         print(resL[["solution"]]) 
                      } else  if (trace > 1L) {
                          cat("\nSOLUTION\n")
                          print(resL)
@@ -456,7 +469,6 @@ predict.TVGEV <- function(object,
                      if (trace == 1L) {
                          names(resU$solution) <- object$parNames
                          cat(sprintf("%7.2f\n", -resU[["objective"]]))
-                         print(resU[["solution"]]) 
                      } else if (trace > 1L) {
                          cat("\nSOLUTION\n")
                          print(resU)
@@ -524,10 +536,101 @@ predict.TVGEV <- function(object,
             stop("the package 'reshape2' could not be used")
         }
 
-        
+        class(RL) <- c("predict.TVGEV", "data.frame")
     } 
 
     return(RL)
 
     
 }
+
+
+## ***********************************************************************
+##' Plot predict Results for \code{TVGEV}
+##' 
+##' @title Plot Predict Results for \code{TVGEV}
+##'
+##' @param x An object with class \code{"predict.TVGEV"} as returned
+##' by the \code{predict} method. This must be a data frame so the
+##' \code{predict} method must be called without using \code{out} or
+##' setting it to the default value \code{"data.frame"}.
+##' 
+##' @param y Not used.
+##'
+##' @param gg Logical. If \code{TRUE} the plot is produced with the
+##' \bold{ggplot2} package.
+##' 
+##' @param ... Not used yet.
+##'
+##' @return An object with class \code{"gg"}. Can be used with the method
+##' \code{plot}, or equivalently with \code{print}.
+##'
+##' @note This function is intended to work with predictions computed
+##' for a possibly large number of periods (to get smooth curves) but
+##' with only a small number of dates, each apearing in a facet. So
+##' the number of dates is limited to \code{6}.
+##' 
+##' @examples
+##' example(TVGEV)
+##' pred <- predict(res2, newdate = c("1960-01-01", "2000-01-01", "2020-01-01"),
+##'                 level = c(0.70, 0.95), confintMethod = "delta")
+##' ## no longer needed
+##' ## class(pred) <- c("predict.TVGEV", "data.frame")
+##' g <- plot(pred)
+plot.predict.TVGEV <- function(x, y, gg = TRUE, ... ) {
+
+    ## avoid NOTE 'no visible binding' in checks
+    Period <- L <- U <- Level <- Quant <- NULL    
+    
+    if (!gg) stop("Sorry, but for now only the 'gg = TRUE' is possible!")
+    
+    if (!requireNamespace("ggplot2", quietly = TRUE))  stop("package 'ggplot2' needed here")
+        
+    confLev <- attr(x, "confLevel")
+    
+    if (nd <- length(unique(x$Date)) > 6L) {
+        stop(nd, "dates found in 'x'. The maximum allowed is 6")
+    } 
+    
+    fill <- "darkgray"
+    ## Find out if the confidence levels
+    g1 <- ggplot(data = x)
+
+    if (!is.null(x$L) && !is.null(x$U)) {
+        g1 <- g1  + geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U, group = Level,
+                                    ## colour = Level,
+                                    fill = Level),
+                                ## group = type,
+                                alpha = 0.2)
+    
+        g1 <- g1 + geom_line(mapping = aes(x = Period, y = L, group = Level), alpha = 0.2)
+        g1 <- g1 + geom_line(mapping = aes(x = Period, y = U, group = Level), alpha = 0.2)
+    }
+    ## g1 <- g1 + scale_fill_manual(name = "legend_name", values = c("red", "green"),
+    ##                               labels = c('one','two'))
+    g1 <- g1 + geom_line(data = x,
+                         mapping = aes(x = Period, y = Quant, colour = "orangered"), size = 1)
+    g1 <- g1 + theme_bw()
+    g1 <- g1 + scale_x_log10(breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000))
+    ## g
+    g1 <- g1 + theme(axis.text.x = element_text(angle = 0, hjust = 0),
+                     axis.title = element_text(face = 'bold', size = 12),
+                     title = element_text(face = 'bold', size = 12),
+                     legend.position = 'right',
+                     legend.title = element_blank(),
+                     legend.text = element_text(size = 12))
+
+    g1 <- g1 + scale_colour_manual(name = "", values = "orangered", labels = "Quantile")
+
+    if (!is.null(x$L) && !is.null(x$U)) {
+        g1 <- g1 + scale_fill_manual(name = "Level", values = c("darkgray", "darkgray"))
+    }
+    
+    g1 <- g1 + xlab("Period") + ylab("Quantile") 
+    
+    g1 <- g1 + facet_wrap( ~ Date)
+        
+    g1
+   
+}
+

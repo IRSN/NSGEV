@@ -42,7 +42,7 @@ as.NSGEV <- function(x, ...) {
 ##' ## generate a matrix covariates
 ##' set.seed(1234)
 ##' dat <- matrix(runif(n * m), nrow = n)
-##' colnames(dat) <- rnames(m)
+##' colnames(dat) <- rNames(m)
 ##'
 ##' ## response
 ##' y <- drop(rGEV(n))

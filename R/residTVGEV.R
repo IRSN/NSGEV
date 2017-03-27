@@ -1,7 +1,7 @@
 ##*****************************************************************************
 ##' Generalised Residuals for a TVGEV model.
 ##' 
-##' @title Generalised Residuals for a TVGEV model
+##' @title Generalised Residuals for a TVGEV Model
 ##'
 ##' @aliases resid.TVGEV
 ##' 

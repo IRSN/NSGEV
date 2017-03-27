@@ -8,7 +8,7 @@ Maintainer: Yves Deville <deville.yves@alpestat.com>
 Description: Utility functions for Non-Stationary time series with GEV margins.
 License: GPL-3
 LazyData: yes
-Imports: methods, numDeriv, nloptr, reshape2
+Imports: methods, numDeriv, nloptr, reshape2, ggplot2
 Depends: Renext, ismev, extRemes
-Suggests: ggplot2, parallel, doParallel, foreach
+Suggests: parallel, doParallel, foreach
 RoxygenNote: 6.0.1

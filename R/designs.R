@@ -1,12 +1,18 @@
+## ****************************************************************************
 ##' Build a design matrix to describe breaks in a linear trend.
 ##'
-##' The design matrix is a Truncated Power Basis of splines. It
-##' can be extended to a degree differing from the default value \eqn{1}.
+##' The design matrix is a Truncated Power Basis of splines. It can be
+##' extended to a degree differing from the default value \eqn{1}.
+##' The provided date is converted into a numeric variable \eqn{t}
+##' corresponding to the number of years from the origin. The basis
+##' functions are functions of this variable \eqn{t}. A year is
+##' defined as \code{365.25} days, so \eqn{t} can not take only
+##' integer values.
 ##' 
 ##' @title Design Matrix with Breaks in a Linear Trend
 ##' 
 ##' @param date A vector with class \code{"Date"} or a vector that can
-##' be coerced to the \code{"Date"} class, typically an unambigous
+##' be coerced to the \code{"Date"} class, typically an unambiguous
 ##' character vector.
 ##'
 ##' @param degree The degree used for spline functions.
@@ -39,7 +45,7 @@
 ##'
 ##' }
 ##'
-##' The power zero will be discarded when \code{contant} is
+##' The power zero will be discarded when \code{constant} is
 ##' \code{FALSE}.
 ##'
 ##' @note When the argument \code{breaks} has length zero, the
@@ -86,3 +92,69 @@ breaksX <- function(date,
     X
     
 }
+
+## ****************************************************************************
+##' Build a design matrix for polynomial regression.
+##'
+##' The provided date is converted into a numeric variable \eqn{t}
+##' corresponding to the number of years from the origin. The basis
+##' functions are functions of this variable \eqn{t}. A year is
+##' defined as \code{365.25} days, so \eqn{t} can not take only
+##' integer values.
+##' 
+##' @title Design Matrix for Polynomial Regression
+##' 
+##' @param date A vector with class \code{"Date"} or that can be
+##' coerced to this class.
+##' 
+##' @param degree The maximal degree \eqn{d}. The basis contains
+##' \eqn{d + 1} functions \eqn{t^0}, \eqn{t^1}, \dots, \eqn{t^d}.
+##'
+##' @param origin Optional vector of length 1 with class \code{"Date"}
+##' or character that can be coerced to this class. Gives the origin
+##' for the transformation of dates into numeric values. The default
+##' value is \code{1970-01-01}, see \code{\link{Date}}.
+##'
+##' @return A matrix having the value of the basis functions as its
+##' columns. Each row corresponds to an element of the given
+##' \code{date} vector. By convention, the columns are named
+##' \code{Cst} then \code{t1}, \code{t2}, \dots.
+##' 
+##' @note This function is intended to provide regressors for Time
+##' Varying GEV models corresponding to \code{TVGEV} objects. Since
+##' the response then usually corresponds to block maxima, the date
+##' variable gives either the begining or the end of each block.
+##'
+##' @seealso \code{breaksX} for a basis of Truncated Power functions.
+##' and \code{TVGEV} to for Time Varying GEV models.
+##'
+##' @examples
+##'
+##' date <- seq(from = as.Date("1996-01-01"),
+##'             to = as.Date("2016-12-31"), by = "years")
+##'
+##' X <- polynomX(date)
+polynomX <- function(date, degree = 2, origin = NULL) {
+
+    if (degree < 1) stop("'degree' must be >= 1")
+    ## dtNum <- as.numeric(diff(head(date)), units = "days")
+    
+    mc <- match.call()
+    date <- as.Date(date)
+    n <- length(date)
+
+    if (!is.null(origin)) {
+        origin <- as.Date(origin)
+        tt <- as.numeric(date - origin) / 365.25
+    } else {
+        tt <- as.numeric(date) / 365.25
+    }
+    print(tt)
+    X <- outer(tt, 0:degree, FUN = "^")
+    colnames(X) <- c("Cst", paste("t", 1:degree, sep = ""))
+    rownames(X) <- format(date, "%Y-%m-%d")
+    attr(X, "origin") <- origin
+    
+    X
+}
+    

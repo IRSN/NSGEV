@@ -64,9 +64,9 @@ reshapeGEV <- function (x, loc, scale, shape, matrix = FALSE) {
 ##' @name GEV
 ##' @rdname GEV
 ##' 
-##' @title Density, distribution function, quantile function and
-##' random generation for the Generalized Extreme Value (GEV)
-##' distribution
+##' @title Density, Distribution Function, Quantile Function and
+##' Random Generation for the Generalized Extreme Value (GEV)
+##' Distribution
 ##'
 ##' 
 ##' @param loc Location parameter. Numeric vector with suitable
