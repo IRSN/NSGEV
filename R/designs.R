@@ -149,7 +149,6 @@ polynomX <- function(date, degree = 2, origin = NULL) {
     } else {
         tt <- as.numeric(date) / 365.25
     }
-    print(tt)
     X <- outer(tt, 0:degree, FUN = "^")
     colnames(X) <- c("Cst", paste("t", 1:degree, sep = ""))
     rownames(X) <- format(date, "%Y-%m-%d")
