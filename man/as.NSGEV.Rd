@@ -2,7 +2,7 @@
 % Please edit documentation in R/asNSGEV.R
 \name{as.NSGEV}
 \alias{as.NSGEV}
-\title{Coerce into a \code{NSGEV} object}
+\title{Coerce into a \code{NSGEV} Object}
 \usage{
 as.NSGEV(x, ...)
 }

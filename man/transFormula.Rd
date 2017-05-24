@@ -2,7 +2,7 @@
 % Please edit documentation in R/miscUtils.R
 \name{transFormula}
 \alias{transFormula}
-\title{Translate a formula into a NSGEV formula}
+\title{Translate a Formula into a NSGEV Formula}
 \usage{
 transFormula(formula, parnm)
 }

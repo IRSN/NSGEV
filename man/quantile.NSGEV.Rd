@@ -2,7 +2,7 @@
 % Please edit documentation in R/NSGEV.R
 \name{quantile.NSGEV}
 \alias{quantile.NSGEV}
-\title{Compute NSGEV quantiles}
+\title{Compute \code{NSGEV} Quantiles}
 \usage{
 \method{quantile}{NSGEV}(x, probs = c(0.9, 0.95, 0.99), data = NULL,
   psi = NULL, ...)
@@ -24,7 +24,7 @@ A matrix of quantiles, with one row for each observation
 of \code{data} and one column by probability.
 }
 \description{
-Compute NSGEV quantiles.
+Compute \code{NSGEV} quantiles.
 }
 \examples{
 df <- data.frame(t = 1:10)

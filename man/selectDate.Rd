@@ -2,7 +2,7 @@
 % Please edit documentation in R/miscUtils.R
 \name{selectDate}
 \alias{selectDate}
-\title{Select (nearly) a Given Number of Dates}
+\title{Select (Nearly) a Given Number of Dates}
 \usage{
 selectDate(date, n = 3L)
 }

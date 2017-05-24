@@ -2,8 +2,8 @@
 % Please edit documentation in R/NSGEV.R
 \name{psi2theta.NSGEV}
 \alias{psi2theta.NSGEV}
-\title{Compute the matrix of GEV parameters from the vector of
-model parameters 'psi' and the data}
+\title{Compute the Matrix of GEV Parameters from the Vector of
+Model Parameters 'psi' and the Data}
 \usage{
 \method{psi2theta}{NSGEV}(model, psi, data = NULL, deriv = TRUE,
   checkNames = TRUE, ...)
@@ -30,7 +30,7 @@ A vector of parameters for the \code{NSGEV} model.
 }
 \description{
 Compute the matrix of GEV parameters from the vector of model
-parameters 'psi' and the data.
+parameters 'psi' and the Data.
 }
 \examples{
 df <- data.frame(t = 1:10)

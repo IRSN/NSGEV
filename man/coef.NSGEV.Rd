@@ -2,6 +2,7 @@
 % Please edit documentation in R/allNSGEVMethods.R
 \name{coef.NSGEV}
 \alias{coef.NSGEV}
+\alias{coef.TVGEV}
 \title{Coefficients of a \code{NSGEV} object}
 \usage{
 \method{coef}{NSGEV}(object, type = c("psi", "theta"), ...)
@@ -9,11 +10,13 @@
 \arguments{
 \item{object}{A \code{NSGEV} object.}
 
-\item{type}{Character. When \code{"psi"}, the vector of model
-parameters is returned. When instead \code{type} is \code{"theta"},
-the matrix of GEV parameters is returned, with one row by block
-(or observation) and one column for each of the GEV parameters
-\code{"loc"}, \code{"scale"} and \code{"shape"}.}
+\item{type}{Character. For \code{type = "psi"}, the vector
+\eqn{\boldsymbol{\psi}}{\psi} of model parameters is
+returned. When instead \code{type} is \code{"theta"}, the matrix
+of GEV parameters \eqn{\boldsymbol{\theta}_i}{\theta_i} is
+returned, with one row by block (or observation) and one column
+for each of the GEV parameters \code{"loc"}, \code{"scale"} and
+\code{"shape"}.}
 
 \item{...}{Not used yet.}
 }

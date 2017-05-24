@@ -4,9 +4,9 @@
 ##' Compute the GEV parameters for the marginal distributions of a
 ##' \code{TVGEV} model.
 ##'
-##' @title Compute the GEV Parameters for the Marginal Distributions
-##' of a \code{TVGEV} Model
-##' 
+##' @title Compute the Matrix of GEV Parameters from the Vector of
+##' Model Parameters 'psi' and the Data
+##'
 ##' @param model The \code{TVGEV} object.
 ##' 
 ##' @param psi A vector of parameters for \code{model}. By default the
@@ -435,7 +435,20 @@ MLE.TVGEV <- function(object,
 }
 
 ##*****************************************************************************
-##' Bootstrap for a \code{TVGEV} Model
+##' Bootstrap for a \code{TVGEV} model.
+##'
+##' The parametric bootstrap (\code{type = "param"}) is as follows: for
+##' each bootstrap sample, a response vector
+##' \eqn{\mathbf{y}^\star}{y*} is drawn from the estimated GEV
+##' distribution as described in \code{object}; a MLE is performed to
+##' find the bootstraped parameter vector
+##' \eqn{\boldsymbol{\psi}^\star}{\psi*}. For the nonparametric
+##' bootstrap (\code{type = "NP"}), the generalised residuals of the
+##' object as returned by \code{\link{residuals.TVGEV}} are resampled
+##' and are back-transformed to simulated observations; a MLE is then
+##' performed to find the bootstraped parameter vector
+##' \eqn{\boldsymbol{\psi}^\star}{\psi*} as in the parametric case.
+##' 
 ##'
 ##' @title  Bootstrap for a \code{TVGEV} Model
 ##' 
@@ -443,30 +456,27 @@ MLE.TVGEV <- function(object,
 ##' 
 ##' @param R Target number of bootstrap samples.
 ##'
-##' @param type Character. The value \code{"param"} leads to a
-##' parametric bootstrap: for each bootstrap sample, a response vector
-##' drawn from the estimated GEV distribution as described in
-##' \code{object}; a MLE is performed to find the bootstraped
-##' parameter vector. When \code{type} is \code{"NP"}, the generalised
-##' residuals of the objects are resampled and are back-transformed to
-##' simulated observations; a MLE is performed to to find the
-##' bootstraped parameter vector as in the parametric case.
-##'
-##' @param estim Argument passed to \code{MLE}
+##' @param type Character. The values \code{"param"} and \code{"NP"}
+##' can be used to chose between parametric and nonparametric bootstrap,
+##' see \bold{Details}.
+##' 
+##' @param estim Argument passed to \code{MLE}.
 ##'
 ##' @param parallel Logical. If \code{TRUE} the loop over the bootstrap
-##' sample is performed using \code{foreach} with \code{\%do par\%}
+##' sample is performed using \code{foreach} with \code{\%do par\%}.
 ##'
 ##' @param ... Further arguments passed to \code{MLE}.
 ##'
-##' @return A matrix with one row for each bootstrap sample, containing
-##' the parameters. 
+##' @return A matrix containing the bootstraped parameter vectors,
+##' with one row for each bootstrap sample.
 ##'
 ##' @note The simulated response does not cover the observations where
-##' the original response was NA.
+##' the original response was \code{NA}.
 ##' 
-##' @section Caution: for some bootstrap samples, the MLE may fail in
-##' which case the coefficients will be set to \code{NA}.
+##' @section Caution: For some bootstrap samples, the MLE may fail, in
+##' which case the coefficients will be ignored. So the true number
+##' of sampled coefficient vecors  will generally be smaller than the
+##' target number as given in \code{R}.
 ##'
 ##' @examples
 ##'
@@ -584,6 +594,7 @@ bs.TVGEV <- function(object,
     
 }
 
+## *************************************************************************
 ##' Build model matrices.
 ##'
 ##' These matrices are needed when the model is build (and usually is
@@ -613,7 +624,6 @@ bs.TVGEV <- function(object,
 ##'
 ##' }
 ##'
-##' 
 ##' @seealso The function \code{\link[stats]{model.matrix}} used by
 ##' \code{\link[stats]{lm}}.
 ##' 
@@ -652,7 +662,7 @@ modelMatrices.TSGEV  <- function(object, date = NULL) {
 
 }
 
-
+## *************************************************************************
 ##' Time-varying GEV model
 ##'
 ##' This kind of model describe \emph{independent} observations having
@@ -663,7 +673,6 @@ modelMatrices.TSGEV  <- function(object, date = NULL) {
 ##' are functions of the date as provided in \code{breaksX},
 ##' \code{polynomX}, \code{trigonX}. No other covariates can be used
 ##' unless the use of \code{predict} or \code{RL} will not be possible.
-##'
 ##' 
 ##' @title Time-Varying GEV Model.
 ##' 
@@ -773,6 +782,37 @@ modelMatrices.TSGEV  <- function(object, date = NULL) {
 ##'       "VGEV_optim" = res1$negLogLik,
 ##'       "TVGEV_nloptr" = res2$negLogLik)
 ##' 
+##' ## ====================================================================
+##' ## use a loop on plausible break years. The fitted models
+##' ## are stored within a list
+##' ## ====================================================================
+##'
+##' yearBreaks <- c(1940, 1950, 1955, 1960:2000, 2005, 2010)
+##' res <- list()
+##' for (ib in seq_along(yearBreaks)) {
+##'     d <- sprintf("%4d-01-01", yearBreaks[[ib]])
+##'     floc <- as.formula(sprintf("~ t1 + t1_%4d", yearBreaks[[ib]]))
+##'     res[[d]] <- TVGEV(data = df, response = "TXMax", date = "Date",
+##'     design = breaksX(date = Date, breaks = d, degree = 1),
+##'     loc = floc)
+##' }
+##'
+##' ## ====================================================================
+##' ## [continuing...] ]find the model with maximum likelihood, and plot
+##' ## something like a profile likelihood for the break date considered
+##' ## as a new parameter. However, the model is not differentiable w.r.t.
+##' ## the break! 
+##' ## ====================================================================
+##' 
+##' ll <- sapply(res, logLik)
+##' plot(yearBreaks, ll, type = "o", pch = 21, col = "orangered",
+##'      lwd = 2, bg = "gold")
+##' grid()
+##' iMax <- which.max(ll)
+##' abline(v = yearBreaks[iMax])
+##' abline(h = ll[iMax] - c(0, qchisq(0.95, df = 1) /2),
+##'        col = "SpringGreen3", lwd = 2)
+
 TVGEV <- function(data,
                   date,
                   response,
@@ -886,10 +926,10 @@ TVGEV <- function(data,
     
 }
 
-
+## *************************************************************************
 ##' Random simulation from a \code{TVGEV} object.
 ##' 
-##' @title Simulate from a \code{TVGEV} Object.
+##' @title Simulate from a \code{TVGEV} Object
 ##'
 ##' @param object An object of class \code{"TVGEV"} representing a
 ##' Time-Varying GEV model.
@@ -936,6 +976,8 @@ simulate.TVGEV <- function (object, nsim = 1, seed = NULL,
     sim
 
 }
+
+## *************************************************************************
 ##' Plot Paths Simultated from a \code{TVGEV} object
 ##'
 ##'
@@ -982,25 +1024,26 @@ plot.simulate.TVGEV <- function(x, y, col = "gray",
              ...)
 
 }
-    
-##' Extract the vector of coefficients from a \code{TVGEV} object.
-##'
-##' @title Coefficients of a \code{TVGEV} object
-##'
-##' @param object A \code{TVGEV} object.
-##' 
-##' @param type Character. When \code{"psi"}, the vector of model
-##' parameters is returned. When instead \code{type} is \code{"theta"},
-##' the matrix of GEV parameters is returned, with one row by block
-##' (or observation) and one column for each of the GEV parameters
-##' \code{"loc"}, \code{"scale"} and \code{"shape"}.
-##'
-##' @param ... Not used yet.
-##' 
-##' @return Vector \eqn{\mathbf{\psi}}{\psi} of coefficients, or
-##' matrix with the GEV parameters \eqn{\mathbf{\theta}_i}{\theta_i}
-##' as its rows.
-##' 
+
+## *************************************************************************
+## Extract the vector of coefficients from a \code{TVGEV} object.
+##
+## @title Coefficients of a \code{TVGEV} object
+##
+## @param object A \code{TVGEV} object.
+## 
+## @param type Character. When \code{"psi"}, the vector of model
+## parameters is returned. When instead \code{type} is \code{"theta"},
+## the matrix of GEV parameters is returned, with one row by block
+## (or observation) and one column for each of the GEV parameters
+## \code{"loc"}, \code{"scale"} and \code{"shape"}.
+##
+## @param ... Not used yet.
+## 
+## @return Vector \eqn{\mathbf{\psi}}{\psi} of coefficients, or
+## matrix with the GEV parameters \eqn{\mathbf{\theta}_i}{\theta_i}
+## as its rows.
+## 
 coef.TVGEV <- function(object, type = c("psi", "theta"),  ...) {
     type <- match.arg(type)
     if (type == "psi") return(object$estimate)

@@ -2,21 +2,21 @@
 ##'
 ##' Compute the Return Levels (RLs) for different period and different
 ##' values of the time block, as well as Confidence Intervals (CIs)
-##' qfor these. The results are not predictions in the usual
+##' for these. The results are not predictions in the usual
 ##' acceptance.  The CIs can be obtained by the usual delta method,
 ##' provided that the approximate covariance for the estimated
 ##' parameters is found in \code{object}. They also can be obtained by
 ##' bootstrap, using by default the bootstrap distribution embeded in
 ##' \code{object} if any or by computing it else. The bootstrap can be
 ##' parametric or non-parametric, see \code{\link{bs.TVGEV}}. Finally,
-##' the profile- ikelihood method can be used: the confidence limits
+##' the profile-likelihood method can be used: the confidence limits
 ##' for a RL are obtained by maximising and minimising this RL under
 ##' the constraint that the log-likelihood is greater than a suitable
 ##' value. This method avoids the usual re-parameterisation of the
-##' model which can is tedious for the general form of model allowed
+##' model which can be tedious for the general form of model allowed
 ##' in \code{TVGEV}.
 ##' 
-##' @title  Predict Method for \code{TVGEV} Objects.
+##' @title  Predict Method for \code{TVGEV} Objects
 ##'
 ##' @param object An object with S3 class \code{"TVGEV"} 
 ##'
@@ -27,9 +27,9 @@
 ##' the block duration. Usually the block duration is one year and a
 ##' value \code{100} will correspond to a 100-year return level, i.e.
 ##' to the GEV quantile with probability 0.99. The default value
-##' allows the construction of an acceptable RL plot, but if a smother
-##' RL curve and/or Confidence Band is needed, more values whould be
-##' used.
+##' allows the construction of an acceptable RL plot, but if a
+##' smoother RL curve and/or Confidence Band is needed, more values
+##' would be used.
 ##'
 ##' @param level Numeric vector of confidence level(s).
 ##'
@@ -39,8 +39,8 @@
 ##' @param out Type of output.
 ##' 
 ##' @param biasCorrect \code{Logical} used only when
-##' \code{confintMethod} is \code{"boot"}. When \code{TRUE}, the
-##' RLnamed \code{"Quantile"} is computed as the average of the RLs
+##' \code{confintMethod} is \code{"boot"}. When \code{TRUE}, the RL
+##' named \code{"Quantile"} is computed as the average of the RLs
 ##' obtained with the bootstraped parameters, and it will differ from
 ##' the RL computed with the estimated parameters in \code{object}.
 ##'
@@ -59,8 +59,8 @@
 ##' @section Caution: When \code{confintMethod} is set to
 ##' \code{"loglik"} the required computing time is huge because
 ##' several constrained optimisations are required. Since the marginal
-##' distribution hence the RL vary only slowly in practice,
-##' unnecesseary computing burden will result when many values of
+##' distribution hence the RL vary only slowly in practice, an
+##' unnecessary computing burden will result when many values of
 ##' \code{newdate} are used as it is the case by default.
 ##'
 ##' @note Despite of its positive sounding name, the "bias correction"
@@ -103,7 +103,7 @@ predict.TVGEV <- function(object,
     }
 
     nPeriod <- length(period)
-    prob <- 1 - 1 / period
+    prob <- 1.0 - 1.0 / period
     fPeriod <- format(period)
     
     method <- match.arg(confintMethod)
@@ -263,15 +263,17 @@ predict.TVGEV <- function(object,
                 RL[ , iPer, "Quant", ] <- t(apply(Quant, MARGIN = 1, mean))
             } else {
                 RL[ , iPer, "Quant", ] <- rep(qGEV(p = prob[iPer],
-                                                  loc = theta[ , 1],
-                                                  scale = theta[ , 2],
-                                                  shape = theta[ , 3],
-                                                  deriv = TRUE), times = nLevel)
+                                                   loc = theta[ , 1],
+                                                   scale = theta[ , 2],
+                                                   shape = theta[ , 3],
+                                                   deriv = TRUE), times = nLevel)
             }
         }
         
     } else if (method == "proflik") {
-
+        
+        constrCheck <- -5e-3
+        
         psiHat <- object$estimates
         
         RL <- array(NA,
@@ -287,16 +289,22 @@ predict.TVGEV <- function(object,
         ## ===================================================================
 
         opts1 <- list("algorithm" = "NLOPT_LD_AUGLAG",
-                      "xtol_rel" = 1.0e-8, "ftol_rel" = 1.0e-8,
+                      "xtol_rel" = 1.0e-8, "ftol_abs" = 1.0e-4,
                       "maxeval" = 3000,
-                      ## "check_derivatives" = TRUE, "check_derivatives_print" = "all",
+                      "check_derivatives" = FALSE,
                       "local_opts" = list("algorithm" = "NLOPT_LD_MMA", "xtol_rel" = 1.0e-8,
                           "maxeval" = 3000,
+                          "ftol_abs" = 1.0e-4,
                           "ftol_rel" = 1.0e-8),
                       "print_level" = 0)
+
+        if (trace >= 2) {
+            opts1[["check_derivatives"]] <- TRUE
+            opts1[["check_derivatives_print"]] <- "all"
+        }
          
          ## ==============================================================
-         ## note that some arguments such as 'level' is unused but is
+         ## note that some arguments such as 'level' are unused but are
          ## required by the constraint
          ## ===============================================================
          
@@ -322,14 +330,24 @@ predict.TVGEV <- function(object,
              }
              
              gradtheta <- attr(RL, "gradient")
-             gradpsi <- rep(1.0, object$p)
-             names(gradpsi) <- object$parNames
-             for (nm in parNames.GEV) {
-                 if (!object$isCst[nm]) {
-                     gradpsi[object$ind[[nm]]] <-
-                         gradtheta[ , nm] * X[[nm]][iDate, ]
-                 } 
+
+             if (all(object$isCst)) {
+                 gradpsi <- gradtheta
+                 names(gradpsi) <- object$parNames
+             } else {
+                 gradpsi <- rep(1.0, object$p)
+                 names(gradpsi) <- object$parNames
+                 
+                 for (nm in parNames.GEV) {
+                     if (!object$isCst[nm]) {
+                         gradpsi[object$ind[[nm]]] <-
+                             gradtheta[ , nm] * X[[nm]][iDate, ]
+                     } else {
+                         gradpsi[object$ind[[nm]]] <- gradtheta[1, nm]
+                     }
+                 }
              }
+
              
              if (chgSign) {
                  return(list("objective" = -RL, "gradient" = -gradpsi))
@@ -345,7 +363,7 @@ predict.TVGEV <- function(object,
          
          g <- function(psi, level, prob, iDate, chgSign = FALSE, object) {
              
-             ellL  <-  object$negLogLik + qchisq(level, df = 1) / 2.0
+             ellL <- object$negLogLik + qchisq(level, df = 1) / 2.0
              res <- object$negLogLikFun(psi = psi,
                                         deriv = TRUE,
                                         object = object)
@@ -364,7 +382,7 @@ predict.TVGEV <- function(object,
 
          for (iDate in 1L:n) { 
 
-             if (trace) cat(sprintf("o Finding CI for date %s\n", fDate[iDate]))
+             if (trace) cat(sprintf("\no Finding CI for date %s\n", fDate[iDate]))
                 
              for (iPer in seq_along(period)) {
                  
@@ -374,7 +392,8 @@ predict.TVGEV <- function(object,
                                shape = theta[iDate, 3],
                                deriv = FALSE)
                  
-                 if (trace) cat(sprintf("   o period %d\n", period[iPer]))
+                 if (trace) cat(sprintf("\n   o period %d\n   ============\n",
+                                        period[iPer]))
                  
                  for (iLev in rev(seq_along(level))) {
                      
@@ -428,9 +447,9 @@ predict.TVGEV <- function(object,
                                                    deriv = FALSE,
                                                    object = object)
                      
-                     if (trace) cat(sprintf("   Constraint check %7.4f, %7.3f\n", check, check2))
+                     if (trace) cat(sprintf("     Constraint check %10.7f, %10.4f\n", check, check2))
                      
-                     check <- (check > -1e-5)
+                     check <- (check > constrCheck)
                      
                      if (!inherits(resL, "try-error") && (resL$status >= 0) && check) {
                          psiLPrec <- resL[["solution"]]
@@ -487,8 +506,8 @@ predict.TVGEV <- function(object,
                                                    deriv = FALSE,
                                                    object = object)
                      
-                     if (trace) cat(sprintf("   Constraint check %7.4f, %7.3f\n", check, check2))
-                     check <- (check > -1e-5)
+                     if (trace) cat(sprintf("     Constraint check %10.7f, %10.4f\n", check, check2))
+                     check <- (check > constrCheck)
                      
                      if (!inherits(resU, "try-error") && (resU$status >= 0) && check) {
                          psiUPrec <- resU[["solution"]]
@@ -499,6 +518,7 @@ predict.TVGEV <- function(object,
                     
                  }
              }
+             if (trace) cat("\n")
          }
          
      } 
@@ -546,7 +566,7 @@ predict.TVGEV <- function(object,
 
 
 ## ***********************************************************************
-##' Plot predict Results for \code{TVGEV}
+##' Plot predict Results for \code{TVGEV}.
 ##' 
 ##' @title Plot Predict Results for \code{TVGEV}
 ##'

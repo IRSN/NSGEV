@@ -3,7 +3,7 @@
 \name{anova.TVGEV}
 \alias{anova.TVGEV}
 \title{Analysis of Deviance Table for two Nested \code{TVGEV}
-objects}
+Objects}
 \usage{
 \method{anova}{TVGEV}(object, object1, trace = 1L, ...)
 }
@@ -22,14 +22,14 @@ An object of class "anova" inheriting from class "data.frame".
 }
 \description{
 Compute an analysis of deviance table for two nested \code{TVGEV}
-objects
+objects.
 }
 \note{
-The deviance of the models should can not be interpreted: only the
-difference of the deviance us useful.
+The deviance of the models can not be interpreted: only the
+difference of the deviance is used.
 }
 \section{Caution}{
- the distribution of the test statistic
+ The distribution of the test statistic
 (difference between two deviances) is obtained on the basis of the
 \emph{large sample theory} which may not be applicable.
 }

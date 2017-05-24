@@ -1,9 +1,9 @@
 ##' Compute an analysis of deviance table for two nested \code{TVGEV}
-##' objects
+##' objects.
 ##'
 ##' 
 ##' @title Analysis of Deviance Table for two Nested \code{TVGEV}
-##' objects
+##' Objects
 ##' 
 ##' @param object A \code{TVGEV} object as fitted by \code{\link{TVGEV}}.
 ##' 
@@ -18,10 +18,10 @@
 ##' An object of class "anova" inheriting from class "data.frame".
 ##'
 ##' @note
-##' The deviance of the models should can not be interpreted: only the
-##' difference of the deviance us useful.
+##' The deviance of the models can not be interpreted: only the
+##' difference of the deviance is used.
 ##'
-##' @section Caution: the distribution of the test statistic
+##' @section Caution: The distribution of the test statistic
 ##' (difference between two deviances) is obtained on the basis of the
 ##' \emph{large sample theory} which may not be applicable.
 ##'

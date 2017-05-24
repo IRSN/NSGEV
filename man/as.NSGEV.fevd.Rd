@@ -2,13 +2,13 @@
 % Please edit documentation in R/asNSGEV.R
 \name{as.NSGEV.fevd}
 \alias{as.NSGEV.fevd}
-\title{Coerce a 'gev.fit' object into a 'NSGEV' object}
+\title{Coerce a 'fevd' Object into a 'NSGEV' object}
 \usage{
 \method{as.NSGEV}{fevd}(x, ...)
 }
 \arguments{
-\item{x}{The object to be coerced. Must have clas \code{"fevd"} and
-be of type \code{"GEV"}}
+\item{x}{The object to be coerced. Must have class \code{"fevd"} and
+be of type \code{"GEV"}.}
 
 \item{...}{Not used yet.}
 }
@@ -16,7 +16,7 @@ be of type \code{"GEV"}}
 An object with class \code{"NSGEV"}.
 }
 \description{
-Coerce a 'gev.fit' object into a 'NSGEV' object.
+Coerce a 'fevd' object into a 'NSGEV' object.
 }
 \section{Caution}{
  For now, only simple formulas can be used.

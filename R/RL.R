@@ -1,16 +1,17 @@
 
-##' Return Levels for NSGEV objects.
+## *************************************************************************
+##' Return Levels for NSGEV Objects.
 ##'
 ##' In all cases, the GEV parameters
 ##' \eqn{\boldsymbol{\theta}_b}{\theta_b} corresponding to the model
 ##' and the rows \eqn{b} of \code{data} are computed. When
 ##' \code{sampleData} is \code{TRUE} the rows are assumed to form a
 ##' sample of the target distribution of the GEV parameters and will
-##' be re-sampled, so the result will change in successive calls. When instead
-##' \code{sampleData} is \code{FALSE}, the rows of \code{data} are
-##' considered as the values of the covariates that will be observed in
-##' the next 'future' blocks. Then the Return period can not be greater
-##' than the number of rows in \code{'data'}. 
+##' be re-sampled, so the result will change in successive calls. When
+##' instead \code{sampleData} is \code{FALSE}, the rows of \code{data}
+##' are considered as the values of the covariates that will be
+##' observed in the next 'future' blocks. Then the Return period can
+##' not be greater than the number of rows in \code{'data'}.
 ##'
 ##' \itemize{
 ##'
@@ -20,9 +21,10 @@
 ##' 
 ##'   \item{When \code{type} is \code{"exceed"} the RL is the value
 ##' \eqn{\rho} for which the number of exeedances over \eqn{\rho} has
-##' unit expectation. This value is found by computing the expectation
-##' and solving a non-linear equation in \eqn{\rho} with
-##' \code{uniroot} function.}
+##' unit expectation, as proposed by Parey et al. This value is found
+##' by computing the expectation and solving a non-linear equation in
+##' \eqn{\rho} with \code{uniroot} function.}
+##' 
 ##' }
 ##' 
 ##' @title Return Levels for NSGEV objects
@@ -48,7 +50,7 @@
 ##' are assumed to form a sample of the distribution of the covariates
 ##' and will be re-sampled.
 ##'
-##' @param deriv Logical. If \code{TRUE} the gadient of the RL w.r.t
+##' @param deriv Logical. If \code{TRUE} the gradient of the RL w.r.t
 ##' the model parameters is returned.
 ##'
 ##' @param rhoMax Maximal value for the evaluation of the function in
@@ -71,6 +73,12 @@
 ##'
 ##' @section Caution: For now, \code{period} can only be a numeric
 ##' vector with length 1.
+##'
+##' @references
+##'
+##' Parey S., Hoang T.T.H., Dacunha-Castelle D. (2007) "Different ways
+##' to compute temperature return levels in the climate change context".
+##' \emph{Environmetrics}, \bold{21}, pp. 698-718.
 ##' 
 ##' @examples
 ##' example(NSGEV)
@@ -82,10 +90,16 @@
 ##' 
 ##' ## check the zero-finding step
 ##' RL(ns1, period = 10, type = "exceed", deriv = TRUE, plot = TRUE)
-RL <- function(period, model, data = NULL, psi = NULL,
-               w = 1.0, type = c("exceed", "average"),
-               sampleData = FALSE, deriv = FALSE,
-               rhoMax = NULL, plot = FALSE) {
+RL <- function(model,
+               period,
+               data = NULL,
+               psi = NULL,
+               w = 1.0,
+               type = c("exceed", "average"),
+               sampleData = FALSE,
+               deriv = FALSE,
+               rhoMax = NULL,
+               plot = FALSE) {
 
     type <- match.arg(type)
     p <- model$p
@@ -96,6 +110,7 @@ RL <- function(period, model, data = NULL, psi = NULL,
     if (is.null(data)) data <- model$data
     theta <- psi2theta(model = model, psi = psi, data = data, deriv = deriv,
                        checkNames = FALSE)
+    
     ## SOG: Save Our Gradient
     if (deriv) dtheta_dpsi <- attr(theta, "gradient")
     
@@ -141,6 +156,7 @@ RL <- function(period, model, data = NULL, psi = NULL,
 
         q <- qGEV(1 - 1 / B, loc = theta[ , 1L], scale = theta[ , 2L],
                   shape = theta[ , 3L], deriv = deriv)
+        
         rho <- weighted.mean(x = q, w = w_ind)
 
         if (deriv) {

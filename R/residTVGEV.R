@@ -1,7 +1,7 @@
 ##*****************************************************************************
-##' Generalised Residuals for a TVGEV model.
+##' Generalised Residuals for a \code{TVGEV} model.
 ##' 
-##' @title Generalised Residuals for a TVGEV Model
+##' @title Generalised Residuals for a \code{TVGEV} Model
 ##'
 ##' @aliases resid.TVGEV
 ##' 
@@ -19,6 +19,10 @@
 ##' @note The upper 95\% quantile of the standard exponential is close
 ##' to \eqn{3} which can be used to gauge "large residuals".
 ##'
+##' @references Cox, D.R. and Snell E.J. (1968) "A General Definition
+##' of Residuals".  \emph{JRSS Ser. B}, \bold{30}(2), pp. 248-275.
+##'
+##' 
 ##' @examples
 ##' df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))
 ##' tv <- TVGEV(data = df, response = "TXMax", date = "Date",
@@ -57,7 +61,7 @@ residuals.TVGEV <- function(object,
 ##' Plot the residuals of a \code{TVGEV} model object against the
 ##' date.
 ##'
-##' @title Plot Residuals of a \code{TGVEV} model.
+##' @title Plot Residuals of a \code{TGVEV} Model
 ##'
 ##' @param x An object with class \code{"TVGEV"}.
 ##'
@@ -219,16 +223,30 @@ confint.TVGEV <- function(object,
         ## ===================================================================
 
         opts1 <- list("algorithm" = "NLOPT_LD_AUGLAG",
-                      "xtol_rel" = 1.0e-10,
+                      "xtol_rel" = 1.0e-10, "ftol_abs" = 1.0e-7,
                       "maxeval" = 1000,
-                      ## "check_derivatives" = TRUE, "check_derivatives_print" = "all",
-                      "local_opts" = list("algorithm" = "NLOPT_LD_MMA", "xtol_rel" = 1.0e-7),
+                      "check_derivatives" = FALSE,
+                      "local_opts" = list("algorithm" = "NLOPT_LD_MMA", "xtol_rel" = 1.0e-8,
+                          "maxeval" = 3000,
+                          "ftol_abs" = 1.0e-6,
+                          "ftol_rel" = 1.0e-8),
                       "print_level" = 0)
 
-        ## note that some arguments sucha as 'level' is unused but is
+        if (trace >= 2) {
+            opts1[["check_derivatives"]] <- TRUE
+            opts1[["check_derivatives_print"]] <-  "all"
+        }
+        if (trace >= 3) {
+              opts1[["print_level"]] <- 1
+        }
+
+        ## ==============================================================
+        ## note that some arguments such as 'level' are unused but are
         ## required by the constraint
+        ## ==============================================================
         
         f <- function(psi, k, chgSign = FALSE, level, object) {
+            
             grad <- rep(0.0, object$p)
             if (chgSign) {
                 grad[k] <- -1.0
@@ -237,6 +255,7 @@ confint.TVGEV <- function(object,
                 grad[k] <- 1.0
                 return(list("objective" = psi[k], "gradient" = grad))
             }
+
         }
 
         g <- function(psi, k, chgSign = FALSE, level, object) {
@@ -260,7 +279,7 @@ confint.TVGEV <- function(object,
        
         for (k in 1L:object$p) {
             
-            if (trace) cat(sprintf("o Finding CI for \"%s\n", object$parNames[k]))
+            if (trace) cat(sprintf("\no Finding CI for \"%s\"\n", object$parNames[k]))
 
             ilevPrec <- 1L
             
@@ -269,7 +288,7 @@ confint.TVGEV <- function(object,
                 lev <- level[ilev]
                 
                 if (trace) {
-                    cat(sprintf("  %s, lower bound\n", fLevel[ilev]))
+                    cat(sprintf("   %s, lower bound: ", fLevel[ilev]))
                 }
 
                 ## =========================================================
@@ -290,8 +309,9 @@ confint.TVGEV <- function(object,
                                            k = k, level = lev, chgSign = FALSE,
                                            opts = opts1,
                                            object = object))
-                            
-                if (trace > 1L) {
+                if (trace == 1L) {
+                    cat(sprintf("%7.2f\n", resL[["objective"]])) 
+                } else if (trace > 1L) {
                     cat("SOLUTION\n")
                     print(resL)
                 }
@@ -299,7 +319,14 @@ confint.TVGEV <- function(object,
                 
                 ## the constraint must be active
                 check <- g(resL$solution, object = object, k = k, level = lev)$constraints
-                check <- (check < 1e-5)
+
+                check2 <- object$negLogLikFun(psi = resL$solution,
+                                              deriv = FALSE,
+                                              object = object)
+
+                if (trace) cat(sprintf("   Constraint check %10.7f, %10.4f\n", check, check2))
+
+                check <- (check > -1e-3)
                 
                 if (!inherits(resL, "try-error") && (resL$status >= 0) && check) {
                     psiLPrec <- resL[["solution"]]
@@ -310,7 +337,7 @@ confint.TVGEV <- function(object,
                 
                 ## here we maximise will 'nloptr' only minimises things
                 if (trace) {
-                    cat(sprintf("  %s, upper bound\n", fLevel[ilev]))
+                    cat(sprintf("   %s, upper bound: ", fLevel[ilev]))
                 }
 
                 ## =========================================================
@@ -331,15 +358,25 @@ confint.TVGEV <- function(object,
                                            k = k, level = lev, chgSign = TRUE,
                                            opts = opts1,
                                            object = object))
-                if (trace > 1L) {
+                
+                if (trace == 1L) {
+                    cat(sprintf("%7.2f\n", -resU[["objective"]])) 
+                } else  if (trace > 1L) {
                     cat("SOLUTION\n")
                     print(resU)
                 }
                 
                 ## the constraint must be active
                 check <- g(resU$solution, object = object, k = k, level = lev)$constraints
-                check <- (check < 1e-5)
-             
+
+                check2 <- object$negLogLikFun(psi = resU$solution,
+                                              deriv = FALSE,
+                                              object = object)
+
+                if (trace) cat(sprintf("   Constraint check %10.7f, %10.4f\n", check, check2))
+
+                check <- (check > -1e-3)
+                
                 if (!inherits(resU, "try-error") && (resU$status >= 0) && check) {
                     psiUPrec <- resU[["solution"]]
                     ci[k, "U", ilev] <- psiUPrec[k]

@@ -1,7 +1,7 @@
 
 ##' Coerce into a \code{NSGEV} object.
 ##'
-##' @title Coerce into a \code{NSGEV} object
+##' @title Coerce into a \code{NSGEV} Object
 ##'
 ##' @param x Object to be coerced.
 ##'
@@ -17,7 +17,7 @@ as.NSGEV <- function(x, ...) {
 
 ##' Coerce a 'gev.fit' object into a 'NSGEV' object.
 ##'
-##' @title Coerce a 'gev.fit' object into a 'NSGEV' object
+##' @title Coerce a 'gev.fit' Object into a 'NSGEV' Object
 ##' 
 ##' @param x The object to be coerced.
 ##'
@@ -102,12 +102,12 @@ as.NSGEV.gev.fit <- function(x, data, ...) {
 
 }
 
-##' Coerce a 'gev.fit' object into a 'NSGEV' object.
+##' Coerce a 'fevd' object into a 'NSGEV' object.
 ##'
-##' @title Coerce a 'gev.fit' object into a 'NSGEV' object
+##' @title Coerce a 'fevd' Object into a 'NSGEV' object
 ##'
-##' @param x The object to be coerced. Must have clas \code{"fevd"} and
-##' be of type \code{"GEV"}
+##' @param x The object to be coerced. Must have class \code{"fevd"} and
+##' be of type \code{"GEV"}.
 ##'
 ##' @param ... Not used yet.
 ##'

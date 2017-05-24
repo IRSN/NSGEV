@@ -2,7 +2,7 @@
 % Please edit documentation in R/allNSGEVMethods.R
 \name{summary.NSGEV}
 \alias{summary.NSGEV}
-\title{Summary method for NSGEV objects}
+\title{Summary Method for \code{NSGEV} Objects}
 \usage{
 \method{summary}{NSGEV}(object, ...)
 }

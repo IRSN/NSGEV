@@ -41,6 +41,7 @@ S3method(confint, TVGEV)
 
 S3method(predict, TVGEV)
 S3method(print, TVGEV)
+S3method(profLik, TVGEV)
 S3method(psi2theta, TVGEV)
 ## S3method(quantile, TVGEV)
 S3method(simulate, TVGEV)

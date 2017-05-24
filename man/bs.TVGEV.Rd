@@ -12,36 +12,46 @@
 
 \item{R}{Target number of bootstrap samples.}
 
-\item{type}{Character. The value \code{"param"} leads to a
-parametric bootstrap: for each bootstrap sample, a response vector
-drawn from the estimated GEV distribution as described in
-\code{object}; a MLE is performed to find the bootstraped
-parameter vector. When \code{type} is \code{"NP"}, the generalised
-residuals of the objects are resampled and are back-transformed to
-simulated observations; a MLE is performed to to find the
-bootstraped parameter vector as in the parametric case.}
+\item{type}{Character. The values \code{"param"} and \code{"NP"}
+can be used to chose between parametric and nonparametric bootstrap,
+see \bold{Details}.}
 
-\item{estim}{Argument passed to \code{MLE}}
+\item{estim}{Argument passed to \code{MLE}.}
 
 \item{parallel}{Logical. If \code{TRUE} the loop over the bootstrap
-sample is performed using \code{foreach} with \code{\%do par\%}}
+sample is performed using \code{foreach} with \code{\%do par\%}.}
 
 \item{...}{Further arguments passed to \code{MLE}.}
 }
 \value{
-A matrix with one row for each bootstrap sample, containing
-the parameters.
+A matrix containing the bootstraped parameter vectors,
+with one row for each bootstrap sample.
 }
 \description{
-Bootstrap for a \code{TVGEV} Model
+Bootstrap for a \code{TVGEV} model.
+}
+\details{
+The parametric bootstrap (\code{type = "param"}) is as follows: for
+each bootstrap sample, a response vector
+\eqn{\mathbf{y}^\star}{y*} is drawn from the estimated GEV
+distribution as described in \code{object}; a MLE is performed to
+find the bootstraped parameter vector
+\eqn{\boldsymbol{\psi}^\star}{\psi*}. For the nonparametric
+bootstrap (\code{type = "NP"}), the generalised residuals of the
+object as returned by \code{\link{residuals.TVGEV}} are resampled
+and are back-transformed to simulated observations; a MLE is then
+performed to find the bootstraped parameter vector
+\eqn{\boldsymbol{\psi}^\star}{\psi*} as in the parametric case.
 }
 \note{
 The simulated response does not cover the observations where
-the original response was NA.
+the original response was \code{NA}.
 }
 \section{Caution}{
- for some bootstrap samples, the MLE may fail in
-which case the coefficients will be set to \code{NA}.
+ For some bootstrap samples, the MLE may fail, in
+which case the coefficients will be ignored. So the true number
+of sampled coefficient vecors  will generally be smaller than the
+target number as given in \code{R}.
 }
 
 \examples{

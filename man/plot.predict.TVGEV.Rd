@@ -24,7 +24,7 @@ An object with class \code{"gg"}. Can be used with the method
 \code{plot}, or equivalently with \code{print}.
 }
 \description{
-Plot predict Results for \code{TVGEV}
+Plot predict Results for \code{TVGEV}.
 }
 \note{
 This function is intended to work with predictions computed

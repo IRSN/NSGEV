@@ -2,7 +2,7 @@
 % Please edit documentation in R/miscUtils.R
 \name{rNames}
 \alias{rNames}
-\title{Generates random names}
+\title{Generates Random Names}
 \usage{
 rNames(n, nchar = 3L)
 }
@@ -23,6 +23,6 @@ parsing of formulas.
 }
 \examples{
 set.seed(31415)
-rnames(4)
-rnames(4, nchar = 6)
+rNames(4)
+rNames(4, nchar = 6)
 }

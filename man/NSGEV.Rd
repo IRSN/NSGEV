@@ -2,7 +2,7 @@
 % Please edit documentation in R/NSGEV.R
 \name{NSGEV}
 \alias{NSGEV}
-\title{Non-Stationnary GEV}
+\title{Non-Stationary GEV Model}
 \usage{
 NSGEV(formulas, data, response = NULL, psi = NULL, est = c("none",
   "optim", "nloptr"), trace = 0)

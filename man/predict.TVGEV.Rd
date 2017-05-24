@@ -2,7 +2,7 @@
 % Please edit documentation in R/predictTVGEV.R
 \name{predict.TVGEV}
 \alias{predict.TVGEV}
-\title{Predict Method for \code{TVGEV} Objects.}
+\title{Predict Method for \code{TVGEV} Objects}
 \usage{
 \method{predict}{TVGEV}(object, newdate = NULL, period = NULL,
   level = 0.95, confintMethod = c("delta", "none", "boot", "proflik"),
@@ -18,9 +18,9 @@ coerced to this class.}
 the block duration. Usually the block duration is one year and a
 value \code{100} will correspond to a 100-year return level, i.e.
 to the GEV quantile with probability 0.99. The default value
-allows the construction of an acceptable RL plot, but if a smother
-RL curve and/or Confidence Band is needed, more values whould be
-used.}
+allows the construction of an acceptable RL plot, but if a
+smoother RL curve and/or Confidence Band is needed, more values
+would be used.}
 
 \item{level}{Numeric vector of confidence level(s).}
 
@@ -30,8 +30,8 @@ intervals. See \bold{Details}.}
 \item{out}{Type of output.}
 
 \item{biasCorrect}{\code{Logical} used only when
-\code{confintMethod} is \code{"boot"}. When \code{TRUE}, the
-RLnamed \code{"Quantile"} is computed as the average of the RLs
+\code{confintMethod} is \code{"boot"}. When \code{TRUE}, the RL
+named \code{"Quantile"} is computed as the average of the RLs
 obtained with the bootstraped parameters, and it will differ from
 the RL computed with the estimated parameters in \code{object}.}
 
@@ -53,18 +53,18 @@ Predict method for \code{TVGEV} objects.
 \details{
 Compute the Return Levels (RLs) for different period and different
 values of the time block, as well as Confidence Intervals (CIs)
-qfor these. The results are not predictions in the usual
+for these. The results are not predictions in the usual
 acceptance.  The CIs can be obtained by the usual delta method,
 provided that the approximate covariance for the estimated
 parameters is found in \code{object}. They also can be obtained by
 bootstrap, using by default the bootstrap distribution embeded in
 \code{object} if any or by computing it else. The bootstrap can be
 parametric or non-parametric, see \code{\link{bs.TVGEV}}. Finally,
-the profile- ikelihood method can be used: the confidence limits
+the profile-likelihood method can be used: the confidence limits
 for a RL are obtained by maximising and minimising this RL under
 the constraint that the log-likelihood is greater than a suitable
 value. This method avoids the usual re-parameterisation of the
-model which can is tedious for the general form of model allowed
+model which can be tedious for the general form of model allowed
 in \code{TVGEV}.
 }
 \note{
@@ -76,8 +76,8 @@ here, especially for non-parametric bootstap.
  When \code{confintMethod} is set to
 \code{"loglik"} the required computing time is huge because
 several constrained optimisations are required. Since the marginal
-distribution hence the RL vary only slowly in practice,
-unnecesseary computing burden will result when many values of
+distribution hence the RL vary only slowly in practice, an
+unnecessary computing burden will result when many values of
 \code{newdate} are used as it is the case by default.
 }
 

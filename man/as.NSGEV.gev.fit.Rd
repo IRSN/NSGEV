@@ -2,7 +2,7 @@
 % Please edit documentation in R/asNSGEV.R
 \name{as.NSGEV.gev.fit}
 \alias{as.NSGEV.gev.fit}
-\title{Coerce a 'gev.fit' object into a 'NSGEV' object}
+\title{Coerce a 'gev.fit' Object into a 'NSGEV' Object}
 \usage{
 \method{as.NSGEV}{gev.fit}(x, data, ...)
 }
@@ -33,7 +33,7 @@ n <- 20; m <- 4
 ## generate a matrix covariates
 set.seed(1234)
 dat <- matrix(runif(n * m), nrow = n)
-colnames(dat) <- rnames(m)
+colnames(dat) <- rNames(m)
 
 ## response
 y <- drop(rGEV(n))

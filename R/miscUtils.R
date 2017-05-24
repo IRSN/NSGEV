@@ -149,7 +149,7 @@ formatPerc <- function (x,
 # ***********************************************************************
 ##' Select (nearly) a given number of dates.
 ##' 
-##' @title Select (nearly) a Given Number of Dates
+##' @title Select (Nearly) a Given Number of Dates
 ##'
 ##' @param date A vector with class\code{"Date"} or that can be coerced
 ##' to this class.

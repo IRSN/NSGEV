@@ -2,8 +2,8 @@
 % Please edit documentation in R/NSGEV.R
 \name{simulate.NSGEV}
 \alias{simulate.NSGEV}
-\title{Simulate paths from a NSGEV model conditional on the
-covariates}
+\title{Simulate Paths from a \code{NSGEV} Model Conditional on the
+Covariates}
 \usage{
 \method{simulate}{NSGEV}(object, nsim = 1, seed = NULL, data = NULL,
   psi = NULL, ...)

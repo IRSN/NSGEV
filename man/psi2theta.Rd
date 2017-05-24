@@ -2,7 +2,8 @@
 % Please edit documentation in R/allGenerics.R
 \name{psi2theta}
 \alias{psi2theta}
-\title{Compute GEV Parameters from Model Parameters}
+\title{Compute the Matrix of GEV Parameters from the Vector of
+Model Parameters 'psi' and the Data}
 \usage{
 psi2theta(model, psi, ...)
 }

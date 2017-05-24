@@ -1,8 +1,9 @@
+##*****************************************************************************
 ##' Compute the matrix of GEV parameters from the vector of model
-##' parameters 'psi' and the data.
+##' parameters 'psi' and the Data.
 ##'
-##' @title Compute the matrix of GEV parameters from the vector of
-##' model parameters 'psi' and the data
+##' @title Compute the Matrix of GEV Parameters from the Vector of
+##' Model Parameters 'psi' and the Data
 ##' 
 ##' @param psi The vector of model parameters.
 ##'
@@ -92,6 +93,7 @@ psi2theta.NSGEV <- function(model, psi, data = NULL, deriv = TRUE,
    
 }
 
+##*****************************************************************************
 ##' Find the complete vector of NSGEV parameters from a partial vector
 ##' and a Return Level.
 ##'
@@ -200,6 +202,7 @@ rho2psi <- function(rho, nm1, psi_m1, model, data = NULL,
    attr(res$f.root, "psi")
 }
 
+##*****************************************************************************
 ##' Evaluate the negative log-likelihood of a NSGEV model.
 ##'
 ##' @title Evaluate the negative log-likelihood of a NSGEV model
@@ -264,6 +267,8 @@ negLogLik <- function(psi, model, data = NULL, y = NULL,
     }
    
 }
+
+##*****************************************************************************
 ##' Non-Stationary GEV.
 ##'
 ##' The model involves a vector \eqn{\boldsymbol{\psi}}{\psi} of
@@ -283,7 +288,7 @@ negLogLik <- function(psi, model, data = NULL, y = NULL,
 ##' can not for now use these names for its columns.
 ##' 
 ##' 
-##' @title Non-Stationnary GEV
+##' @title Non-Stationary GEV Model
 ##' 
 ##' @param formulas A named list with three formulas. 
 ##'
@@ -483,10 +488,10 @@ NSGEV <- function(formulas,
    
 }
 
-
-##' Compute NSGEV quantiles.
+##*****************************************************************************
+##' Compute \code{NSGEV} quantiles.
 ##'
-##' @title Compute NSGEV quantiles
+##' @title Compute \code{NSGEV} Quantiles
 ##'
 ##' @param x A \code{NSGEV} object. 
 ##'
@@ -545,6 +550,7 @@ quantile.NSGEV <- function(x, probs = c(0.90, 0.95, 0.99),
     quant
 }
 
+##*****************************************************************************
 ##' Compute NSGEV densities.
 ##'
 ##'
@@ -617,12 +623,12 @@ density.NSGEV <- function(x,
     dens
 }
 
-
+##*****************************************************************************
 ##' Simulate paths from a NSGEV model conditional on the
 ##' covariates.
 ##'
-##' @title Simulate paths from a NSGEV model conditional on the
-##' covariates
+##' @title Simulate Paths from a \code{NSGEV} Model Conditional on the
+##' Covariates
 ##' 
 ##' @param object A NSGEV model.
 ##'

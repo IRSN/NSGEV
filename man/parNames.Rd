@@ -2,7 +2,7 @@
 % Please edit documentation in R/allNSGEVMethods.R
 \name{parNames}
 \alias{parNames}
-\title{Names of the parameters of a statistical model}
+\title{Names of the Parameters of a Statistical Model}
 \usage{
 parNames(object, ...)
 }

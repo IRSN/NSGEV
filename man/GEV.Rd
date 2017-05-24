@@ -6,9 +6,9 @@
 \alias{pGEV}
 \alias{qGEV}
 \alias{rGEV}
-\title{Density, distribution function, quantile function and
-random generation for the Generalized Extreme Value (GEV)
-distribution}
+\title{Density, Distribution Function, Quantile Function and
+Random Generation for the Generalized Extreme Value (GEV)
+Distribution}
 \usage{
 dGEV(x, loc = 0, scale = 1, shape = 0, log = FALSE, deriv = FALSE,
   impl = c("C", "R"))

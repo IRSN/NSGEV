@@ -2,7 +2,7 @@
 % Please edit documentation in R/residTVGEV.R
 \name{plot.resid.TVGEV}
 \alias{plot.resid.TVGEV}
-\title{Plot Residuals of a \code{TGVEV} model.}
+\title{Plot Residuals of a \code{TGVEV} Model}
 \usage{
 \method{plot}{resid.TVGEV}(x, y = NULL, ...)
 }

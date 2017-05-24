@@ -4,17 +4,17 @@
 \alias{RL}
 \title{Return Levels for NSGEV objects}
 \usage{
-RL(period, model, data = NULL, psi = NULL, w = 1, type = c("exceed",
+RL(model, period, data = NULL, psi = NULL, w = 1, type = c("exceed",
   "average"), sampleData = FALSE, deriv = FALSE, rhoMax = NULL,
   plot = FALSE)
 }
 \arguments{
+\item{model}{A \code{NSGEV} object.}
+
 \item{period}{The Return period. Should be understood as an integer
 multiple of the block duration \code{w}, and will be rounded else.
 In some cases \code{period} must not exceed the number of rows in
 \code{data}, see \bold{Details}.}
-
-\item{model}{A \code{NSGEV} object.}
 
 \item{data}{A data frame containing covariates for the model.  By
 default, the data frame attached to \code{model} is used.}
@@ -30,7 +30,7 @@ coefficients of the model is used.}
 are assumed to form a sample of the distribution of the covariates
 and will be re-sampled.}
 
-\item{deriv}{Logical. If \code{TRUE} the gadient of the RL w.r.t
+\item{deriv}{Logical. If \code{TRUE} the gradient of the RL w.r.t
 the model parameters is returned.}
 
 \item{rhoMax}{Maximal value for the evaluation of the function in
@@ -45,7 +45,7 @@ is shown to check the results of the zero-finding step.}
 The numeric value of the Return Level.
 }
 \description{
-Return Levels for NSGEV objects.
+Return Levels for NSGEV Objects.
 }
 \details{
 In all cases, the GEV parameters
@@ -53,11 +53,11 @@ In all cases, the GEV parameters
 and the rows \eqn{b} of \code{data} are computed. When
 \code{sampleData} is \code{TRUE} the rows are assumed to form a
 sample of the target distribution of the GEV parameters and will
-be re-sampled, so the result will change in successive calls. When instead
-\code{sampleData} is \code{FALSE}, the rows of \code{data} are
-considered as the values of the covariates that will be observed in
-the next 'future' blocks. Then the Return period can not be greater
-than the number of rows in \code{'data'}.
+be re-sampled, so the result will change in successive calls. When
+instead \code{sampleData} is \code{FALSE}, the rows of \code{data}
+are considered as the values of the covariates that will be
+observed in the next 'future' blocks. Then the Return period can
+not be greater than the number of rows in \code{'data'}.
 
 \itemize{
 
@@ -67,9 +67,10 @@ mean of the computed RLs.}
 
 \item{When \code{type} is \code{"exceed"} the RL is the value
 \eqn{\rho} for which the number of exeedances over \eqn{\rho} has
-unit expectation. This value is found by computing the expectation
-and solving a non-linear equation in \eqn{\rho} with
-\code{uniroot} function.}
+unit expectation, as proposed by Parey et al. This value is found
+by computing the expectation and solving a non-linear equation in
+\eqn{\rho} with \code{uniroot} function.}
+
 }
 }
 \note{
@@ -94,6 +95,11 @@ RL(ns1, period = 10, type = "exceed", deriv = TRUE)
 
 ## check the zero-finding step
 RL(ns1, period = 10, type = "exceed", deriv = TRUE, plot = TRUE)
+}
+\references{
+Parey S., Hoang T.T.H., Dacunha-Castelle D. (2007) "Different ways
+to compute temperature return levels in the climate change context".
+\emph{Environmetrics}, \bold{21}, pp. 698-718.
 }
 \author{
 Yves Deville

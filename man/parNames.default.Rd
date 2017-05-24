@@ -2,7 +2,7 @@
 % Please edit documentation in R/allNSGEVMethods.R
 \name{parNames.default}
 \alias{parNames.default}
-\title{Names of the parameters of a model}
+\title{Names of the parameters of a Statistical Model}
 \usage{
 \method{parNames}{default}(object, ...)
 }
@@ -17,5 +17,5 @@ The character vector of the names of the parameters of the
 model.
 }
 \description{
-Names of the parameters of a model.
+Names of the Parameters of a Model.
 }

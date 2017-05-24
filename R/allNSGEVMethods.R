@@ -1,4 +1,4 @@
-
+##*****************************************************************************
 ##' Plot method for \code{NSGEV} objects.
 ##'
 ##' @title Plot method for \code{NSGEV} object
@@ -94,21 +94,25 @@ plot.NSGEV <- function(x, y, which = 1,
                      lty = 1:3, col = "darkgray")
         }
  
-
     }
-        
 }
+
+##*****************************************************************************
 ##' Extract the vector of coefficients from a NSGEV object.
 ##'
+##' @aliases coef.TVGEV
+##' 
 ##' @title Coefficients of a \code{NSGEV} object
 ##'
 ##' @param object A \code{NSGEV} object.
 ##' 
-##' @param type Character. When \code{"psi"}, the vector of model
-##' parameters is returned. When instead \code{type} is \code{"theta"},
-##' the matrix of GEV parameters is returned, with one row by block
-##' (or observation) and one column for each of the GEV parameters
-##' \code{"loc"}, \code{"scale"} and \code{"shape"}.
+##' @param type Character. For \code{type = "psi"}, the vector
+##' \eqn{\boldsymbol{\psi}}{\psi} of model parameters is
+##' returned. When instead \code{type} is \code{"theta"}, the matrix
+##' of GEV parameters \eqn{\boldsymbol{\theta}_i}{\theta_i} is
+##' returned, with one row by block (or observation) and one column
+##' for each of the GEV parameters \code{"loc"}, \code{"scale"} and
+##' \code{"shape"}.
 ##'
 ##' @param ... Not used yet.
 ##' 
@@ -122,9 +126,10 @@ coef.NSGEV <- function(object, type = c("psi", "theta"),  ...) {
     else return(object$theta)
 }
 
+##*****************************************************************************
 ##' Names of the parameters of a model.
 ##'
-##' @title Names of the parameters of a statistical model
+##' @title Names of the Parameters of a Statistical Model
 ##'
 ##' @param object A parametric statistical model for which the
 ##' parameters must have names.
@@ -138,9 +143,10 @@ parNames <- function(object, ...) {
    UseMethod("parNames")
 }
 
-##' Names of the parameters of a model.
+##*****************************************************************************
+##' Names of the Parameters of a Model.
 ##'
-##' @title  Names of the parameters of a model
+##' @title  Names of the parameters of a Statistical Model
 ##'
 ##' @param object A parametric statistical model for which the
 ##' parameters must have names.
@@ -160,9 +166,11 @@ parNames.default <- function(object, ...) {
    invisible(NULL)
    
 }
+
+##*****************************************************************************
 ##' Summary method for \code{NSGEV} objects.
 ##'
-##' @title Summary method for NSGEV objects
+##' @title Summary Method for \code{NSGEV} Objects
 ##'
 ##' @param object A \code{NSGEV} object.
 ##'
@@ -184,6 +192,7 @@ summary.NSGEV <- function(object, ...) {
     res
 }
 
+##*****************************************************************************
 print.summary.NSGEV <- function(x, ...) {
     
     cat("o Names of parameters (psi):\n   ",
@@ -213,6 +222,7 @@ print.summary.NSGEV <- function(x, ...) {
     
 }
 
+##*****************************************************************************
 print.NSGEV <- function(x, ...) {
     print(summary(x))
 }

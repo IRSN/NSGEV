@@ -2,8 +2,8 @@
 % Please edit documentation in R/TVGEV.R
 \name{psi2theta.TVGEV}
 \alias{psi2theta.TVGEV}
-\title{Compute the GEV Parameters for the Marginal Distributions
-of a \code{TVGEV} Model}
+\title{Compute the Matrix of GEV Parameters from the Vector of
+Model Parameters 'psi' and the Data}
 \usage{
 \method{psi2theta}{TVGEV}(model, psi = NULL, date = NULL, deriv = FALSE,
   checkNames = TRUE, ...)

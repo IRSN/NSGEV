@@ -2,7 +2,7 @@
 % Please edit documentation in R/TVGEV.R
 \name{simulate.TVGEV}
 \alias{simulate.TVGEV}
-\title{Simulate from a \code{TVGEV} Object.}
+\title{Simulate from a \code{TVGEV} Object}
 \usage{
 \method{simulate}{TVGEV}(object, nsim = 1, seed = NULL, newdate = NULL,
   psi = NULL, ...)

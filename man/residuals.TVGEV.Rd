@@ -3,7 +3,7 @@
 \name{residuals.TVGEV}
 \alias{residuals.TVGEV}
 \alias{resid.TVGEV}
-\title{Generalised Residuals for a TVGEV model}
+\title{Generalised Residuals for a \code{TVGEV} Model}
 \usage{
 \method{residuals}{TVGEV}(object, type = c("exp", "unif"), ...)
 }
@@ -21,7 +21,7 @@ follow the standard exponential or the uniform distribution,
 depending on the value of \code{type}.
 }
 \description{
-Generalised Residuals for a TVGEV model.
+Generalised Residuals for a \code{TVGEV} model.
 }
 \note{
 The upper 95\% quantile of the standard exponential is close
@@ -37,4 +37,8 @@ plot(e)
 mu <- tv$theta[ , "loc"]
 plot(mu, e, type = "p", pch = 16, col = "darkcyan",
      main = "generalised residuals against 'loc'")
+}
+\references{
+Cox, D.R. and Snell E.J. (1968) "A General Definition
+of Residuals".  \emph{JRSS Ser. B}, \bold{30}(2), pp. 248–275.
 }
