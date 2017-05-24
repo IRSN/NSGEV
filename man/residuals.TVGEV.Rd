@@ -40,5 +40,5 @@ plot(mu, e, type = "p", pch = 16, col = "darkcyan",
 }
 \references{
 Cox, D.R. and Snell E.J. (1968) "A General Definition
-of Residuals".  \emph{JRSS Ser. B}, \bold{30}(2), pp. 248–275.
+of Residuals".  \emph{JRSS Ser. B}, \bold{30}(2), pp. 248-275.
 }
