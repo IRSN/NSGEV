@@ -21,3 +21,11 @@ psi2theta <- function(model, psi, ...) {
 bs <- function(object, ...) {
     UseMethod("bs")
 }
+
+cdf <- function(x, ...) {
+    UseMethod("cdf")
+}
+
+moment <- function(x, which, ...) {
+    UseMethod("moment")
+}

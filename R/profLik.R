@@ -36,11 +36,12 @@ profLik <- function(object, fun, ...) {
 ##' 
 ##' @param object A \code{TSGEV} object.
 ##'
-##' @param fun A function of the parameter for which the
+##' @param fun A function of the parameter vector for which the
 ##' profile-likelihood will be carried over. This function must have
 ##' the arguments: \code{psi} for the vector of parameters and
-##' \code{object} for the model object. If needed, a wrapper function
-##' can be used use more arguments, see \bold{Details}.
+##' \code{object} for the model object; so the function can use the
+##' some of slots of \code{object}. If needed, a wrapper function can
+##' be used use more arguments, see \bold{Details}.
 ##' 
 ##' @param level Level of confidence. Can be of length \code{> 1}.
 ##'
@@ -66,11 +67,17 @@ profLik <- function(object, fun, ...) {
 ##' 
 ##' @examples
 ##' df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))
+##'
 ##' ## fit a TVGEV model with constant parameters.
 ##' res1 <- TVGEV(data = df, response = "TXMax", date = "Date",
 ##'               estim = "nloptr")
-##' ## define a function of the parameter vector
-##' myfun <- function(psi, object, deriv = TRUE) {
+##' 
+##' ## define a function of the parameter vector: here the first component
+##' ## This is for illustration only since the the result can be obtained
+##' ## using the 'confint' method with \code{method = "proflik"}, which
+##' ## gives the confidence intervals for each of the parameters.
+##' 
+##' myfun <- function(psi, object) {
 ##'     res <- psi[1]
 ##'     grad <- rep(0.0, object$p)
 ##'     grad[1] <- 1
@@ -80,6 +87,7 @@ profLik <- function(object, fun, ...) {
 ##'
 ##' profLik.TVGEV(object = res1, fun = myfun, deriv = TRUE)
 ##' 
+##' confint(res1, method = "proflik")
 profLik.TVGEV <- function(object,
                           fun,
                           level = 0.95,
@@ -95,7 +103,7 @@ profLik.TVGEV <- function(object,
     constrCheck <- -5e-3
     
     res <- array(NA, dim = c(Lim = 3L, Level = nLevel),
-                 dimnames = list(Type = c("Quant", "L", "U"), Level = fLevel))
+                 dimnames = list(Type = c("est", "L", "U"), Level = fLevel))
 
     ## ===================================================================
     ## For each parameter, we maximise/minimise it under the constraint
@@ -144,12 +152,15 @@ profLik.TVGEV <- function(object,
         }
         
     } else {
-        
         stop("for now, the method is only implemented for deriv = TRUE")
-
     }
+
+    ## the confidence level is not used here
+    val <- f(psiHat, object, level = 0.95, chgSign = FALSE)$objective
+    res["est",  ] <- val
     
     for (iLev in rev(seq_along(level))) {
+        
         lev <- level[iLev]
          if (trace) {
              cat(sprintf("     %s, lower bound: ", fLevel[iLev]))

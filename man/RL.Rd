@@ -2,22 +2,28 @@
 % Please edit documentation in R/RL.R
 \name{RL}
 \alias{RL}
-\title{Return Levels for NSGEV objects}
+\title{Return Levels for \code{NSGEV} and \code{TVGEV} objects}
 \usage{
-RL(model, period, data = NULL, psi = NULL, w = 1, type = c("exceed",
-  "average"), sampleData = FALSE, deriv = FALSE, rhoMax = NULL,
-  plot = FALSE)
+RL(model, period, data = NULL, date = NULL, psi = NULL, w = 1,
+  type = c("exceed", "average"), sampleData = FALSE, deriv = FALSE,
+  rhoMin = NULL, rhoMax = NULL, plot = FALSE)
 }
 \arguments{
-\item{model}{A \code{NSGEV} object.}
+\item{model}{A \code{NSGEV} or \code{TVGEV} object.}
 
 \item{period}{The Return period. Should be understood as an integer
 multiple of the block duration \code{w}, and will be rounded else.
 In some cases \code{period} must not exceed the number of rows in
 \code{data}, see \bold{Details}.}
 
-\item{data}{A data frame containing covariates for the model.  By
-default, the data frame attached to \code{model} is used.}
+\item{data}{To be used only when \code{model} has class
+\code{"NSGEV"}. A data frame containing covariates for the model.
+By default, the data frame attached to \code{model} is used.}
+
+\item{date}{To be used only when \code{model} has class
+\code{"TVGEV"}. A vector that can be coerced to the \code{"Date"}
+class.  By default, the date attached to \code{model} is
+used.}
 
 \item{psi}{Vector of coefficients. By default, the vector of
 coefficients of the model is used.}
@@ -26,26 +32,31 @@ coefficients of the model is used.}
 
 \item{type}{The type of RL wanted, see \bold{Details}.}
 
-\item{sampleData}{Logical. If \code{TRUE} the rows of \code{data}
-are assumed to form a sample of the distribution of the covariates
-and will be re-sampled.}
+\item{sampleData}{Logical. Only used for \code{NSGEV} objects. If
+\code{TRUE}, the rows of \code{data} are assumed to form a sample
+of the distribution of the covariates and will be re-sampled.}
 
 \item{deriv}{Logical. If \code{TRUE} the gradient of the RL w.r.t
 the model parameters is returned.}
+
+\item{rhoMin}{Minimal value for the evaluation of the function in
+the zero-finding step when \code{type} is \code{"exceed"}. This
+should be used if the zero is not found with the default value,
+which can be diagnosed then with \code{plot = TRUE}.}
 
 \item{rhoMax}{Maximal value for the evaluation of the function in
 the zero-finding step when \code{type} is \code{"exceed"}. This
 should be used if the zero is not found with the default value,
 which can be diagnosed then with \code{plot = TRUE}.}
 
-\item{plot}{Logical. If \code{type} is \code{"expect"} , the a plot
-is shown to check the results of the zero-finding step.}
+\item{plot}{Logical. If \code{type} is \code{"expect"}, a plot is
+shown to check the results of the zero-finding step.}
 }
 \value{
 The numeric value of the Return Level.
 }
 \description{
-Return Levels for NSGEV Objects.
+Return Levels for \code{NSGEV} and \code{TVGEV} Objects.
 }
 \details{
 In all cases, the GEV parameters
@@ -73,19 +84,15 @@ by computing the expectation and solving a non-linear equation in
 
 }
 }
-\note{
-Consider the special case of a model simply defining a
-linear trend time for the GEV location parameter \eqn{\mu} with a
-constant scale \eqn{sigma} and a constant shape \eqn{\xi}. If the
-observations in \code{data} are the expectations for future blocks
-conditional on past blocks, these XXX.
-}
 \section{Caution}{
  For now, \code{period} can only be a numeric
 vector with length 1.
 }
 
 \examples{
+## =================
+## NSGEV examples
+## =================
 example(NSGEV)
 RL(ns1, period = 10, type = "average")
 RL(ns1, period = 10, type = "exceed")
@@ -95,6 +102,21 @@ RL(ns1, period = 10, type = "exceed", deriv = TRUE)
 
 ## check the zero-finding step
 RL(ns1, period = 10, type = "exceed", deriv = TRUE, plot = TRUE)
+
+## =================
+## TVGEV examples
+## ================
+example(TVGEV)
+RL(res1, period = 30)
+nd <-  seq(from = as.Date("2000-01-01"), to = as.Date("2300-01-01"),
+            by = "year")
+RLe <- RL(res1, period = 200, date = nd, plot = TRUE)
+RLa <- RL(res1, period = 200, date = nd, plot = TRUE, type = "average")
+## check the value of 'RLA'
+q <- quantile(res2, prob = 1.0 - 1.0 / 200, date = nd)
+plot(q)
+mean(q[1:200])
+
 }
 \references{
 Parey S., Hoang T.T.H., Dacunha-Castelle D. (2007) "Different ways
@@ -103,4 +125,10 @@ to compute temperature return levels in the climate change context".
 }
 \author{
 Yves Deville
+
+%% note Consider the special case of a model simply defining a
+%% linear trend time for the GEV location parameter \eqn{\mu} with a
+%% constant scale \eqn{\sigma} and a constant shape \eqn{\xi}. If the
+%% observations in \code{data} are the expectations for future blocks
+%% conditional on past blocks, the computed Return Level.
 }

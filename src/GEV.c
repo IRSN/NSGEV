@@ -17,12 +17,13 @@ SEXP Call_dGEV(SEXP x,            /*  double                          */
   
   SEXP val;
   
-  x = coerceVector(x, REALSXP);
-  loc = coerceVector(loc, REALSXP);
-  scale = coerceVector(scale, REALSXP);
-  shape = coerceVector(shape, REALSXP);
+  PROTECT(x = coerceVector(x, REALSXP));
+  PROTECT(loc = coerceVector(loc, REALSXP));
+  PROTECT(scale = coerceVector(scale, REALSXP));
+  PROTECT(shape = coerceVector(shape, REALSXP));
 
-  double *rx = REAL(x), *rloc = REAL(loc), *rscale = REAL(scale), *rshape = REAL(shape);
+  double *rx = REAL(x), *rloc = REAL(loc), *rscale = REAL(scale), 
+    *rshape = REAL(shape);
 
   nx = LENGTH(x);						
   nloc = LENGTH(loc);						
@@ -122,7 +123,7 @@ SEXP Call_dGEV(SEXP x,            /*  double                          */
     }
   
     SET_ATTR(val, attrNm, grad);
-    UNPROTECT(3);
+    UNPROTECT(7);
     return(val);
     
   } else {
@@ -171,7 +172,7 @@ SEXP Call_dGEV(SEXP x,            /*  double                          */
       
     }
   
-    UNPROTECT(1);
+    UNPROTECT(5);
     return(val);
     
   }

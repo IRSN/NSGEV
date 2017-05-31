@@ -46,26 +46,27 @@ for each combination of \emph{date}, \emph{period} and
 \code{"none"} the three values \code{Quant}, \code{L} and \code{U}
 are given for each combination (the first not depending on the
 confidence level). The data frame is in 'long' format, with
+ different rows for multiple levels.
 }
 \description{
 Predict method for \code{TVGEV} objects.
 }
 \details{
-Compute the Return Levels (RLs) for different period and different
-values of the time block, as well as Confidence Intervals (CIs)
-for these. The results are not predictions in the usual
-acceptance.  The CIs can be obtained by the usual delta method,
-provided that the approximate covariance for the estimated
-parameters is found in \code{object}. They also can be obtained by
-bootstrap, using by default the bootstrap distribution embeded in
-\code{object} if any or by computing it else. The bootstrap can be
-parametric or non-parametric, see \code{\link{bs.TVGEV}}. Finally,
-the profile-likelihood method can be used: the confidence limits
-for a RL are obtained by maximising and minimising this RL under
-the constraint that the log-likelihood is greater than a suitable
-value. This method avoids the usual re-parameterisation of the
-model which can be tedious for the general form of model allowed
-in \code{TVGEV}.
+Compute the Return Levels (RLs) for different periods and
+different values of the time block, as well as Confidence
+Intervals (CIs) for these. The results are not predictions in the
+usual acceptance.  The CIs can be obtained by the usual
+\emph{delta method}, provided that the approximate covariance for
+the estimated parameters is found in \code{object}. They also can
+be obtained by \emph{bootstrap}, using by default the bootstrap
+distribution embeded in \code{object} if any or by computing it
+else. The bootstrap can be parametric or non-parametric, see
+\code{\link{bs.TVGEV}}. Finally, the \emph{profile-likelihood}
+method can be used: the confidence limits for a RL are obtained by
+maximising and minimising this RL under the constraint that the
+log-likelihood is greater than a suitable value. This method
+avoids the usual re-parameterisation of the model which can be
+tedious for the general form of model allowed in \code{TVGEV}.
 }
 \note{
 Despite of its positive sounding name, the "bias correction"

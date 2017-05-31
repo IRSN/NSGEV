@@ -88,11 +88,13 @@ psi2theta.TVGEV <- function(model, psi = NULL, date = NULL,
 
     if (deriv) {
         
-        jac <- array(1.0, dim = c(n, model$p, 3L),
+        jac <- array(0.0, dim = c(n, model$p, 3L),
                      dimnames = list(fDate, names(psi), parNames.GEV))
         for(nm in parNames.GEV) {
             if (!model$isCst[nm]) {
                 jac[ , model$ind[[nm]], nm] <- X[[nm]]
+            } else {
+                jac[ , model$ind[[nm]], nm] <- 1.0
             }
         }
         attr(theta, "gradient") <- jac
@@ -101,35 +103,6 @@ psi2theta.TVGEV <- function(model, psi = NULL, date = NULL,
     theta
     
 }
-
-                            
-## negLogLik_TVGEV <- function(psi, model, data = NULL, y = NULL,
-##                             deriv = TRUE,
-##                             checkNames = TRUE) {
-    
-##     if (is.null(data)) data <- model$data
-##     if (is.null(y)) y <- model$response
-##     theta <- psi2theta(psi = psi, model = model, data = data, deriv = deriv,
-##                        checkNames = checkNames)
-##     n <- nrow(data)
-##     p <- length(psi)
-##     logL <- dGEV(y, loc = theta[, 1L], scale = theta[, 2L],
-##                  shape = theta[, 3L], log = TRUE, deriv = deriv)
-##     nl <- -sum(logL)
-##     if (deriv) {
-##         ## XXX a optimiser plus tard
-##         grad1 <- -attr(logL, "gradient")
-##         gradnl <- rep(0, p)
-##         names(gradnl) <- parNames(model)
-##         G <- attr(theta, "gradient")
-##         for (b in 1:n) {
-##             gradnl <- gradnl + tcrossprod(grad1[b, , drop = FALSE], G[b, , ])
-##         }
-##         return(list("objective" = nl , "gradient" = gradnl))
-##     } else {
-##         return(nl)
-##     }
-## }
 
 ##*****************************************************************************
 ##' Initial Parameter Estimates for a \code{TVGEV} model.
@@ -787,31 +760,34 @@ modelMatrices.TSGEV  <- function(object, date = NULL) {
 ##' ## are stored within a list
 ##' ## ====================================================================
 ##'
-##' yearBreaks <- c(1940, 1950, 1955, 1960:2000, 2005, 2010)
-##' res <- list()
-##' for (ib in seq_along(yearBreaks)) {
-##'     d <- sprintf("%4d-01-01", yearBreaks[[ib]])
-##'     floc <- as.formula(sprintf("~ t1 + t1_%4d", yearBreaks[[ib]]))
-##'     res[[d]] <- TVGEV(data = df, response = "TXMax", date = "Date",
-##'     design = breaksX(date = Date, breaks = d, degree = 1),
-##'     loc = floc)
-##' }
-##'
-##' ## ====================================================================
-##' ## [continuing...] ]find the model with maximum likelihood, and plot
-##' ## something like a profile likelihood for the break date considered
-##' ## as a new parameter. However, the model is not differentiable w.r.t.
-##' ## the break! 
-##' ## ====================================================================
+##' \dontrun{
 ##' 
-##' ll <- sapply(res, logLik)
-##' plot(yearBreaks, ll, type = "o", pch = 21, col = "orangered",
-##'      lwd = 2, bg = "gold")
-##' grid()
-##' iMax <- which.max(ll)
-##' abline(v = yearBreaks[iMax])
-##' abline(h = ll[iMax] - c(0, qchisq(0.95, df = 1) /2),
-##'        col = "SpringGreen3", lwd = 2)
+##'     yearBreaks <- c(1940, 1950, 1955, 1960:2000, 2005, 2010)
+##'     res <- list()
+##' 
+##'     for (ib in seq_along(yearBreaks)) {
+##'         d <- sprintf("%4d-01-01", yearBreaks[[ib]])
+##'         floc <- as.formula(sprintf("~ t1 + t1_%4d", yearBreaks[[ib]]))
+##'         res[[d]] <- TVGEV(data = df, response = "TXMax", date = "Date",
+##'         design = breaksX(date = Date, breaks = d, degree = 1),
+##'         loc = floc)
+##'     }
+##'
+##'     ## [continuing...] ]find the model with maximum likelihood, and plot
+##'     ## something like a profile likelihood for the break date considered
+##'     ## as a new parameter. However, the model is not differentiable w.r.t.
+##'     ## the break! 
+##' 
+##'     ll <- sapply(res, logLik)
+##'     plot(yearBreaks, ll, type = "o", pch = 21, col = "orangered",
+##'          lwd = 2, bg = "gold", xlab = "break", ylab = "log-lik")
+##'     grid()
+##'     iMax <- which.max(ll)
+##'     abline(v = yearBreaks[iMax])
+##'     abline(h = ll[iMax] - c(0, qchisq(0.95, df = 1) /2),
+##'            col = "SpringGreen3", lwd = 2)
+##'
+##' }
 
 TVGEV <- function(data,
                   date,
@@ -981,7 +957,7 @@ simulate.TVGEV <- function (object, nsim = 1, seed = NULL,
 ##' Plot Paths Simultated from a \code{TVGEV} object
 ##'
 ##'
-##' @title Plot Paths Simultated from a \code{TVGEV} object.
+##' @title Plot Paths Simultated from a \code{TVGEV} object
 ##' 
 ##' @param x A \code{TVGEV} object
 ##' 
@@ -996,6 +972,12 @@ simulate.TVGEV <- function (object, nsim = 1, seed = NULL,
 ##' @return Nothing.
 ##'
 ##' @seealso \code{\link{simulate.TVGEV}}.
+##'
+##' @section Caution: This function will soon be removed. The
+##' \code{simulate} method will return a block time series
+##' with class \code{"bts"} instead of an object with a specific
+##' class \code{"simulate.TVGEV"}. This is intended to avoid
+##' an unnecessary proliferation of classes.
 ##' 
 plot.simulate.TVGEV <- function(x, y, col = "gray",
                                 alpha = NULL, ...) {
@@ -1047,7 +1029,14 @@ plot.simulate.TVGEV <- function(x, y, col = "gray",
 coef.TVGEV <- function(object, type = c("psi", "theta"),  ...) {
     type <- match.arg(type)
     if (type == "psi") return(object$estimate)
-    else return(object$theta)
+    else {
+        co <- object$theta
+        rownames(co) <- attr(co, "date") <- object$fDate
+        attr(co, "collabels") <- c("loc", "scale", "shape")
+        attr(co, "label") <- "GEV parameters"
+        class(co) <- c("bts", "matrix")
+        return(co)
+    }
 }
 
 vcov.TVGEV <- function(object, ...) {
@@ -1061,14 +1050,11 @@ logLik.TVGEV <- function(object, ...) {
     res
 }
 
-
-
 summary.TVGEV <- function(object, ...) {
     res <- object
     class(res) <- "summary.TVGEV"
     res
 }
-
 
 print.summary.TVGEV <- function(x, ...) {
     

@@ -1,3 +1,14 @@
+2017-05-31  yves  <deville.yves@alpestat.com>
+
+	* New classes "bts" and 'bfts" for results concerning TVGEV
+	objects.
+
+	* Many changes concerning methods for TVGEV objects or derived
+	objects: quantiles, density, RL predictions, ...
+
+	* Bug fixes and fine tuning for profile-likelihod (implementation
+	of chain rule for TVGEV models).
+
 2017-03-24  yves  <deville.yves@alepstat.com>
 
 	* New class "TVGEV" for Time-Varying objects. 

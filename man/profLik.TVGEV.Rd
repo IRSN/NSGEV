@@ -10,11 +10,12 @@
 \arguments{
 \item{object}{A \code{TSGEV} object.}
 
-\item{fun}{A function of the parameter for which the
+\item{fun}{A function of the parameter vector for which the
 profile-likelihood will be carried over. This function must have
 the arguments: \code{psi} for the vector of parameters and
-\code{object} for the model object. If needed, a wrapper function
-can be used use more arguments, see \bold{Details}.}
+\code{object} for the model object; so the function can use the
+some of slots of \code{object}. If needed, a wrapper function can
+be used use more arguments, see \bold{Details}.}
 
 \item{level}{Level of confidence. Can be of length \code{> 1}.}
 
@@ -50,11 +51,17 @@ a re-parameterisation of the model.
 }
 \examples{
 df <- within(TXMax_Dijon, Date <- as.Date(sprintf("\%4d-01-01", Year)))
+
 ## fit a TVGEV model with constant parameters.
 res1 <- TVGEV(data = df, response = "TXMax", date = "Date",
               estim = "nloptr")
-## define a function of the parameter vector
-myfun <- function(psi, object, deriv = TRUE) {
+
+## define a function of the parameter vector: here the first component
+## This is for illustration only since the the result can be obtained
+## using the 'confint' method with \\code{method = "proflik"}, which
+## gives the confidence intervals for each of the parameters.
+
+myfun <- function(psi, object) {
     res <- psi[1]
     grad <- rep(0.0, object$p)
     grad[1] <- 1
@@ -64,6 +71,7 @@ myfun <- function(psi, object, deriv = TRUE) {
 
 profLik.TVGEV(object = res1, fun = myfun, deriv = TRUE)
 
+confint(res1, method = "proflik")
 }
 \references{
 Deville Y. (2017) "Profile-likelihood using constrained

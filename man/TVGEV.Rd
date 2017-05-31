@@ -135,31 +135,34 @@ cbind("fevd" = res0$results$value,
 ## are stored within a list
 ## ====================================================================
 
-yearBreaks <- c(1940, 1950, 1955, 1960:2000, 2005, 2010)
-res <- list()
-for (ib in seq_along(yearBreaks)) {
-    d <- sprintf("\%4d-01-01", yearBreaks[[ib]])
-    floc <- as.formula(sprintf("~ t1 + t1_\%4d", yearBreaks[[ib]]))
-    res[[d]] <- TVGEV(data = df, response = "TXMax", date = "Date",
-    design = breaksX(date = Date, breaks = d, degree = 1),
-    loc = floc)
+\dontrun{
+
+    yearBreaks <- c(1940, 1950, 1955, 1960:2000, 2005, 2010)
+    res <- list()
+
+    for (ib in seq_along(yearBreaks)) {
+        d <- sprintf("\%4d-01-01", yearBreaks[[ib]])
+        floc <- as.formula(sprintf("~ t1 + t1_\%4d", yearBreaks[[ib]]))
+        res[[d]] <- TVGEV(data = df, response = "TXMax", date = "Date",
+        design = breaksX(date = Date, breaks = d, degree = 1),
+        loc = floc)
+    }
+
+    ## [continuing...] ]find the model with maximum likelihood, and plot
+    ## something like a profile likelihood for the break date considered
+    ## as a new parameter. However, the model is not differentiable w.r.t.
+    ## the break! 
+
+    ll <- sapply(res, logLik)
+    plot(yearBreaks, ll, type = "o", pch = 21, col = "orangered",
+         lwd = 2, bg = "gold", xlab = "break", ylab = "log-lik")
+    grid()
+    iMax <- which.max(ll)
+    abline(v = yearBreaks[iMax])
+    abline(h = ll[iMax] - c(0, qchisq(0.95, df = 1) /2),
+           col = "SpringGreen3", lwd = 2)
+
 }
-
-## ====================================================================
-## [continuing...] ]find the model with maximum likelihood, and plot
-## something like a profile likelihood for the break date considered
-## as a new parameter. However, the model is not differentiable w.r.t.
-## the break! 
-## ====================================================================
-
-ll <- sapply(res, logLik)
-plot(yearBreaks, ll, type = "o", pch = 21, col = "orangered",
-     lwd = 2, bg = "gold")
-grid()
-iMax <- which.max(ll)
-abline(v = yearBreaks[iMax])
-abline(h = ll[iMax] - c(0, qchisq(0.95, df = 1) /2),
-       col = "SpringGreen3", lwd = 2)
 }
 \author{
 Yves Deville

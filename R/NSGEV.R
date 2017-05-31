@@ -530,7 +530,7 @@ quantile.NSGEV <- function(x, probs = c(0.90, 0.95, 0.99),
     if (any(is.na(probs))) stop ("NA not allowed yet in 'probs'")
    
     eps <- 100 * .Machine$double.eps
-    if (any(probs < -eps | probs > 1 + eps))  stop("'probs' outside [0,1]")
+    if (any(probs < eps | probs > 1 - eps))  stop("'probs' outside [0,1]")
     
     if (is.null(data)) data <- x$data
     if (is.null(psi)) psi <- x$estimate

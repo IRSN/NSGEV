@@ -1,20 +1,21 @@
+## ************************************************************************
 ##' Predict method for \code{TVGEV} objects.
 ##'
-##' Compute the Return Levels (RLs) for different period and different
-##' values of the time block, as well as Confidence Intervals (CIs)
-##' for these. The results are not predictions in the usual
-##' acceptance.  The CIs can be obtained by the usual delta method,
-##' provided that the approximate covariance for the estimated
-##' parameters is found in \code{object}. They also can be obtained by
-##' bootstrap, using by default the bootstrap distribution embeded in
-##' \code{object} if any or by computing it else. The bootstrap can be
-##' parametric or non-parametric, see \code{\link{bs.TVGEV}}. Finally,
-##' the profile-likelihood method can be used: the confidence limits
-##' for a RL are obtained by maximising and minimising this RL under
-##' the constraint that the log-likelihood is greater than a suitable
-##' value. This method avoids the usual re-parameterisation of the
-##' model which can be tedious for the general form of model allowed
-##' in \code{TVGEV}.
+##' Compute the Return Levels (RLs) for different periods and
+##' different values of the time block, as well as Confidence
+##' Intervals (CIs) for these. The results are not predictions in the
+##' usual acceptance.  The CIs can be obtained by the usual
+##' \emph{delta method}, provided that the approximate covariance for
+##' the estimated parameters is found in \code{object}. They also can
+##' be obtained by \emph{bootstrap}, using by default the bootstrap
+##' distribution embeded in \code{object} if any or by computing it
+##' else. The bootstrap can be parametric or non-parametric, see
+##' \code{\link{bs.TVGEV}}. Finally, the \emph{profile-likelihood}
+##' method can be used: the confidence limits for a RL are obtained by
+##' maximising and minimising this RL under the constraint that the
+##' log-likelihood is greater than a suitable value. This method
+##' avoids the usual re-parameterisation of the model which can be
+##' tedious for the general form of model allowed in \code{TVGEV}.
 ##' 
 ##' @title  Predict Method for \code{TVGEV} Objects
 ##'
@@ -54,7 +55,7 @@
 ##' \code{"none"} the three values \code{Quant}, \code{L} and \code{U}
 ##' are given for each combination (the first not depending on the
 ##' confidence level). The data frame is in 'long' format, with
-##  different rows for multiple levels.
+##'  different rows for multiple levels.
 ##'
 ##' @section Caution: When \code{confintMethod} is set to
 ##' \code{"loglik"} the required computing time is huge because
@@ -87,9 +88,9 @@ predict.TVGEV <- function(object,
 
     if (!all(object$isCst)) {
         if (is.null(newdate)) {
-            message("Since 'object' is really time-varying, the Return Levels ",
-                    "depend on the date. A default choice is made here. Use ",
-                    "the 'newdate' formal to change this.")
+            message("Since 'object' is really time-varying, the Return Levels\n",
+                    "depend on the date. A default choice of dates is made here.\n",
+                    "Use the 'newdate' formal to change this.")
         }
     } 
     
@@ -122,27 +123,22 @@ predict.TVGEV <- function(object,
         newdate <- selectDate(object$data[ , object$date])
     }
 
-    ## OLD CODE working with else
+    ## OLD CODE working with else            
+    ## X <- object$X
+    ## n <- object$n
+    ## ind <- object$ind
+    ## newdate <- object$data[ , object$date]
+    ## fDate <- object$fDate
 
-    if (FALSE) {
-            
-        X <- object$X
-        n <- object$n
-        ind <- object$ind
-        newdate <- object$data[ , object$date]
-        fDate <- object$fDate
-    }
-    ## OLD else 
-
-    ## } else {
     n <- length(newdate)
+    
     ## special case for non TV model
     if (!all(object$isCst)) {
         L <- modelMatrices.TSGEV(object, date = newdate)
         X <- L$X
     } else X <- NULL
+
     fDate <- format(newdate)
-    ## }
     
     theta <- psi2theta(object, date = newdate, deriv = TRUE)
 
@@ -447,8 +443,10 @@ predict.TVGEV <- function(object,
                                                    deriv = FALSE,
                                                    object = object)
                      
-                     if (trace) cat(sprintf("     Constraint check %10.7f, %10.4f\n", check, check2))
-                     
+                     if (trace) {
+                         cat(sprintf("     Constraint check %10.7f, %10.4f\n",
+                                     check, check2))
+                     }
                      check <- (check > constrCheck)
                      
                      if (!inherits(resL, "try-error") && (resL$status >= 0) && check) {
@@ -506,7 +504,10 @@ predict.TVGEV <- function(object,
                                                    deriv = FALSE,
                                                    object = object)
                      
-                     if (trace) cat(sprintf("     Constraint check %10.7f, %10.4f\n", check, check2))
+                     if (trace) {
+                         cat(sprintf("     Constraint check %10.7f, %10.4f\n",
+                                     check, check2))
+                     }
                      check <- (check > constrCheck)
                      
                      if (!inherits(resU, "try-error") && (resU$status >= 0) && check) {
@@ -594,8 +595,6 @@ predict.TVGEV <- function(object,
 ##' example(TVGEV)
 ##' pred <- predict(res2, newdate = c("1960-01-01", "2000-01-01", "2020-01-01"),
 ##'                 level = c(0.70, 0.95), confintMethod = "delta")
-##' ## no longer needed
-##' ## class(pred) <- c("predict.TVGEV", "data.frame")
 ##' g <- plot(pred)
 plot.predict.TVGEV <- function(x, y, gg = TRUE, ... ) {
 

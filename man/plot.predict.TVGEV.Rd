@@ -36,7 +36,5 @@ the number of dates is limited to \code{6}.
 example(TVGEV)
 pred <- predict(res2, newdate = c("1960-01-01", "2000-01-01", "2020-01-01"),
                 level = c(0.70, 0.95), confintMethod = "delta")
-## no longer needed
-## class(pred) <- c("predict.TVGEV", "data.frame")
 g <- plot(pred)
 }

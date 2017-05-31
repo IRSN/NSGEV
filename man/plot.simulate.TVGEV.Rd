@@ -2,7 +2,7 @@
 % Please edit documentation in R/TVGEV.R
 \name{plot.simulate.TVGEV}
 \alias{plot.simulate.TVGEV}
-\title{Plot Paths Simultated from a \code{TVGEV} object.}
+\title{Plot Paths Simultated from a \code{TVGEV} object}
 \usage{
 \method{plot}{simulate.TVGEV}(x, y, col = "gray", alpha = NULL, ...)
 }
@@ -23,6 +23,14 @@ Nothing.
 \description{
 Plot Paths Simultated from a \code{TVGEV} object
 }
+\section{Caution}{
+ This function will soon be removed. The
+\code{simulate} method will return a block time series
+with class \code{"bts"} instead of an object with a specific
+class \code{"simulate.TVGEV"}. This is intended to avoid
+an unnecessary proliferation of classes.
+}
+
 \seealso{
 \code{\link{simulate.TVGEV}}.
 }

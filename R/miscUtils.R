@@ -179,3 +179,19 @@ selectDate <- function(date, n = 3L) {
 
     as.Date(sprintf("%4d-01-01", ys))
 }
+
+## *****************************************************************************
+##' Choose an opacity level.
+##'
+##' @title Choose an Opacity Level
+##'
+##' @param n Vector of integers.
+##' 
+##' @return Vector of opacities "alpha". Value 0 is for a fully
+##' transparent colour, value 1 is for a fully opaque colour.
+##' 
+opacity <- function(n) {
+    exp(- log(n)^2 / 16)
+}
+
+    
