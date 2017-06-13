@@ -82,9 +82,20 @@ reshapeGEV <- function (x, loc, scale, shape, matrix = FALSE) {
 ##' returned as \code{log(p)}.
 ##' 
 ##' @param deriv Logical. If \code{TRUE}, the gradient of each
-##' computed value w.r.t. the parameter vector is computed.
+##' computed value w.r.t. the parameter vector is computed, and
+##' returned as a \code{"gradient"} attribute of the result. This is a
+##' numeric array with dimension \code{c(n, 3)} where \code{n} is the
+##' length of the first argument, i.e. \code{x}, \code{p} or \code{q}
+##' depending on the function.
 ##'
-##' @param impl Character. Choose between a R implementation and a C
+##' @param hessian Logical. If \code{TRUE}, the Hessian of each
+##' computed value w.r.t. the parameter vector is computed, and
+##' returned as a \code{"hessian"} attribute of the result. This is a
+##' numeric array with dimension \code{c(n, 3, 3)} where \code{n} is
+##' the length of the first argument, i.e. \code{x}, \code{p} or
+##' depending on the function.
+##' 
+##' @param impl Character. Choose between a R and a C
 ##' implementation. The second one should be faster but less checks
 ##' have been done on it for now.
 ##'
@@ -115,6 +126,14 @@ reshapeGEV <- function (x, loc, scale, shape, matrix = FALSE) {
 ##' and are given the length \code{np}, as well as the first argument.
 ##' Note that only vectors of length one are actually recycled.
 ##'
+##' @note With the R implementation, the gradient and Hessian of the
+##' (log) density can be \code{NaN} in the Gumbel case, i.e. when
+##' \code{shape} has a small absolute value. This occurs when \eqn{z
+##' := (x - \mu) / \sigma} is strongly negative, say \eqn{z < -20} and
+##' is due to numeric difficulties in operations involving very small
+##' and very large values. This is fixed in the C implementation which
+##' should be preferred.
+##' 
 ##' @author Yves Deville
 ##'
 ##' @examples
@@ -125,9 +144,14 @@ reshapeGEV <- function (x, loc, scale, shape, matrix = FALSE) {
 ##' matplot(ti, y, type = "l", col = "gray")
 ##' lines(ti, apply(y, 1, mean))
 dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
-                 deriv = FALSE, impl = c("C", "R")) {
+                 deriv = FALSE, hessian = FALSE, impl = c("C", "R")) {
 
     impl <- match.arg(impl)
+
+    if (hessian && (!deriv || impl == "R")) {
+        stop("'hessian' can be TRUE only when 'deriv' is equal to TRUE\n",
+             "and 'impl' is equal to \"C\"")
+    }
     
     if (impl == "C") {
         
@@ -138,14 +162,25 @@ dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
                      as.double(shape),
                      as.integer(log),
                      as.integer(deriv),
+                     as.integer(hessian),
                      PACKAGE = "NSGEV")
 
         n <- length(res)
         if (deriv) {
+
             attr(res, "gradient") <-
                 array(attr(res, "gradient"),
-                      dim = c(n, 3),
+                      dim = c(n, 3L),
                       dimnames = list(rownames(x), c("loc", "scale", "shape")))
+            
+            if (hessian) {
+                attr(res, "hessian") <-
+                    array(attr(res, "hessian"),
+                          dim = c(n, 3L, 3L),
+                          dimnames = list(rownames(x), c("loc", "scale", "shape"),
+                              c("loc", "scale", "shape")))
+            }
+            
         }
         return(res)
         
@@ -169,20 +204,18 @@ dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
     ind <- (!nax  & (L[ , "scale"] > 0.0) & (abs(L[ , "shape"]) < 1e-6))
     
     if (any(ind)) {
+
         z_ind <- z[ind]
         scale_ind <- L[ind, "scale"]
         emz_ind <- exp(-z_ind)
         d[ind] <- -log(scale_ind) - z_ind - emz_ind
-        if (deriv) {
-
-            ## grad[ind, ] <- c("loc" = (1.0 - emz_ind) / scale_ind,
-            ##                  "scale" = (-1.0 + z_ind * (1.0 - emz_ind)) / scale_ind,
-            ##                  "shape" = z_ind * z_ind* (1 - emz_ind) / 2.0 - z_ind)
+        
+        if (deriv) {    
             grad[ind, "loc"] <- (1.0 - emz_ind) / scale_ind
             grad[ind, "scale"] <- (-1.0 + z_ind * (1.0 - emz_ind)) / scale_ind
             grad[ind, "shape"] <- z_ind * z_ind* (1 - emz_ind) / 2.0 - z_ind
-        
         }
+        
     }
     ## non-Gumbel xi != 0.0
     ind <- (!nax  & (L[ , "scale"] > 0.0) & (abs(L[ , "shape"]) >= 1e-6))
@@ -202,24 +235,20 @@ dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
             d_ind[ind2] <- -log(sigma_ind[ind2]) -
                 V_ind[ind2]^(-1.0 / xi_ind[ind2]) - 
                     (1.0 / xi_ind[ind2] + 1.0) * log(V_ind[ind2])
+
             if (deriv) {
                 W_ind <- V_ind^(-1.0 / xi_ind)
                 U_ind <- (1.0 + xi_ind - W_ind) / V_ind / sigma_ind
-                ## grad_ind[ind2, ] <-
-                ##     c("loc" =  U_ind[ind2],
-                ##       "scale" = -1.0 / sigma_ind[ind2] + z_ind[ind2] * U_ind[ind2],
-                ##       "shape" =  log(V_ind[ind2]) * (1.0 - W_ind[ind2]) /
-                ##           xi_ind[ind2] / xi_ind[ind2] -
-                ##           z_ind[ind2] * U_ind[ind2] * sigma_ind[ind2] / xi_ind[ind2])
+              
                 grad_ind[ind2, "loc"] <- U_ind[ind2]
                 grad_ind[ind2, "scale"] <- -1.0 / sigma_ind[ind2] + z_ind[ind2] * U_ind[ind2]
                 grad_ind[ind2, "shape"] <- log(V_ind[ind2]) * (1.0 - W_ind[ind2]) /
                     xi_ind[ind2] / xi_ind[ind2] -
-                        z_ind[ind2] * U_ind[ind2] * sigma_ind[ind2] / xi_ind[ind2]
-
-                
+                        z_ind[ind2] * U_ind[ind2] * sigma_ind[ind2] / xi_ind[ind2]    
             }
+            
         }
+        
         d[ind] <- d_ind
         if (deriv) {
             grad[ind] <- grad_ind
@@ -242,9 +271,32 @@ dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
 
 ##' @rdname GEV
 pGEV <- function (q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
-                  deriv = FALSE) {
+                  deriv = FALSE, impl = c("C", "R")) {
 
+    impl <- match.arg(impl)
+    
+    if (impl == "C") {
+        
+        res <- .Call("Call_pGEV",
+                     as.double(q),
+                     as.double(loc),
+                     as.double(scale),
+                     as.double(shape),
+                     as.integer(lower.tail),
+                     as.integer(deriv),
+                     PACKAGE = "NSGEV")
 
+        n <- length(res)
+        if (deriv) {
+            attr(res, "gradient") <-
+                array(attr(res, "gradient"),
+                      dim = c(n, 3),
+                      dimnames = list(rownames(q), c("loc", "scale", "shape")))
+        }
+        return(res)
+        
+    }
+    
     L <- reshapeGEV(x = q, loc = loc, scale = scale, shape = shape,
                     matrix = TRUE)
     n <- nrow(L)
@@ -321,11 +373,49 @@ pGEV <- function (q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
 
 ##' @rdname GEV
 qGEV <- function (p, loc = 0.0, scale = 1.0, shape = 0.0, lower.tail = TRUE,
-                  deriv = FALSE) {
-    
+                  deriv = FALSE, hessian = FALSE, impl = c("C", "R")) {
+
     if (min(p, na.rm = TRUE) < 0.0 || max(p, na.rm = TRUE) > 1.0) 
         stop("`p' must contain probabilities in [0, 1]")
+
+    impl <- match.arg(impl)
     
+    if (hessian && (!deriv || impl == "R")) {
+        stop("'hessian' can be TRUE only when 'deriv' is equal to TRUE\n",
+             "and 'impl' is equal to \"C\"")
+    }
+    
+    if (impl == "C") {
+        
+        res <- .Call("Call_qGEV",
+                     as.double(p),
+                     as.double(loc),
+                     as.double(scale),
+                     as.double(shape),
+                     as.integer(lower.tail),
+                     as.integer(deriv),
+                     as.integer(hessian),
+                     PACKAGE = "NSGEV")
+        
+        n <- length(res)
+        if (deriv) {
+            attr(res, "gradient") <-
+                array(attr(res, "gradient"),
+                      dim = c(n, 3),
+                      dimnames = list(rownames(p), c("loc", "scale", "shape")))
+
+            if (hessian) {
+                attr(res, "hessian") <-
+                    array(attr(res, "hessian"),
+                          dim = c(n, 3L, 3L),
+                          dimnames = list(rownames(p), c("loc", "scale", "shape"),
+                              c("loc", "scale", "shape")))
+            }
+        }
+        return(res)
+        
+    } 
+
     L <- reshapeGEV(x = p, loc = loc, scale = scale, shape = shape,
                     matrix = TRUE)
     n <- nrow(L)

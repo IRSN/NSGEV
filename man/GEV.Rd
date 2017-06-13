@@ -11,13 +11,13 @@ Random Generation for the Generalized Extreme Value (GEV)
 Distribution}
 \usage{
 dGEV(x, loc = 0, scale = 1, shape = 0, log = FALSE, deriv = FALSE,
-  impl = c("C", "R"))
+  hessian = FALSE, impl = c("C", "R"))
 
 pGEV(q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
-  deriv = FALSE)
+  deriv = FALSE, impl = c("C", "R"))
 
 qGEV(p, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
-  deriv = FALSE)
+  deriv = FALSE, hessian = FALSE, impl = c("C", "R"))
 
 rGEV(n, loc = 0, scale = 1, shape = 0)
 }
@@ -37,9 +37,20 @@ see \bold{Details}.}
 returned as \code{log(p)}.}
 
 \item{deriv}{Logical. If \code{TRUE}, the gradient of each
-computed value w.r.t. the parameter vector is computed.}
+computed value w.r.t. the parameter vector is computed, and
+returned as a \code{"gradient"} attribute of the result. This is a
+numeric array with dimension \code{c(n, 3)} where \code{n} is the
+length of the first argument, i.e. \code{x}, \code{p} or \code{q}
+depending on the function.}
 
-\item{impl}{Character. Choose between a R implementation and a C
+\item{hessian}{Logical. If \code{TRUE}, the Hessian of each
+computed value w.r.t. the parameter vector is computed, and
+returned as a \code{"hessian"} attribute of the result. This is a
+numeric array with dimension \code{c(n, 3, 3)} where \code{n} is
+the length of the first argument, i.e. \code{x}, \code{p} or
+depending on the function.}
+
+\item{impl}{Character. Choose between a R and a C
 implementation. The second one should be faster but less checks
 have been done on it for now.}
 
@@ -74,6 +85,15 @@ length met for the three parameters, say \code{np} is used. The
 two other parameters must then be of length \code{1} or \code{np},
 and are given the length \code{np}, as well as the first argument.
 Note that only vectors of length one are actually recycled.
+}
+\note{
+With the R implementation, the gradient and Hessian of the
+(log) density can be \code{NaN} in the Gumbel case, i.e. when
+\code{shape} has a small absolute value. This occurs when \eqn{z
+:= (x - \mu) / \sigma} is strongly negative, say \eqn{z < -20} and
+is due to numeric difficulties in operations involving very small
+and very large values. This is fixed in the C implementation which
+should be preferred.
 }
 \examples{
 ti <- 1:10; names(ti) <- 2000 + ti

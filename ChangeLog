@@ -1,3 +1,8 @@
+2017-06-13  yves  <deville.yves@alpestat.com>
+
+	* Added the computation of the (exact) qHessian of the log-density
+	and of the quantile for the GEV distribution.
+
 2017-05-31  yves  <deville.yves@alpestat.com>
 
 	* New classes "bts" and 'bfts" for results concerning TVGEV
