@@ -181,7 +181,9 @@ predict.TVGEV <- function(object,
         
         gradpsi <- array(NA, dim = c(n, p),
                          dimnames = list(fDate, object$parNames))
-                        
+
+        diagno <- NULL
+        
         for (iPer in seq_along(period)) {
  
             Quant[ , iPer] <- quant <- qGEV(p = prob[iPer],
