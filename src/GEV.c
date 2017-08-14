@@ -621,7 +621,7 @@ SEXP Call_qGEV(SEXP p,               /*  double                          */
       
 
       if (ISNA(rp[ip]) || (rscale[iscale] <= 0.0)) {
-	Rprintf("NA case\n");
+	// Rprintf("NA case\n");
 
 	rval[i] = NA_REAL;
 	

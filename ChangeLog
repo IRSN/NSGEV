@@ -1,3 +1,8 @@
+2017-08-14  yves  <deville.yves@alpestat.com>
+
+	* Changed predict.TVGEV to improve the convergence of the
+	constrained optimisation.
+
 2017-06-13  yves  <deville.yves@alpestat.com>
 
 	* Added the computation of the (exact) qHessian of the log-density
