@@ -187,11 +187,46 @@ selectDate <- function(date, n = 3L) {
 ##'
 ##' @param n Vector of integers.
 ##' 
-##' @return Vector of opacities "alpha". Value 0 is for a fully
-##' transparent colour, value 1 is for a fully opaque colour.
+##' @return Vector of values for the opacity "alpha". Value 0 is for a
+##' fully transparent colour, value 1 is for a fully opaque colour.
 ##' 
 opacity <- function(n) {
     exp(- log(n)^2 / 16)
 }
+
+## *****************************************************************************
+##' Distance between two lines.
+##'
+##' @title Distance Between Two Lines
+##' 
+##' @param x1 A numeric vector with positive norm.
+##' 
+##' @param x2 A numeric vector with positive norm and with the same
+##' length as \code{x1}.
+##' 
+##' @return The distance.
+##'
+##' @details The vectors \code{x1} \code{x1} are scaled to have unit
+##' Euclidean norm and to have the same direction. The distance
+##' between the lines is simply the distance between the unit vectors
+##' on the unit sphere.
+##' 
+distLines <- function(x1, x2) {
+    if (length(x1) != length(x2)) {
+        stop("'x1' and 'x2' must have the same length")
+    }
+    n1 <- sqrt(sum(x1^2))
+    n2 <- sqrt(sum(x2^2))
+    if ((n1 <= 1e-6) || (n2 <= 1e-6)) {
+        ## warning("'x1' and 'x2' should have Euclidean norm > 1e-6")
+        return(NA)
+    }
+    x1 <- x1 / n1
+    x2 <- x2 / n2
+    i <- which.max(abs(x1))
+    if (x1[i] * x2[i] < 0.0) x2 <- -x2
+    acos(sum(x1 * x2))
+}
+
 
     

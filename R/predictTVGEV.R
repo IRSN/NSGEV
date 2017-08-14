@@ -146,7 +146,8 @@ predict.TVGEV <- function(object,
 
         RL <- array(NA, dim = c(Date = n, Period = nPeriod),
                     dimnames = list(Date = fDate, Period = fPeriod))
-
+        diagno <- NULL
+        
         for (iPer in seq_along(period)) {
             RL[ , iPer] <- qGEV(p = prob[iPer],
                                 loc = theta[ , 1],
@@ -240,6 +241,8 @@ predict.TVGEV <- function(object,
                     dim = c(Date = n, Period = nPeriod, Lim = 3L, Level = nLevel),
                     dimnames = list(Date = fDate, Period = fPeriod,
                         Type = c("Quant", "L", "U"), Level = fLevel)) 
+
+        diagno <- NULL
         
         myFun <- function(psi, prob) {
             theta <- psi2theta(model = object, psi = psi, date = newdate)
@@ -276,7 +279,14 @@ predict.TVGEV <- function(object,
                     dim = c(Date = n, Period = nPeriod, Lim = 3L, Level = nLevel),
                     dimnames = list(Date = fDate, Period = fPeriod,
                         Type = c("Quant", "L", "U"), Level = fLevel))
-         
+
+        diagno <- array(NA,
+                        dim = c(Date = n, Period = nPeriod, Lim = 2L, Level = nLevel,
+                                Diag = 3L),
+                        dimnames = list(Date = fDate, Period = fPeriod,
+                            Type = c("L", "U"), Level = fLevel,
+                            Diag = c("status", "constraint", "gradDist")))
+        
         ## ===================================================================
         ## For each parameter, we maximise/minimise it under the constraint
         ## that the logLik remains >= max logLik - delta where delta :=
@@ -284,14 +294,15 @@ predict.TVGEV <- function(object,
         ##
         ## ===================================================================
 
-        opts1 <- list("algorithm" = "NLOPT_LD_AUGLAG",
-                      "xtol_rel" = 1.0e-8, "ftol_abs" = 1.0e-4,
+        opts1 <- list("algorithm" = "NLOPT_LD_MMA",
+                      "xtol_rel" = 1.0e-5,
+                      "ftol_abs" = 1.0e-7, "ftol_rel" = 1.0e-5,
                       "maxeval" = 3000,
                       "check_derivatives" = FALSE,
-                      "local_opts" = list("algorithm" = "NLOPT_LD_MMA", "xtol_rel" = 1.0e-8,
-                          "maxeval" = 3000,
-                          "ftol_abs" = 1.0e-4,
-                          "ftol_rel" = 1.0e-8),
+                      ## "local_opts" = list("algorithm" = "NLOPT_LD_MMA", "xtol_rel" = 1.0e-8,
+                      ##    "maxeval" = 3000,
+                      ##    "ftol_abs" = 1.0e-4,
+                      ##    "ftol_rel" = 1.0e-8),
                       "print_level" = 0)
 
         if (trace >= 2) {
@@ -378,7 +389,7 @@ predict.TVGEV <- function(object,
 
          for (iDate in 1L:n) { 
 
-             if (trace) cat(sprintf("\no Finding CI for date %s\n", fDate[iDate]))
+             ## if (trace) cat(sprintf("\no Finding CI for date %s\n", fDate[iDate]))
                 
              for (iPer in seq_along(period)) {
                  
@@ -388,141 +399,130 @@ predict.TVGEV <- function(object,
                                shape = theta[iDate, 3],
                                deriv = FALSE)
                  
-                 if (trace) cat(sprintf("\n   o period %d\n   ============\n",
-                                        period[iPer]))
+                ##  if (trace) cat(sprintf("\n   o period %d\n   ============\n",
+                ##                         period[iPer]))
                  
                  for (iLev in rev(seq_along(level))) {
                      
                      lev <- level[iLev]
 
                      RL[iDate, iPer, "Quant", iLev] <- quant
-                     
-                     if (trace) {
-                         cat(sprintf("     %s, lower bound: ", fLevel[iLev]))
-                     }
-                     
-                     ## =========================================================
-                     ## if we have successfully computed the result for a
-                     ## larger confidence level (and the same parameter),
-                     ## use it as initial guess
-                     ## ==========================================================
-                     
-                     if ((iLev > 1L || iPer > 1L) && !is.null(psiLPrec)) {
-                         psi0 <- psiLPrec
-                     } else {
-                         psi0 <- psiHat
-                     }
-                     
-                     resL <- try(nloptr::nloptr(x0 = psi0,
-                                                eval_f = f,
-                                                eval_g_ineq = g,
-                                                level = lev,
-                                                prob = prob[iPer],
-                                                iDate = as.double(iDate),
-                                                chgSign = as.double(FALSE),
-                                                opts = opts1,
-                                                object = object))
-                     
-                     if (trace == 1L) {
-                         names(resL$solution) <- object$parNames
-                         cat(sprintf("%7.2f\n", resL[["objective"]]))
-                     } else  if (trace > 1L) {
-                         cat("\nSOLUTION\n")
-                         print(resL)
-                     }
-                     
-                     ## the constraint must be active: check that!
-                     check <- g(psi = resL$solution,
-                                level = lev,
-                                prob = prob[iPer],
-                                iDate = iDate,
-                                chgSign = FALSE,
-                                object = object)$constraints
-
-                     check2 <- object$negLogLikFun(psi = resL$solution,
-                                                   deriv = FALSE,
-                                                   object = object)
-                     
-                     if (trace) {
-                         cat(sprintf("     Constraint check %10.7f, %10.4f\n",
-                                     check, check2))
-                     }
-                     check <- (check > constrCheck)
-                     
-                     if (!inherits(resL, "try-error") && (resL$status >= 0) && check) {
-                         psiLPrec <- resL[["solution"]]
-                         RL[iDate, iPer, "L", iLev] <- resL[["objective"]]
-                     } else {
-                         psiLPrec <- NULL
-                     }
-                
-                     ## here we maximise will 'nloptr' only minimises things
-                     if (trace) {
-                         cat(sprintf("     %s, upper bound: ", fLevel[iLev]))
-                     }
-                     
-                     ## =========================================================
-                     ## if we have successfully computed the result for a
-                     ## larger confidence level (and the same parameter),
-                     ## use it as initial guess
-                     ## ==========================================================
-                     
-                     if ((iLev > 1L || iPer > 1L) && !is.null(psiUPrec)) {
-                         psi0 <- psiUPrec
-                     } else {
-                         psi0 <- psiHat
-                     }
-
-                     resU <- try(nloptr::nloptr(x0 = psi0,
-                                                eval_f = f,
-                                                eval_g_ineq = g,
-                                                level = lev,
-                                                prob = prob[iPer],
-                                                iDate = as.double(iDate),
-                                                chgSign = as.double(TRUE),
-                                                opts = opts1,
-                                                object = object))
-                     
-                     if (trace == 1L) {
-                         names(resU$solution) <- object$parNames
-                         cat(sprintf("%7.2f\n", -resU[["objective"]]))
-                     } else if (trace > 1L) {
-                         cat("\nSOLUTION\n")
-                         print(resU)
-                     }
-                     
-                     ## the constraint must be active
-                     names(resU$solution) <- object$parNames
-                     check <- g(psi = resU$solution,
-                                level = lev,
-                                prob = prob[iPer],
-                                iDate = iDate,
-                                chgSign = TRUE,
-                                object = object)$constraints
-                     
-                     check2 <- object$negLogLikFun(psi = resU$solution,
-                                                   deriv = FALSE,
-                                                   object = object)
-                     
-                     if (trace) {
-                         cat(sprintf("     Constraint check %10.7f, %10.4f\n",
-                                     check, check2))
-                     }
-                     check <- (check > constrCheck)
-                     
-                     if (!inherits(resU, "try-error") && (resU$status >= 0) && check) {
-                         psiUPrec <- resU[["solution"]]
-                         RL[iDate, iPer, "U", iLev] <- -resU[["objective"]]
-                     } else {
-                         psiUPrec <- NULL
-                     }
-                    
                  }
              }
-             if (trace) cat("\n")
          }
-         
-     } 
+
+        ## =========================================================
+        ## Lower and upper bounds
+        ## ==========================================================
+        
+        labs <- c("L" = "Lower", "U" = "Upper")
+        sign <- c("L" = 1.0, "U" = -1.0)
+        chgSign <- c("L" = 0.0, "U" = 1.0)
+        
+        if (trace) cat("\no Finding CI for Return Levels\n")
+
+        for (LU in c("L", "U")) {
+            
+            if (trace) {
+                cat(sprintf("\n**************\n %s bounds \n**************\n",
+                            labs[LU]))
+            }
+            
+            for (iLev in rev(seq_along(level))) {
+                
+                lev <- level[iLev]
+
+                if (trace) {
+                    cat(sprintf("Confidence Level: %5.2f\n", lev))
+                }
+                
+                for (iDate in 1L:n) { 
+                    
+                    if (trace) cat(sprintf("\n  o Date: %s\n", fDate[iDate]))
+                    
+                    for (iPer in seq_along(period)) {
+
+                        if (trace) cat(sprintf("\n    - Period:  %5d\n", period[iPer]))
+                        
+                        if ((iPer > 1L) && !is.null(psiIniPrec)) {
+                            psi0 <- psiIniPrec
+                        } else {
+                            psi0 <- psiHat
+                        }
+                        
+                        resOpt <- try(nloptr::nloptr(x0 = psi0,
+                                                     eval_f = f,
+                                                     eval_g_ineq = g,
+                                                     level = lev,
+                                                     prob = prob[iPer],
+                                                     iDate = as.double(iDate),
+                                                     chgSign = chgSign[LU],
+                                                     opts = opts1,
+                                                     object = object))
+                        
+                        diagno[iDate, iPer, LU, iLev, "status"] <-
+                            resOpt$status
+                        
+                        if (trace == 1L) {
+                            cat(sprintf("        Optimisation status: %d\n", resOpt[["status"]]))
+                            names(resOpt$solution) <- object$parNames
+                            cat(sprintf("        Objective: %7.2f\n", resOpt[["objective"]]))
+                        } else  if (trace > 2L) {
+                            cat("\nSOLUTION\n")
+                            print(resOpt)
+                        }
+                        
+                        ## The constraint must be active. We have to check that!
+                        checkg <- g(psi = resOpt$solution,
+                                    level = lev,
+                                    prob = prob[iPer],
+                                    iDate = iDate,
+                                    chgSign = chgSign[LU],
+                                    object = object)
+                        
+                        diagno[iDate, iPer, LU, iLev, "constraint"] <-
+                            checkg$constraints
+                        
+                        ## The gradient of the objective must be colinear to the
+                        ## jacobian of the constraint. We have to check that!
+                        checkf <- f(psi = resOpt$solution,
+                                    level = lev,
+                                    prob = prob[iPer],
+                                    iDate = iDate,
+                                    chgSign = chgSign[LU],
+                                    object = object)
+                        
+                        gradDist <- distLines(x1 = checkg$jacobian,
+                                              x2 = checkf$gradient)
+                        
+                        diagno[iDate, iPer, LU, iLev, "gradDist"] <- gradDist
+                        
+                        if (trace) {
+                            cat(sprintf("        Constraint check %10.7f\n",
+                                        checkg$constraints))
+                            cat(sprintf("        Gradient directions: %7.4f\n", gradDist))
+                            if (trace == 2) {
+                                cat("        Gradients\n")
+                                print(rbind("        g" = checkg$jacobian,
+                                            "        f" = checkf$gradient))
+                                cat("\n")
+                            }
+                        }
+                        check <- (checkg$constraints > constrCheck)
+                        
+                        if (!inherits(resOpt, "try-error") && (resOpt$status >= 0) && check) {
+                            psiIniPrec <- resOpt[["solution"]]
+                            RL[iDate, iPer, LU, iLev] <- sign[LU] * resOpt[["objective"]]
+                        } else {
+                            psiIniPrec <- NULL
+                        }
+                    }
+                }
+            }
+        }
+  
+
+    }
     
     if (out == "data.frame") {
         
@@ -535,7 +535,7 @@ predict.TVGEV <- function(object,
                 ## ====================================================================
                 ## UGGLY CODE: there must be a simpler and more
                 ## efficient way of doing that. The problem is that we
-                ## want to drop the "Type" dimension but not the
+                ## want to drop the " Type" dimension but not the
                 ## "Level" dimension even when it has no extension
                 ## ====================================================================
                 
@@ -553,6 +553,7 @@ predict.TVGEV <- function(object,
                 ind <- with(RL, order(Date, Level, Period))
                 RL <- RL[ind, , drop = FALSE]
             }
+            
         } else {
             stop("the package 'reshape2' could not be used")
         }
@@ -560,6 +561,8 @@ predict.TVGEV <- function(object,
         class(RL) <- c("predict.TVGEV", "data.frame")
     } 
 
+    attr(RL, "diagno") <- diagno
+    
     return(RL)
 
     
@@ -621,7 +624,7 @@ plot.predict.TVGEV <- function(x, y, gg = TRUE, ... ) {
                                     fill = Level),
                                 ## group = type,
                                 alpha = 0.2)
-    
+        
         g1 <- g1 + geom_line(mapping = aes(x = Period, y = L, group = Level), alpha = 0.2)
         g1 <- g1 + geom_line(mapping = aes(x = Period, y = U, group = Level), alpha = 0.2)
     }
