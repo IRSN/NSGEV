@@ -207,7 +207,7 @@ print.summary.NSGEV <- function(x, ...) {
     }
     cat("o Formulas for GEV parameters:\n", x$formText, "\n\n")
     cat("o Coefficients:\n")
-    print(x$estimates)
+    print(x$estimate)
     cat("\n")
 
     cat("o GEV parameters:\n")

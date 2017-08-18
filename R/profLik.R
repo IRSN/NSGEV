@@ -22,15 +22,15 @@ profLik <- function(object, fun, ...) {
 ##'
 ##' Compute the lower and upper end-points of a profile-likelihood
 ##' based confidence interval. The (apparently new) method used here
-##' relies on maximising the function of interest, say
-##' \eqn{\rho(\boldsymbol(\psi)}{\rho(\psi)}, under the constraint
+##' relies on maximising and minimising the function of interest, say
+##' \eqn{\eta(\boldsymbol(\psi)}{\eta(\psi)}, under the constraint
 ##' that the log-likelihood is greater than the maximal log-likelihood
 ##' minus a positive quantity \eqn{\delta} depending on the confidence
-##' level. This differs from the usual method which relies on a
-##' univariate zero-finding for the profile-likelihood function, the
-##' evaluation of which relies on a \eqn{p-1} dimensional
-##' optimisation. As a major advantage, the new method does not require
-##' a re-parameterisation of the model.
+##' level. This differs from the usual method which relies on an
+##' univariate zero-finding for the profile-likelihood function (minus
+##' a constant). Remind that each evaluation of the profile requires a
+##' \eqn{p-1} dimensional optimisation. As a major advantage, the new
+##' method does not require a re-parameterisation of the model.
 ##' 
 ##' @title  Profile-Likelihood Inference for \code{TVGEV} Objects
 ##' 
@@ -56,7 +56,11 @@ profLik <- function(object, fun, ...) {
 ##'
 ##' @return An array with the value of the function and the
 ##' corresponding Lower and Upper end-points for the given confidence
-##' levels.
+##' levels. This array has two attributes with names \code{"diagno"}
+##' and \code{"psi"} which both are arrays. The attributes provide
+##' information about the numerical optimisation and the values of the
+##' vector of parameter that maximised or minimised the function
+##' \code{fun}.
 ##'
 ##' @author Yves Deville
 ##'
@@ -64,6 +68,19 @@ profLik <- function(object, fun, ...) {
 ##'
 ##' Deville Y. (2017) "Profile-likelihood using constrained
 ##' optimisation". Unpublished Tech. Report.
+##'
+##' @note For each confidence limit the numerical optimisation may
+##' fail, in which case the limit will be \code{NA}. Using \code{trace
+##' = 1} can be useful to further check the optimisation. The
+##' \code{Optimisation status} value should be \code{3} or \code{4}
+##' for small changes on the parameter or on the objective. On the
+##' other hand, a value of \code{5} indicates that the maximal number
+##' of iterations was reached, which is considered here as a
+##' failure. The \code{Constaint check} value should be small because
+##' the constraint must be active at the optimum. The \code{gradDist}
+##' is the distance between the two directions of the gradient vectors
+##' (objective and constraint). It should be small as well because the
+##' gradients must be colinear at the optimum (Lagrange conditions).
 ##' 
 ##' @examples
 ##' df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))
@@ -95,11 +112,21 @@ profLik.TVGEV <- function(object,
                           trace = 0,
                           ...) {
 
+    if (FALSE) {
+        dots <- match.call(expand.dots = FALSE)[["..."]]
+        nmOk <- names(dots) %in% names(formals(fun))
+        
+        if (!all(nmOk)) {
+            stop("all formals passed through the dots '...' must be ",
+                 "formals of the function given in 'fun'")
+        }
+    }
+    
     indLevel <- order(level)
     level <- level[indLevel]
     fLevel <- formatLevel(level)
     nLevel <- length(level)
-    psiHat <- object$estimates
+    psiHat <- object$estimate
     constrCheck <- -5e-3
     
     res <- array(NA, dim = c(Lim = 3L, Level = nLevel),
@@ -110,17 +137,23 @@ profLik.TVGEV <- function(object,
     ## that the logLik remains >= max logLik - delta where delta :=
     ## qchisq(1 - alpha) where alpha is given by the cofidence level.
     ##
+    ## The constrained optim is performed using an augmented
+    ## Lagrangian method which requires a local companion algorithm
+    ## with its own settings. So a sublist is used to tune the local
+    ## optimisation.
     ## ===================================================================
 
-    opts1 <- list("algorithm" = "NLOPT_LD_AUGLAG",
-                  "xtol_rel" = 1.0e-8, "ftol_abs" = 1.0e-4,
-                      "maxeval" = 3000,
-                  "check_derivatives" = FALSE,
-                  "local_opts" = list("algorithm" = "NLOPT_LD_MMA", "xtol_rel" = 1.0e-8,
-                      "maxeval" = 3000,
-                      "ftol_abs" = 1.0e-4,
-                      "ftol_rel" = 1.0e-8),
-                  "print_level" = 0)
+    opts1 <-
+        list("algorithm" = "NLOPT_LD_AUGLAG",
+             "xtol_rel" = 1.0e-8, "ftol_abs" = 1.0e-4, "ftol_rel" = 1.0e-8,
+             "maxeval" = 3000,
+             "check_derivatives" = FALSE,
+             "local_opts" = list("algorithm" = "NLOPT_LD_MMA",
+                 "xtol_rel" = 1.0e-8,
+                 "maxeval" = 3000,
+                 "ftol_abs" = 1.0e-4,
+                 "ftol_rel" = 1.0e-8),
+             "print_level" = 0)
     
     if (trace >= 2) {
         opts1[["check_derivatives"]] <- TRUE
@@ -130,8 +163,22 @@ profLik.TVGEV <- function(object,
     if (deriv) {
         
         f <- function(psi, object, level, chgSign) {
+            
             res <- fun(psi, object)
+            
+            ## 'nloptr' fails on NA and NaN!
+            if (is.na(res)) {
+                if (chgSign) {
+                    return(list("objective" = Inf,
+                                "gradient" = rep(NaN, object$p)))
+                 } else {
+                     return(list("objective" = Inf,
+                                 "gradient" = rep(NaN, object$p)))
+                 }
+            }
+
             gradpsi <-  attr(res, "gradient")
+            
             if (chgSign) {
                  return(list("objective" = -res, "gradient" = -gradpsi))
              } else {
@@ -144,8 +191,8 @@ profLik.TVGEV <- function(object,
             ellL <- object$negLogLik + qchisq(level, df = 1) / 2.0
             res <- object$negLogLikFun(psi = psi,
                                        object = object,
-                                       deriv = TRUE,
-                                       ...)
+                                       deriv = TRUE)
+            
             list("constraints" = res$objective - ellL,
                  "jacobian" = res$gradient)
             
@@ -159,118 +206,142 @@ profLik.TVGEV <- function(object,
     val <- f(psiHat, object, level = 0.95, chgSign = FALSE)$objective
     res["est",  ] <- val
     
-    for (iLev in rev(seq_along(level))) {
+    ## ========================================================================
+    ## keep some information about optimisation: diagnostics and value
+    ## of the parameter vector which lead to the min or max of the
+    ## profiled function.
+    ## ========================================================================
+    
+    diagno <-
+        array(NA,
+              dim = c(Lim = 2L,
+                  Level = nLevel,
+                  Diag = 4L),
+              dimnames = list(Type = c("L", "U"),
+                  Level = fLevel,
+                  Diag = c("status", "objective", "constraint", "gradDist")))
+    
+    Psi <-
+        array(NA,
+              dim = c(Lim = 2L,
+                  Level = nLevel,
+                  psi = object$p),
+              dimnames = list(Type = c("L", "U"),
+                  Level = fLevel,
+                  psi = object$parNames))
+    
+    labs <- c("L" = "Lower", "U" = "Upper")
+    sign <- c("L" = 1.0, "U" = -1.0)
+    chgSign <- c("L" = 0.0, "U" = 1.0)
+    
+    for (LU in c("L", "U")) {
         
-        lev <- level[iLev]
-         if (trace) {
-             cat(sprintf("     %s, lower bound: ", fLevel[iLev]))
-         }
-                     
-        ## =========================================================
-        ## if we have successfully computed the result for a
-        ## larger confidence level (and the same parameter),
-        ## use it as initial guess
-        ## ==========================================================
-        
-        if ((iLev > 1L) && !is.null(psiLPrec)) {
-            psi0 <- psiLPrec
-        } else {
-            psi0 <- psiHat
-        }
-        
-        resL <- try(nloptr::nloptr(x0 = psi0,
-                                   eval_f = f,
-                                   eval_g_ineq = g,
-                                   level = lev,
-                                   chgSign = as.double(FALSE),
-                                   opts = opts1,
-                                   object = object))
-        
-        if (trace == 1L) {
-            names(resL$solution) <- object$parNames
-            cat(sprintf("%7.2f\n", resL[["objective"]]))
-        } else  if (trace > 1L) {
-            cat("\nSOLUTION\n")
-            print(resL)
-        }
-        
-        ## the constraint must be active: check that!
-        check <- g(psi = resL$solution,
-                   level = lev,
-                   chgSign = FALSE,
-                   object = object)$constraints
-        
-        check2 <- object$negLogLikFun(psi = resL$solution,
-                                      deriv = FALSE,
-                                      object = object)
-        
-        if (trace) cat(sprintf("     Constraint check %10.7f, %10.4f\n", check, check2))
-        
-        check <- (check > constrCheck)
-        
-        if (!inherits(resL, "try-error") && (resL$status >= 0) && check) {
-            psiLPrec <- resL[["solution"]]
-            res["L", iLev] <- resL[["objective"]]
-        } else {
-            psiLPrec <- NULL
-        }
-        
-        ## here we maximise will 'nloptr' only minimises things
-        if (trace) {
-            cat(sprintf("     %s, upper bound: ", fLevel[iLev]))
-        }
-        
-        ## =========================================================
-        ## if we have successfully computed the result for a
-        ## larger confidence level (and the same parameter),
-        ## use it as initial guess
-        ## ==========================================================
-        
-        if ((iLev > 1L) && !is.null(psiUPrec)) {
-            psi0 <- psiUPrec
-        } else {
-            psi0 <- psiHat
-        }
-        
-        resU <- try(nloptr::nloptr(x0 = psi0,
-                                   eval_f = f,
-                                   eval_g_ineq = g,
-                                   level = lev,
-                                   chgSign = as.double(TRUE),
-                                   opts = opts1,
-                                   object = object))
-        
-        if (trace == 1L) {
-            names(resU$solution) <- object$parNames
-            cat(sprintf("%7.2f\n", -resU[["objective"]]))
-        } else if (trace > 1L) {
-            cat("\nSOLUTION\n")
-            print(resU)
-        }
-        
-        ## the constraint must be active
-        names(resU$solution) <- object$parNames
-        check <- g(psi = resU$solution,
-                   level = lev,
-                   chgSign = TRUE,
-                   object = object)$constraints
-        
-        check2 <- object$negLogLikFun(psi = resU$solution,
-                                      object = object,
-                                      deriv = FALSE)
-                     
-        if (trace) cat(sprintf("     Constraint check %10.7f, %10.4f\n", check, check2))
-        check <- (check > constrCheck)
-        
-        if (!inherits(resU, "try-error") && (resU$status >= 0) && check) {
-            psiUPrec <- resU[["solution"]]
-            res["U", iLev] <- -resU[["objective"]]
-        } else {
-            psiUPrec <- NULL
+        for (iLev in seq_along(level)) {
+            
+            lev <- level[iLev]
+            
+            if (trace) {
+                cat(sprintf("\no %s bound for level %s\n",
+                            labs[LU], fLevel[iLev]))
+            }
+            
+            ## =========================================================
+            ## if we have successfully computed the result for a
+            ## larger confidence level (and the same parameter), use
+            ## the corresponding parameter as initial guess
+            ## ==========================================================
+            
+            if ((iLev > 1L) && !is.null(psiPrec)) {
+                psi0 <- psiPrec
+            } else {
+                psi0 <- psiHat
+            }
+            
+            ## if (trace) {
+            ##     cat("    Initial value\n")
+            ##     print(psi0)
+            ## }
+            
+            resOpt <- try(nloptr::nloptr(x0 = psi0,
+                                         eval_f = f,
+                                         eval_g_ineq = g,
+                                         level = lev,
+                                         chgSign = chgSign[LU],
+                                         opts = opts1,
+                                         object = object))
+
+            diagno[LU, iLev, "status"] <- resOpt$status
+            if (trace == 1L) {
+                cat(sprintf("    Optimisation status: %d\n", resOpt$status))
+            }
+            
+            if (trace > 1L) {
+                cat("\nSOLUTION\n")
+                print(resL)
+            }
+            
+            ## ================================================================
+            ## compute value of the constaint as well as the distance
+            ## between the two directions gradient of objective 'f'
+            ## and gradient of constraint 'g' to see if the constaint
+            ## is active at solution
+            ## ================================================================
+
+            if (!inherits(resOpt, "try-error") && (resOpt$status %in% c(3, 4))) {
+                
+                checkg <- g(psi = resOpt$solution,
+                            level = lev,
+                            chgSign = chgSign[LU],
+                            object = object)
+                
+                checkf <- object$negLogLikFun(psi = resOpt$solution,
+                                              deriv = TRUE,
+                                              object = object)
+                
+                diagno[LU, iLev, "objective"] <- checkf$objective
+                diagno[LU, iLev, "constraint"] <- checkg$constraints
+                
+                if (trace == 1L) {
+                    cat(sprintf("    Objective value:  %10.7f\n", checkf$objective))
+                    cat(sprintf("    Constraint check: %10.7f\n", checkg$constraints))
+                }
+                
+                gradDist <- distLines(x1 = checkg$jacobian,
+                                      x2 = checkf$gradient)
+                
+                diagno[LU, iLev, "gradDist"] <- gradDist
+                
+                if (trace == 1L) {
+                    cat(sprintf("    gradDist:        %10.7f\n", gradDist))
+                    ## print(rbind("    f " = checkf$gradient,
+                    ##             "    g " = checkg$jacobian))
+                    
+                }
+
+                if ( (!is.na(gradDist)) && (gradDist < 0.05)) {
+                
+                    optDone <- TRUE
+                    psiPrec <- resOpt[["solution"]]
+                    res[LU, iLev] <- sign[LU] * resOpt[["objective"]]
+                    Psi[LU, iLev, ] <- resOpt[["solution"]]
+                    
+                } else {
+                    psiPrec <- NULL
+                }
+      
+                
+            } else {
+                psiPrec <- NULL
+            }
+      
         }
         
     }
+
+    ## attach diagnostic and parameter values as attributes.
+    attr(res, "diagno") <- diagno
+    attr(res, "psi") <- Psi
     
-    res
+    invisible(res)
 
 }

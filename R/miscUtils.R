@@ -215,6 +215,9 @@ distLines <- function(x1, x2) {
     if (length(x1) != length(x2)) {
         stop("'x1' and 'x2' must have the same length")
     }
+    if (any(is.na(x1)) || any(is.na(x2))) {
+        return(NA)
+    }
     n1 <- sqrt(sum(x1^2))
     n2 <- sqrt(sum(x2^2))
     if ((n1 <= 1e-6) || (n2 <= 1e-6)) {
@@ -225,7 +228,9 @@ distLines <- function(x1, x2) {
     x2 <- x2 / n2
     i <- which.max(abs(x1))
     if (x1[i] * x2[i] < 0.0) x2 <- -x2
-    acos(sum(x1 * x2))
+    s <- sum(x1 * x2)
+    if (s > 1 - 1e-9) return(0.0)
+    acos(s)
 }
 
 

@@ -70,12 +70,12 @@ ns2 <- NSGEV(formulas = list("loc" = ~ exp(alpha + beta * t), "scale" = ~ delta,
 ## compare the estimation with that of ismev::gev.fit
 require(ismev)
 ns1.ismev <- gev.fit(xdat = df2$y, ydat = as.matrix(df), mul = 1, show = FALSE)
-rbind("NSGEV" = c(ns1$estimates, "negLogL" = ns1$negLogL),
+rbind("NSGEV" = c(ns1$estimate, "negLogL" = ns1$negLogL),
        "ismev" = c(ns1.ismev$mle, "negLogL" = ns1.ismev$nllh))
 
 ## Try an expoential link
 ns2.ismev <- gev.fit(xdat = df2$y, ydat = as.matrix(df), mul = 1, mulink = exp, show = FALSE)
-rbind("NSGEV" = c(ns2$estimates, "negLogL" = ns2$negLogL),
+rbind("NSGEV" = c(ns2$estimate, "negLogL" = ns2$negLogL),
        "ismev" = c(ns2.ismev$mle, "negLogL" = ns2.ismev$nllh))
 }
 \seealso{

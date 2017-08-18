@@ -171,7 +171,7 @@ confint.TVGEV <- function(object,
         
         probL <- (1 - level) / 2
         probU <- 1 - probL
-        psiHat <- object$estimates
+        psiHat <- object$estimate
         sigHat <- object$sd
         q <- qnorm(cbind(probL, probU), mean = 0.0, sd = 1.0)
 
@@ -202,7 +202,7 @@ confint.TVGEV <- function(object,
                 " intented to be passed to `bs` (if any) will be ignored")
         }
         
-        ci <- apply(object$boot$estimates, 2, quantile,
+        ci <- apply(object$boot$estimate, 2, quantile,
                     prob = rbind(probL, probU))
         ci <- array(ci, dim = c(2L, nLevel, object$p),
                      dimnames = list(c("L", "U"), fLevel, object$parNames))
@@ -211,7 +211,7 @@ confint.TVGEV <- function(object,
     } else if (method == "proflik") {
 
         prob <- 1 - level
-        psiHat <- object$estimates
+        psiHat <- object$estimate
         ci <- array(NA, dim = c(object$p, 2L, nLevel),
                     dimnames = list(object$parNames, c("L", "U"), fLevel)) 
 

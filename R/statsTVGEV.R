@@ -40,7 +40,7 @@ quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
     if (any(probs < -eps | probs > 1 + eps))  stop("'probs' outside [0,1]")
     
     if (is.null(date)) date <- x$fDate
-    if (is.null(psi)) psi <- x$estimates
+    if (is.null(psi)) psi <- x$estimate
     
     n <- length(date)
     theta <- psi2theta(model = x, psi = psi, date = date)
@@ -119,7 +119,7 @@ density.TVGEV <- function(x, xValue = NULL,
                           log = FALSE, ...) {
     
     if (is.null(date)) date <- x$fDate
-    if (is.null(psi)) psi <- x$estimates
+    if (is.null(psi)) psi <- x$estimate
     
     n <- length(date)
     theta <- psi2theta(model = x, psi = psi, date = date)
@@ -163,7 +163,7 @@ cdf.TVGEV <- function(x,
                       log = FALSE, ...) {
     
     if (is.null(date)) date <- x$fDate
-    if (is.null(psi)) psi <- x$estimates
+    if (is.null(psi)) psi <- x$estimate
     
     n <- length(date)
     theta <- psi2theta(model = x, psi = psi, date = date)
@@ -230,7 +230,7 @@ mean.TVGEV <- function(x,
     ## Euler-Mascheroni constant
     gam <- - digamma(1) 
     if (is.null(date)) date <- x$fDate
-    if (is.null(psi)) psi <- x$estimates
+    if (is.null(psi)) psi <- x$estimate
     
     n <- length(date)
     theta <- psi2theta(model = x, psi = psi, date = date)
@@ -269,7 +269,7 @@ moment.TVGEV <- function(x,
     gam <- - digamma(1)
     
     if (is.null(date)) date <- x$fDate
-    if (is.null(psi)) psi <- x$estimates
+    if (is.null(psi)) psi <- x$estimate
     
     n <- length(date)
     theta <- psi2theta(model = x, psi = psi, date = date)

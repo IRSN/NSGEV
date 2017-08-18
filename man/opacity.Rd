@@ -10,8 +10,8 @@ opacity(n)
 \item{n}{Vector of integers.}
 }
 \value{
-Vector of opacities "alpha". Value 0 is for a fully
-transparent colour, value 1 is for a fully opaque colour.
+Vector of values for the opacity "alpha". Value 0 is for a
+fully transparent colour, value 1 is for a fully opaque colour.
 }
 \description{
 Choose an opacity level.

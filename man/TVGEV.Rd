@@ -63,7 +63,7 @@ date columns in \code{data}.}
 
 \item{opt}{The results of the optimisation, if relevant.}
 
-\item{estimates}{The numeric vector of estimates for the vector
+\item{estimate}{The numeric vector of estimates for the vector
 \code{psi}.}
 
 \item{theta}{A matrix with three columns containing the GEV
@@ -122,10 +122,10 @@ t0 <- system.time({
    res0 <- fevd(x = df0.evd$TXMax, data = df0.evd, loc = ~ t1 + t1_1970)
  })
 
-## compare estimates and negative log-liks
+## compare estimate and negative log-liks
 cbind("fevd" = res0$results$par,
-      "TVGEV_optim" = res1$estimates,
-      "TVGEV_nloptr" = res2$estimates)
+      "TVGEV_optim" = res1$estimate,
+      "TVGEV_nloptr" = res2$estimate)
 cbind("fevd" = res0$results$value,
       "VGEV_optim" = res1$negLogLik,
       "TVGEV_nloptr" = res2$negLogLik)

@@ -8,7 +8,7 @@ for a \code{NSGEV} object or \code{TVGEV} object}
 predictUncond(object, period = NULL, level = 0.95, newdata = NULL,
   newdate = NULL, newdateFrom = NULL, resample = FALSE,
   RLType = c("exceed", "average"), confintMethod = c("delta", "none",
-  "proflik"), out = c("data.frame", "array"), trace = 0, ...)
+  "boot", "proflik"), out = c("data.frame", "array"), trace = 0, ...)
 }
 \arguments{
 \item{object}{A \code{NSGEV} or \code{TVGEV} model.}
@@ -24,14 +24,19 @@ for now.}
 containing the covariates needed. Each row represents a block with
 unit duration.}
 
-\item{newdate}{Only for a \code{TVGEV} model. A vector that can
-be coerced to the \code{"Date"} class.}
+\item{newdate}{Only for a \code{TVGEV} model. This argument is
+essentially for compatibility with the \code{predict} method for
+unconditional prediction. A vector that can be coerced to the
+\code{"Date"} class. This vector define \eqn{B} blocks used to
+compute the return levels. The standard use is is with consecutive
+blocks, so the specification should \emph{use the}
+\code{newdateFrom} \emph{formal argument rather than} \code{newdate}.}
 
-\item{newdateFrom}{Only for a \code{TVGEV} model when
-\code{newdate} is not given. A vector with length one that can be
-coerced to the \code{"Date"} class. This gives the first block of a period
-of \eqn{B} successive blocks used to compute the Return Levels,
-where \eqn{B} is the maximal period defined in \code{period}.}
+\item{newdateFrom}{Only for a \code{TVGEV} model. A vector with
+length one that can be coerced to the \code{"Date"} class. This
+gives the first block of a period of \eqn{B} successive blocks
+used to compute the Return Levels, where \eqn{B} is the maximal
+period defined in \code{period}.}
 
 \item{resample}{Not used yet. See the \code{\link{RL}}
 function. For now, the RL period that are greater than
@@ -51,20 +56,26 @@ profile-likelihood method.}
 \item{...}{Not used yet.}
 }
 \value{
-A list with several elements.
+A data frame with the predicted RLs and the related CIs,
+with one row by block.
 
-\item{RL}{A data frame with the predicted RLs and the related CIs,
-with one row by block.}
+This data frame can have several attributes
 
-\item{PsiStar}{When \code{confInt} is equal to \code{"proflik"},
-this element is a matrix with its row \eqn{i} giving the value
-\eqn{\boldsymbol{psi}^\star}{\psi*} of the vector of parameters
-that maximizes the Return Level \eqn{\rho(T)} with period \eqn{T =
-T_i} under the constraint on the log-likelihood. Since most often
-the rows are close enough, a significant reduction of the
-computing time could be achieved in the near future by using the
-same value of \eqn{\boldsymbol{\psi}}{\psi} for all the Return
-Periods.  }
+\itemize{
+
+\item \code{title} is a string that can be used as title in plots.
+
+\item \code{diagno}. When \code{confInt} is equal to
+\code{"proflik"}, this element is an array providing information
+about the optimisation.
+
+\item \code{PsiStar}. When \code{confInt} is equal to
+\code{"proflik"}, this element is a matrix with its row \eqn{i}
+giving the value \eqn{\boldsymbol{psi}^\star}{\psi*} of the vector
+of parameters that maximizes the Return Level \eqn{\rho(T)} with
+period \eqn{T = T_i} under the constraint on the log-likelihood.
+
+}
 }
 \description{
 Prediction of unconditional or Non-Stationary Return Levels for a
@@ -86,19 +97,37 @@ For the profile-likelihood method, the determination of the
 confidence intervals is quite slow because a constrained
 optimization problem is solved for each period.
 
+Since most often the values of \eqn{\bolsymbol{\psi}^\star}{\psi*}
+corresponding to different periods are close enough, a significant
+reduction of the computing time could be achieved in the near
+future by using the same value of \eqn{\boldsymbol{\psi}}{\psi}
+for all the Return Periods.
+
 Future versions might allow different durations across blocks by
-using dedicated arguments. For now it must be kept in mind that
+using dedicated arguments. For now, it must be kept in mind that
 the periods are understood as multiple of a constant block
 duration. So if \code{newdata} has \code{100} rows the maximal
 Return Period that can be used without resampling is \code{100}.
 }
 \section{Caution}{
- When \code{period} contains some large values,
-say 100 or more, a massive extrapolation from the model is
-required to compute the correspondint RLs. This is likely to be
-meaningless from a statistical point of view, because a massive
-extrapolation of regression-like model does not make sense. The
-interest should rather focus on a moderately large period.
+
+\itemize{
+
+\item When \code{period} contains some large values, say 100 or
+more, a massive extrapolation from the model is required to
+compute the corresponding RLs. This is likely to be meaningless
+from a statistical point of view, because a massive extrapolation
+of regression-like model does not make sense. The interest should
+rather focus on a moderately large period.
+
+\item For each period \eqn{T}, the Return Level is computed using
+the $T$ blocks \eqn{t_0}, \eqn{t_0 + 1}, \dots, \eqn{t_0 + T -1}
+so the different periods \eqn{T} appearing on a Return Level plot
+correspond to different prediction horizons. As a result, the
+quantile or confidence bounds do not depend as smoothly of \eqn{T}
+as they do for conditional predictions.
+ 
+}
 }
 
 \author{

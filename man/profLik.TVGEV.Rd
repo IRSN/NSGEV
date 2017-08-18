@@ -31,7 +31,11 @@ assumed to provide a gradient vector as an attribute named
 \value{
 An array with the value of the function and the
 corresponding Lower and Upper end-points for the given confidence
-levels.
+levels. This array has two attributes with names \code{"diagno"}
+and \code{"psi"} which both are arrays. The attributes provide
+information about the numerical optimisation and the values of the
+vector of parameter that maximised or minimised the function
+\code{fun}.
 }
 \description{
 Profile-likelihood inference for \code{TVGEV} objects.
@@ -39,15 +43,29 @@ Profile-likelihood inference for \code{TVGEV} objects.
 \details{
 Compute the lower and upper end-points of a profile-likelihood
 based confidence interval. The (apparently new) method used here
-relies on maximising the function of interest, say
-\eqn{\rho(\boldsymbol(\psi)}{\rho(\psi)}, under the constraint
+relies on maximising and minimising the function of interest, say
+\eqn{\eta(\boldsymbol(\psi)}{\eta(\psi)}, under the constraint
 that the log-likelihood is greater than the maximal log-likelihood
 minus a positive quantity \eqn{\delta} depending on the confidence
-level. This differs from the usual method which relies on a
-univariate zero-finding for the profile-likelihood function, the
-evaluation of which relies on a \eqn{p-1} dimensional
-optimisation. As a major advantage, the new method does not require
-a re-parameterisation of the model.
+level. This differs from the usual method which relies on an
+univariate zero-finding for the profile-likelihood function (minus
+a constant). Remind that each evaluation of the profile requires a
+\eqn{p-1} dimensional optimisation. As a major advantage, the new
+method does not require a re-parameterisation of the model.
+}
+\note{
+For each confidence limit the numerical optimisation may
+fail, in which case the limit will be \code{NA}. Using \code{trace
+= 1} can be useful to further check the optimisation. The
+\code{Optimisation status} value should be \code{3} or \code{4}
+for small changes on the parameter or on the objective. On the
+other hand, a value of \code{5} indicates that the maximal number
+of iterations was reached, which is considered here as a
+failure. The \code{Constaint check} value should be small because
+the constraint must be active at the optimum. The \code{gradDist}
+is the distance between the two directions of the gradient vectors
+(objective and constraint). It should be small as well because the
+gradients must be colinear at the optimum (Lagrange conditions).
 }
 \examples{
 df <- within(TXMax_Dijon, Date <- as.Date(sprintf("\%4d-01-01", Year)))

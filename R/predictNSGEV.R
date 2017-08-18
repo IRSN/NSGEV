@@ -205,7 +205,7 @@ predict.NSGEV <- function(object, period = NULL,
         names(Rho) <- period
         
         ## Initial 
-        psi <- object$estimates
+        psi <- object$estimate
         
         for (i in seq_along(period)) {
             if (period[i] <= nrow(newdata)) {

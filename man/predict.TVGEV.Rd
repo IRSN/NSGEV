@@ -79,7 +79,7 @@ here, especially for non-parametric bootstap.
 several constrained optimisations are required. Since the marginal
 distribution hence the RL vary only slowly in practice, an
 unnecessary computing burden will result when many values of
-\code{newdate} are used as it is the case by default.
+\code{newdate} are used.
 }
 
 \examples{

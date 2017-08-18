@@ -44,7 +44,7 @@ psi2theta.TVGEV <- function(model, psi = NULL, date = NULL,
 
     ## psi2theta can be used to extract the element 'theta'
     if (is.null(psi)) {
-        psi <- model$estimates
+        psi <- model$estimate
     }
     
     p <- length(psi)
@@ -259,7 +259,8 @@ MLE.TVGEV <- function(object,
             dGEV(y,
                  loc = theta[object$indVal, "loc"],
                  scale = theta[object$indVal, "scale"],
-                 shape = theta[object$indVal, "shape"], log = TRUE, deriv = deriv)
+                 shape = theta[object$indVal, "shape"], log = TRUE,
+                 deriv = deriv)
         
         nL <- -sum(logL)
       
@@ -288,7 +289,7 @@ MLE.TVGEV <- function(object,
         nL
         
     }
-
+    
     res$negLogLikFun <- negLogLikFun
     
     psi0 <- res$psi0 <- parIni.TVGEV(object = object, y = yBak)
@@ -314,9 +315,9 @@ MLE.TVGEV <- function(object,
 
         if (!inherits(res$fit, "try-error")) {
             if (res$fit$convergence == 0) {
-                estimates <- res$fit$par
-                names(estimates) <- object$parNames
-                res$estimates <- estimates
+                estimate <- res$fit$par
+                names(estimate) <- object$parNames
+                res$estimate <- estimate
                 res$negLogLik <- res$fit$value
             } else {
                 cvg <- FALSE
@@ -349,9 +350,9 @@ MLE.TVGEV <- function(object,
         
         if (!inherits(res$fit, "try-error")) {
             if (res$fit$status > 0 ) {
-                estimates <- res$fit$solution
-                names(estimates) <- object$parNames
-                res$estimates <- estimates
+                estimate <- res$fit$solution
+                names(estimate) <- object$parNames
+                res$estimate <- estimate
                 res$negLogLik <- res$fit$objective
             } else {
                 cvg <- FALSE
@@ -362,24 +363,24 @@ MLE.TVGEV <- function(object,
 
     if (!cvg) {
         warning("covergence not reached in optimisation")
-        estimates <- rep(NA, object$p)
-        names(estimates) <- object$parNames
+        estimate <- rep(NA, object$p)
+        names(estimate) <- object$parNames
         res$negLogLik <- NA
-        res$estimates <- estimates
+        res$estimate <- estimate
         res$logLik <- NA
     } else {
         
         res$logLik <- -res$negLogLik
-        psiHat <- res$estimates
+        psiHat <- res$estimate
         ## compute theta 
         res$theta <- psi2theta(object, psi = psiHat, checkNames = FALSE)
         
         ## compute Hessian. 
         ## res$hessian <- hessian(func = negLogLikFun,
-        ##                       x = res$estimates, deriv = FALSE,
+        ##                       x = res$estimate, deriv = FALSE,
         ##                       object = object)
 
-        res$hessian <- optimHess(par = res$estimates,
+        res$hessian <- optimHess(par = res$estimate,
                                  fn = negLogLikFun,
                                  deriv = FALSE,
                                  object = object)
@@ -531,7 +532,7 @@ bs.TVGEV <- function(object,
                                        res <- try(MLE.TVGEV(object, y = y[ , b], estim = estim, ...),
                                                   silent = TRUE)
                                        if (!inherits(res, "try-error")) {
-                                           est <- res$estimates
+                                           est <- res$estimate
                                        } else est <- NULL
                                        est
                                    })
@@ -547,7 +548,7 @@ bs.TVGEV <- function(object,
             res <- try(MLE.TVGEV(object, y = y[ , b], estim = estim, ...),
                        silent = TRUE)
             if (!inherits(res, "try-error")) {
-                Psi[b, ] <- res$estimates
+                Psi[b, ] <- res$estimate
                 nlL[b] <- res$negLogLik
             }
         }
@@ -559,7 +560,7 @@ bs.TVGEV <- function(object,
     Psi <- Psi[ind, , drop = FALSE]
     nlL <- nlL[ind]
     
-    list(estimates = Psi,
+    list(estimate = Psi,
          negLogLik = nlL,
          R = R,
          optim = optim,
@@ -707,7 +708,7 @@ modelMatrices.TSGEV  <- function(object, date = NULL) {
 ##' 
 ##' \item{opt}{The results of the optimisation, if relevant.}
 ##'
-##' \item{estimates}{The numeric vector of estimates for the vector
+##' \item{estimate}{The numeric vector of estimates for the vector
 ##' \code{psi}.}
 ##' 
 ##' \item{theta}{A matrix with three columns containing the GEV
@@ -747,10 +748,10 @@ modelMatrices.TSGEV  <- function(object, date = NULL) {
 ##'    res0 <- fevd(x = df0.evd$TXMax, data = df0.evd, loc = ~ t1 + t1_1970)
 ##'  })
 ##'
-##' ## compare estimates and negative log-liks
+##' ## compare estimate and negative log-liks
 ##' cbind("fevd" = res0$results$par,
-##'       "TVGEV_optim" = res1$estimates,
-##'       "TVGEV_nloptr" = res2$estimates)
+##'       "TVGEV_optim" = res1$estimate,
+##'       "TVGEV_nloptr" = res2$estimate)
 ##' cbind("fevd" = res0$results$value,
 ##'       "VGEV_optim" = res1$negLogLik,
 ##'       "TVGEV_nloptr" = res2$negLogLik)
@@ -895,7 +896,7 @@ TVGEV <- function(data,
         tv[[nm1]] <- res[[nm1]]
     }
     
-    tv$theta <- psi2theta(tv, psi = tv$estimates)
+    tv$theta <- psi2theta(tv, psi = tv$estimate)
     rownames(tv$theta) <- tv$fDate
 
     tv
@@ -1064,7 +1065,7 @@ print.summary.TVGEV <- function(x, ...) {
 
     cat("Coefficients:\n")
     grp <- rep(c("loc", "scale", "shape"), times = x$pp)
-    print(cbind("Estimate" = x$estimates,
+    print(cbind("Estimate" = x$estimate,
                 "Std. Error" = x$sd))
     cat("\n")
     

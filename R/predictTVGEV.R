@@ -62,7 +62,7 @@
 ##' several constrained optimisations are required. Since the marginal
 ##' distribution hence the RL vary only slowly in practice, an
 ##' unnecessary computing burden will result when many values of
-##' \code{newdate} are used as it is the case by default.
+##' \code{newdate} are used.
 ##'
 ##' @note Despite of its positive sounding name, the "bias correction"
 ##' can have a negative impact with some Extreme Value models as used
@@ -160,7 +160,7 @@ predict.TVGEV <- function(object,
         
         probL <- (1 - level) / 2
         probU <- 1 - probL
-        psiHat <- object$estimates
+        psiHat <- object$estimate
         covPsi <- vcov(object)
         p <- object$p
         
@@ -275,7 +275,7 @@ predict.TVGEV <- function(object,
         
         constrCheck <- -5e-3
         
-        psiHat <- object$estimates
+        psiHat <- object$estimate
         
         RL <- array(NA,
                     dim = c(Date = n, Period = nPeriod, Lim = 3L, Level = nLevel),
@@ -296,17 +296,27 @@ predict.TVGEV <- function(object,
         ##
         ## ===================================================================
 
-        opts1 <- list("algorithm" = "NLOPT_LD_MMA",
-                      "xtol_rel" = 1.0e-5,
-                      "ftol_abs" = 1.0e-7, "ftol_rel" = 1.0e-5,
-                      "maxeval" = 3000,
-                      "check_derivatives" = FALSE,
-                      ## "local_opts" = list("algorithm" = "NLOPT_LD_MMA", "xtol_rel" = 1.0e-8,
-                      ##    "maxeval" = 3000,
-                      ##    "ftol_abs" = 1.0e-4,
-                      ##    "ftol_rel" = 1.0e-8),
-                      "print_level" = 0)
-
+        opts <- list()
+        opts[[1]] <- list("algorithm" = "NLOPT_LD_MMA",
+                          "xtol_rel" = 1.0e-5,
+                          "ftol_abs" = 1.0e-7, "ftol_rel" = 1.0e-5,
+                          "maxeval" = 200,
+                          "check_derivatives" = FALSE,
+                          "print_level" = 0)
+        
+        opts[[2]] <- list("algorithm" = "NLOPT_LD_AUGLAG",
+                          "xtol_rel" = 1.0e-5,
+                          "ftol_abs" = 1.0e-7, "ftol_rel" = 1.0e-5,
+                          "maxeval" = 500,
+                          "check_derivatives" = FALSE,
+                          "local_opts" = list("algorithm" = "NLOPT_LD_MMA",
+                              "xtol_rel" = 1.0e-5,
+                              "maxeval" = 1000,
+                              "ftol_abs" = 1.0e-7,
+                              "ftol_rel" = 1.0e-5),
+                          "print_level" = 0)
+        
+        
         if (trace >= 2) {
             opts1[["check_derivatives"]] <- TRUE
             opts1[["check_derivatives_print"]] <- "all"
@@ -435,7 +445,7 @@ predict.TVGEV <- function(object,
                 lev <- level[iLev]
 
                 if (trace) {
-                    cat(sprintf("Confidence Level: %5.2f\n", lev))
+                    cat(sprintf("\nConfidence Level: %5.2f\n", lev))
                 }
                 
                 for (iDate in 1L:n) { 
@@ -451,73 +461,90 @@ predict.TVGEV <- function(object,
                         } else {
                             psi0 <- psiHat
                         }
-                        
-                        resOpt <- try(nloptr::nloptr(x0 = psi0,
-                                                     eval_f = f,
-                                                     eval_g_ineq = g,
-                                                     level = lev,
-                                                     prob = prob[iPer],
-                                                     iDate = as.double(iDate),
-                                                     chgSign = chgSign[LU],
-                                                     opts = opts1,
-                                                     object = object))
-                        
-                        diagno[iDate, iPer, LU, iLev, "status"] <-
-                            resOpt$status
-                        
-                        if (trace == 1L) {
-                            cat(sprintf("        Optimisation status: %d\n", resOpt[["status"]]))
-                            names(resOpt$solution) <- object$parNames
-                            cat(sprintf("        Objective: %7.2f\n", resOpt[["objective"]]))
-                        } else  if (trace > 2L) {
-                            cat("\nSOLUTION\n")
-                            print(resOpt)
-                        }
-                        
-                        ## The constraint must be active. We have to check that!
-                        checkg <- g(psi = resOpt$solution,
-                                    level = lev,
-                                    prob = prob[iPer],
-                                    iDate = iDate,
-                                    chgSign = chgSign[LU],
-                                    object = object)
-                        
-                        diagno[iDate, iPer, LU, iLev, "constraint"] <-
-                            checkg$constraints
-                        
-                        ## The gradient of the objective must be colinear to the
-                        ## jacobian of the constraint. We have to check that!
-                        checkf <- f(psi = resOpt$solution,
-                                    level = lev,
-                                    prob = prob[iPer],
-                                    iDate = iDate,
-                                    chgSign = chgSign[LU],
-                                    object = object)
-                        
-                        gradDist <- distLines(x1 = checkg$jacobian,
-                                              x2 = checkf$gradient)
-                        
-                        diagno[iDate, iPer, LU, iLev, "gradDist"] <- gradDist
-                        
-                        if (trace) {
-                            cat(sprintf("        Constraint check %10.7f\n",
-                                        checkg$constraints))
-                            cat(sprintf("        Gradient directions: %7.4f\n", gradDist))
-                            if (trace == 2) {
-                                cat("        Gradients\n")
-                                print(rbind("        g" = checkg$jacobian,
-                                            "        f" = checkf$gradient))
-                                cat("\n")
+
+                        optDone <- FALSE
+                        optNum <- 1
+
+                        while (!optDone && (optNum <= 2)) {
+
+                            if (trace && (optNum > 1)) {
+                                cat("        <retrying optimisation!>\n")
                             }
+                            
+                            resOpt <- try(nloptr::nloptr(x0 = psi0,
+                                                         eval_f = f,
+                                                         eval_g_ineq = g,
+                                                         level = lev,
+                                                         prob = prob[iPer],
+                                                         iDate = as.double(iDate),
+                                                         chgSign = chgSign[LU],
+                                                         opts = opts[[optNum]],
+                                                         object = object))
+                            
+                            diagno[iDate, iPer, LU, iLev, "status"] <-
+                                resOpt$status
+                            
+                            if (trace == 1L) {
+                                cat(sprintf("        Optimisation status: %d\n", resOpt[["status"]]))
+                                cat(sprintf("        Iterations: %d\n", resOpt[["iterations"]]))
+                                names(resOpt$solution) <- object$parNames
+                                cat(sprintf("        Objective: %7.2f\n", resOpt[["objective"]]))
+                            } else  if (trace > 2L) {
+                                cat("\nSOLUTION\n")
+                                print(resOpt)
+                            }
+                            
+                            ## The constraint must be active. We have to check that!
+                            checkg <- g(psi = resOpt$solution,
+                                        level = lev,
+                                        prob = prob[iPer],
+                                        iDate = iDate,
+                                        chgSign = chgSign[LU],
+                                        object = object)
+                            
+                            diagno[iDate, iPer, LU, iLev, "constraint"] <-
+                                checkg$constraints
+                            
+                            ## The gradient of the objective must be colinear to the
+                            ## jacobian of the constraint. We have to check that!
+                            checkf <- f(psi = resOpt$solution,
+                                        level = lev,
+                                        prob = prob[iPer],
+                                        iDate = iDate,
+                                        chgSign = chgSign[LU],
+                                        object = object)
+                            
+                            gradDist <- distLines(x1 = checkg$jacobian,
+                                                  x2 = checkf$gradient)
+                            
+                            diagno[iDate, iPer, LU, iLev, "gradDist"] <- gradDist
+                            
+                            if (trace) {
+                                cat(sprintf("        Constraint check %10.7f\n",
+                                            checkg$constraints))
+                                cat(sprintf("        Gradient directions: %7.4f\n", gradDist))
+                                if (trace == 2) {
+                                    cat("        Gradients\n")
+                                    print(rbind("        g" = checkg$jacobian,
+                                                "        f" = checkf$gradient))
+                                    cat("\n")
+                                }
+                            }
+                                 
+                            if (!inherits(resOpt, "try-error") && (resOpt$status == 3) &&
+                                (checkg$constraints > constrCheck) &&
+                                (!is.na(gradDist)) &&
+                                (gradDist < 0.05)) {
+                                optDone <- TRUE
+                                psiIniPrec <- resOpt[["solution"]]
+                                RL[iDate, iPer, LU, iLev] <- sign[LU] * resOpt[["objective"]]
+                            } else {
+                                optNum <- optNum + 1
+                                psiIniPrec <- NULL
+                            }
+
                         }
-                        check <- (checkg$constraints > constrCheck)
                         
-                        if (!inherits(resOpt, "try-error") && (resOpt$status >= 0) && check) {
-                            psiIniPrec <- resOpt[["solution"]]
-                            RL[iDate, iPer, LU, iLev] <- sign[LU] * resOpt[["objective"]]
-                        } else {
-                            psiIniPrec <- NULL
-                        }
                     }
                 }
             }
@@ -561,9 +588,11 @@ predict.TVGEV <- function(object,
         }
 
         class(RL) <- c("predict.TVGEV", "data.frame")
-    } 
-
+    }
+    
+    attr(RL, "title") <- fDate
     attr(RL, "diagno") <- diagno
+    attr(RL, "type") <- "conditional"
     
     return(RL)
 
