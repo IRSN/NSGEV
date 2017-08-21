@@ -71,7 +71,9 @@ tedious for the general form of model allowed in \code{TVGEV}.
 \note{
 Despite of its positive sounding name, the "bias correction"
 can have a negative impact with some Extreme Value models as used
-here, especially for non-parametric bootstap.
+here, especially for non-parametric bootstrap. In future versions,
+the dots \code{...} might be used to control the profile-likelihood
+as well as the bootstrap.
 }
 \section{Caution}{
  When \code{confintMethod} is set to

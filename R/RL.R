@@ -249,7 +249,7 @@ RL <- function(model,
             if (is.null(rhoMin)) rhoMin <- min(q)
             if (is.null(rhoMax)) rhoMax <- max(q)
 
-            ## added on 2017-08-18. This tyîcally occurs when the
+            ## added on 2017-08-18. This typically occurs when the
             ## parameter falls outside of the admissible region, e.g.
             ## when the scale is negative.
             if (is.na(rhoMin) || is.na(rhoMax)) {

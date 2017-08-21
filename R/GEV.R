@@ -1,5 +1,5 @@
 
-reshapeGEV <- function (x, loc, scale, shape, matrix = FALSE) {
+.reshapeGEV <- function (x, loc, scale, shape, matrix = FALSE) {
    
    n <- length(x)
    
@@ -186,7 +186,7 @@ dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
         
     } 
     
-    L <- reshapeGEV(x = x, loc = loc, scale = scale, shape = shape,
+    L <- .reshapeGEV(x = x, loc = loc, scale = scale, shape = shape,
                     matrix = TRUE)
 
     n <- nrow(L)
@@ -297,7 +297,7 @@ pGEV <- function (q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
         
     }
     
-    L <- reshapeGEV(x = q, loc = loc, scale = scale, shape = shape,
+    L <- .reshapeGEV(x = q, loc = loc, scale = scale, shape = shape,
                     matrix = TRUE)
     n <- nrow(L)
     
@@ -416,7 +416,7 @@ qGEV <- function (p, loc = 0.0, scale = 1.0, shape = 0.0, lower.tail = TRUE,
         
     } 
 
-    L <- reshapeGEV(x = p, loc = loc, scale = scale, shape = shape,
+    L <- .reshapeGEV(x = p, loc = loc, scale = scale, shape = shape,
                     matrix = TRUE)
     n <- nrow(L)
     
@@ -475,7 +475,7 @@ rGEV <- function (n, loc = 0.0, scale = 1.0, shape = 0.0) {
         stop("'shape' must contain non-NA finite numeric values")  
     }
     
-    L <- reshapeGEV(x = 1.0, loc = loc, scale = scale, shape = shape)
+    L <- .reshapeGEV(x = 1.0, loc = loc, scale = scale, shape = shape)
     
     r <- array(NA, dim = c(L$n, n),
                dimnames = list(L$nms, paste("sim", 1:n, sep = "")) )

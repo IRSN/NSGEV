@@ -257,11 +257,6 @@ profLik.TVGEV <- function(object,
                 psi0 <- psiHat
             }
             
-            ## if (trace) {
-            ##     cat("    Initial value\n")
-            ##     print(psi0)
-            ## }
-            
             resOpt <- try(nloptr::nloptr(x0 = psi0,
                                          eval_f = f,
                                          eval_g_ineq = g,
@@ -273,11 +268,12 @@ profLik.TVGEV <- function(object,
             diagno[LU, iLev, "status"] <- resOpt$status
             if (trace == 1L) {
                 cat(sprintf("    Optimisation status: %d\n", resOpt$status))
+                cat(sprintf("    Iterations:          %d\n", resOpt$iterations))
             }
             
             if (trace > 1L) {
                 cat("\nSOLUTION\n")
-                print(resL)
+                print(resOpt)
             }
             
             ## ================================================================

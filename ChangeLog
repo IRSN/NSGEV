@@ -1,3 +1,18 @@
+2017-08-21  yves  <deville.yves@alpestat.com>
+
+	* Changed 'plot.TVGEV' to render in black and white print.
+
+	* Refactored code of 'profLik': easier to read and display
+	information.
+
+	* Added a better control of arguments passed through dots.
+
+	* Added exact computation of Hessian for TVGEV models. Might be
+	plugged in the estimation in the future.
+
+	* Added bootstap inference on unconditional predictions.
+	
+	
 2017-08-14  yves  <deville.yves@alpestat.com>
 
 	* Changed predict.TVGEV to improve the convergence of the
@@ -5,7 +20,7 @@
 
 2017-06-13  yves  <deville.yves@alpestat.com>
 
-	* Added the computation of the (exact) qHessian of the log-density
+	* Added the computation of the (exact) Hessian of the log-density
 	and of the quantile for the GEV distribution.
 
 2017-05-31  yves  <deville.yves@alpestat.com>

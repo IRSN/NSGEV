@@ -86,7 +86,7 @@
 ##' confidence intervals is quite slow because a constrained
 ##' optimization problem is solved for each period.
 ##'
-##' Since most often the values of \eqn{\bolsymbol{\psi}^\star}{\psi*}
+##' Since most often the values of \eqn{\boldsymbol{\psi}^\star}{\psi*}
 ##' corresponding to different periods are close enough, a significant
 ##' reduction of the computing time could be achieved in the near
 ##' future by using the same value of \eqn{\boldsymbol{\psi}}{\psi}
@@ -409,8 +409,9 @@ predictUncond <- function(object,
     }
     attr(RL, "diagno") <- diagno
     attr(RL, "psi") <- Psi
-    attr(RL, "title") <- sprintf(" %s + T - 1", format(newdateFrom))
-    attr(RL, "type") <- "conditional"
+    attr(RL, "title") <- sprintf("Integrated Return Levels for periods starting at  %s",
+                                 format(newdateFrom))
+    attr(RL, "type") <- "unconditional"
     invisible(RL)
     
 }

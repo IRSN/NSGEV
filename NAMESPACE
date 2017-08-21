@@ -1,5 +1,6 @@
 useDynLib(NSGEV)
 
+importFrom("utils", "getS3method")
 import("stats")
 importFrom("graphics", "abline", "lines", "matlines", "matplot",
            "mtext", "plot")
@@ -9,7 +10,7 @@ importFrom("reshape2", "melt")
 
 import("Renext")
 importFrom("ismev", "gev.fit")
-import("extRemes")
+import("extRemes", except = c("qqplot", "qqnorm"))
 import("numDeriv")
 import("nloptr")
 
@@ -57,7 +58,8 @@ S3method(vcov, TVGEV)
 
 ## predictions iherits from data.frame
 S3method(plot, predict.TVGEV)
-
+S3method(plot, resid.TVGEV)
+S3method(plot, simulate.TVGEV)
 S3method(print, summary.TVGEV)
 
 S3method(plot, bts)

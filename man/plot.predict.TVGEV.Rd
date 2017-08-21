@@ -4,7 +4,7 @@
 \alias{plot.predict.TVGEV}
 \title{Plot Predict Results for \code{TVGEV}}
 \usage{
-\method{plot}{predict.TVGEV}(x, y, gg = TRUE, ...)
+\method{plot}{predict.TVGEV}(x, y, gg = TRUE, bw = TRUE, ...)
 }
 \arguments{
 \item{x}{An object with class \code{"predict.TVGEV"} as returned
@@ -16,6 +16,9 @@ setting it to the default value \code{"data.frame"}.}
 
 \item{gg}{Logical. If \code{TRUE} the plot is produced with the
 \bold{ggplot2} package.}
+
+\item{bw}{Logical. Should the plot render in black and white for
+printing?}
 
 \item{...}{Not used yet.}
 }
@@ -30,7 +33,8 @@ Plot predict Results for \code{TVGEV}.
 This function is intended to work with predictions computed
 for a possibly large number of periods (to get smooth curves) but
 with only a small number of dates, each apearing in a facet. So
-the number of dates is limited to \code{6}.
+the number of dates is limited to \code{6}. Similarily, the number
+of confidence levels can not be \code{> 3}.
 }
 \examples{
 example(TVGEV)

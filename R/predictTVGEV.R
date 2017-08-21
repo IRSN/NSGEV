@@ -47,7 +47,7 @@
 ##'
 ##' @param trace Integer level of verbosity.
 ##'
-##' @param ... Arguments to be passed to \code{bs}.
+##' @param ... Arguments to be passed to \code{bs}. 
 ##'
 ##' @return A data frame or an array with the RL and confidence limits
 ##' for each combination of \emph{date}, \emph{period} and
@@ -66,7 +66,9 @@
 ##'
 ##' @note Despite of its positive sounding name, the "bias correction"
 ##' can have a negative impact with some Extreme Value models as used
-##' here, especially for non-parametric bootstap.
+##' here, especially for non-parametric bootstrap. In future versions,
+##' the dots \code{...} might be used to control the profile-likelihood
+##' as well as the bootstrap.
 ##' 
 ##' @author Yves Deville
 ##'
@@ -86,6 +88,25 @@ predict.TVGEV <- function(object,
                           trace = 1L,
                           ...) {
 
+
+    dots <- match.call(expand.dots = FALSE)$...
+
+    if (length(dots)) {
+        dotsText <- paste(sprintf("'%s'", names(dots)), collapse = ", ")
+        if (confintMethod %in% c("none", "delta", "proflik")) {
+            warning("the formals ", dotsText, " are ignored")
+        } else if (confintMethod == "boot") {
+            fm <- formals(getS3method("bs", class(object)))
+            ind <- !(names(dots) %in% names(fm))
+            if (any(ind)) {
+                dotsText2 <- paste(sprintf("'%s'", names(dots)[ind]), collapse = ", ")
+                stop("the formals ", dotsText2, " are passed to 'bs'\n",
+                     "method but are nor formals of it.")
+            }
+        }
+    }
+
+    
     if (!all(object$isCst)) {
         if (is.null(newdate)) {
             message("Since 'object' is really time-varying, the Return Levels\n",
@@ -451,12 +472,19 @@ predict.TVGEV <- function(object,
                 for (iDate in 1L:n) { 
                     
                     if (trace) cat(sprintf("\n  o Date: %s\n", fDate[iDate]))
-                    
-                    for (iPer in seq_along(period)) {
 
-                        if (trace) cat(sprintf("\n    - Period:  %5d\n", period[iPer]))
-                        
-                        if ((iPer > 1L) && !is.null(psiIniPrec)) {
+                    ## ========================================================
+                    ## 2017-08-20 It was found that the convergence is much
+                    ## easier when the periods 'T' are taken in reverse order
+                    ## ========================================================
+                    for (iPer in rev(seq_along(period))) {
+
+                        if (trace) {
+                            cat(sprintf("\n    - Period:  %5d\n", period[iPer]))
+                        }
+
+                        if ((iPer < length(period)) && !is.null(psiIniPrec)) {
+                        ## if ((iPer > 1L) && !is.null(psiIniPrec)) {
                             psi0 <- psiIniPrec
                         } else {
                             psi0 <- psiHat
@@ -530,14 +558,22 @@ predict.TVGEV <- function(object,
                                     cat("\n")
                                 }
                             }
-                                 
-                            if (!inherits(resOpt, "try-error") && (resOpt$status == 3) &&
+
+                            ## It seems that the distance reached is smaller when
+                            ## 'T' is large.
+
+                            gradLim <- 1.0 / period^0.6
+
+                            if (!inherits(resOpt, "try-error") &&
+                                (resOpt$status %in% c(3, 4)) &&
                                 (checkg$constraints > constrCheck) &&
                                 (!is.na(gradDist)) &&
-                                (gradDist < 0.05)) {
+                                (gradDist < gradLim)) {
+
                                 optDone <- TRUE
                                 psiIniPrec <- resOpt[["solution"]]
                                 RL[iDate, iPer, LU, iLev] <- sign[LU] * resOpt[["objective"]]
+
                             } else {
                                 optNum <- optNum + 1
                                 psiIniPrec <- NULL
@@ -589,8 +625,9 @@ predict.TVGEV <- function(object,
 
         class(RL) <- c("predict.TVGEV", "data.frame")
     }
-    
-    attr(RL, "title") <- fDate
+
+    ## use fDate to display information in title?
+    attr(RL, "title") <- "Conditional Return Levels"
     attr(RL, "diagno") <- diagno
     attr(RL, "type") <- "conditional"
     
@@ -614,6 +651,9 @@ predict.TVGEV <- function(object,
 ##'
 ##' @param gg Logical. If \code{TRUE} the plot is produced with the
 ##' \bold{ggplot2} package.
+##'
+##' @param bw Logical. Should the plot render in black and white for
+##' printing?
 ##' 
 ##' @param ... Not used yet.
 ##'
@@ -623,22 +663,36 @@ predict.TVGEV <- function(object,
 ##' @note This function is intended to work with predictions computed
 ##' for a possibly large number of periods (to get smooth curves) but
 ##' with only a small number of dates, each apearing in a facet. So
-##' the number of dates is limited to \code{6}.
+##' the number of dates is limited to \code{6}. Similarily, the number
+##' of confidence levels can not be \code{> 3}.
 ##' 
 ##' @examples
 ##' example(TVGEV)
 ##' pred <- predict(res2, newdate = c("1960-01-01", "2000-01-01", "2020-01-01"),
 ##'                 level = c(0.70, 0.95), confintMethod = "delta")
 ##' g <- plot(pred)
-plot.predict.TVGEV <- function(x, y, gg = TRUE, ... ) {
+plot.predict.TVGEV <- function(x, y, gg = TRUE, bw = TRUE, ... ) {
 
-    ## avoid NOTE 'no visible binding' in checks
+
+    dots <- match.call(expand.dots = FALSE)$...
+
+    if (length(dots)) {
+        dotsText <- paste(sprintf("'%s'", names(dots)), collapse = ", ")
+        warning("dots '...' not used yet in this method: ",
+                "the formals ", dotsText, " will be ignored. ",
+                "Use the ggplot fonctions to change the apearance ",
+                "of the graph.")
+    }
+    
+    ## avoid "NOTE: no visible binding..." in checks
     Period <- L <- U <- Level <- Quant <- NULL    
     
-    if (!gg) stop("Sorry, but for now only the 'gg = TRUE' is possible!")
+    if (!gg) stop("Sorry, for now only the 'gg = TRUE' is possible!")
     
-    if (!requireNamespace("ggplot2", quietly = TRUE))  stop("package 'ggplot2' needed here")
-        
+    if (!requireNamespace("ggplot2", quietly = TRUE)) {
+        stop("package 'ggplot2' needed here")
+    } 
+
     confLev <- attr(x, "confLevel")
     
     if (nd <- length(unique(x$Date)) > 6L) {
@@ -648,42 +702,61 @@ plot.predict.TVGEV <- function(x, y, gg = TRUE, ... ) {
     fill <- "darkgray"
     ## Find out if the confidence levels
     g1 <- ggplot(data = x)
-
+    
     if (!is.null(x$L) && !is.null(x$U)) {
         g1 <- g1  + geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U, group = Level,
                                     ## colour = Level,
                                     fill = Level),
                                 ## group = type,
                                 alpha = 0.2)
+         if (bw) {
+             g1 <- g1 +
+                 geom_line(mapping = aes(x = Period, y = L, group = Level, linetype = Level),
+                           colour = "gray20",
+                           alpha = 0.8)
+             g1 <- g1 +
+                 geom_line(mapping = aes(x = Period, y = U, group = Level, linetype = Level),
+                           colour = "gray20",
+                           alpha = 0.8)
+         } else {
+             g1 <- g1 + geom_line(mapping = aes(x = Period, y = L, group = Level),
+                                  alpha = 0.2)
+             g1 <- g1 + geom_line(mapping = aes(x = Period, y = U, group = Level),
+                                  alpha = 0.2)
+         }
         
-        g1 <- g1 + geom_line(mapping = aes(x = Period, y = L, group = Level), alpha = 0.2)
-        g1 <- g1 + geom_line(mapping = aes(x = Period, y = U, group = Level), alpha = 0.2)
     }
-    ## g1 <- g1 + scale_fill_manual(name = "legend_name", values = c("red", "green"),
-    ##                               labels = c('one','two'))
+    
     g1 <- g1 + geom_line(data = x,
-                         mapping = aes(x = Period, y = Quant, colour = "orangered"), size = 1)
+                         mapping = aes(x = Period, y = Quant, colour = "orangered"),
+                         size = 1)
     g1 <- g1 + theme_bw()
     g1 <- g1 + scale_x_log10(breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000))
     ## g
-    g1 <- g1 + theme(axis.text.x = element_text(angle = 0, hjust = 0),
+    g1 <- g1 + theme(plot.title = element_text(face = "bold", size = 12),
+                     axis.text.x = element_text(angle = 0),
                      axis.title = element_text(face = 'bold', size = 12),
-                     title = element_text(face = 'bold', size = 12),
+                     panel.spacing = unit(0.5, "lines"),
                      legend.position = 'right',
                      legend.title = element_blank(),
                      legend.text = element_text(size = 12))
 
-    g1 <- g1 + scale_colour_manual(name = "", values = "orangered", labels = "Quantile")
+    g1 <- g1 + scale_colour_manual(name = "", values = "orangered",
+                                   labels = "Quantile")
 
     if (!is.null(x$L) && !is.null(x$U)) {
-        g1 <- g1 + scale_fill_manual(name = "Level", values = c("darkgray", "darkgray"))
+         g1 <- g1 + scale_fill_manual(name = "Level",
+                                      values = c("gray75", "gray60", "gray50"))
     }
     
     g1 <- g1 + xlab("Period") + ylab("Quantile") 
+
+    if (attr(x, "type") == "conditional") {       
+        g1 <- g1 + facet_wrap( ~ Date)
+    }
     
-    g1 <- g1 + facet_wrap( ~ Date)
-        
+    g1 <- g1  + ggtitle(attr(x, "title"))
+    
     g1
    
 }
-
