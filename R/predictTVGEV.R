@@ -88,7 +88,6 @@ predict.TVGEV <- function(object,
                           trace = 1L,
                           ...) {
 
-
     dots <- match.call(expand.dots = FALSE)$...
 
     if (length(dots)) {
@@ -155,7 +154,7 @@ predict.TVGEV <- function(object,
     
     ## special case for non TV model
     if (!all(object$isCst)) {
-        L <- modelMatrices.TSGEV(object, date = newdate)
+        L <- modelMatrices.TVGEV(object, date = newdate)
         X <- L$X
     } else X <- NULL
 
@@ -339,8 +338,8 @@ predict.TVGEV <- function(object,
         
         
         if (trace >= 2) {
-            opts1[["check_derivatives"]] <- TRUE
-            opts1[["check_derivatives_print"]] <- "all"
+            opts[["check_derivatives"]] <- TRUE
+            opts[["check_derivatives_print"]] <- "all"
         }
          
          ## ==============================================================
@@ -349,7 +348,7 @@ predict.TVGEV <- function(object,
          ## ===============================================================
          
          f <- function(psi, level, prob, iDate, chgSign = FALSE, object) {
-
+             
              theta <- psi2theta(model = object,
                                 psi = psi,
                                 date = newdate[iDate],
@@ -387,7 +386,6 @@ predict.TVGEV <- function(object,
                      }
                  }
              }
-
              
              if (chgSign) {
                  return(list("objective" = -RL, "gradient" = -gradpsi))
@@ -482,7 +480,7 @@ predict.TVGEV <- function(object,
                         if (trace) {
                             cat(sprintf("\n    - Period:  %5d\n", period[iPer]))
                         }
-
+                        
                         if ((iPer < length(period)) && !is.null(psiIniPrec)) {
                         ## if ((iPer > 1L) && !is.null(psiIniPrec)) {
                             psi0 <- psiIniPrec

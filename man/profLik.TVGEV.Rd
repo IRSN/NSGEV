@@ -8,7 +8,7 @@
   trace = 0, ...)
 }
 \arguments{
-\item{object}{A \code{TSGEV} object.}
+\item{object}{A \code{TVGEV} object.}
 
 \item{fun}{A function of the parameter vector for which the
 profile-likelihood will be carried over. This function must have

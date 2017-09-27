@@ -34,7 +34,7 @@ profLik <- function(object, fun, ...) {
 ##' 
 ##' @title  Profile-Likelihood Inference for \code{TVGEV} Objects
 ##' 
-##' @param object A \code{TSGEV} object.
+##' @param object A \code{TVGEV} object.
 ##'
 ##' @param fun A function of the parameter vector for which the
 ##' profile-likelihood will be carried over. This function must have

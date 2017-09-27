@@ -156,4 +156,78 @@ polynomX <- function(date, degree = 2, origin = NULL) {
     
     X
 }
+
+## ****************************************************************************
+##' Build a design matrix for a natural spline basis.
+##'
+##' The design matrix contains a basis to represent a natural spline
+##' with possibly chosen knots if needed. By default the boundary
+##' knots are chosen as the range of the numeric translation of
+##' \code{date}. The basis generates a space of cubic splines with
+##' their second order derivative vanishing at the two boundary
+##' knots. Therefore, the splines behave as a polynomials of degree
+##' one outside of the boundary knots.
+##' 
+##' @title Design Matrix for a Natural Spline Basis
+##' 
+##' @param date A vector with class \code{"Date"} or a vector that can
+##' be coerced to the \code{"Date"} class, typically an unambiguous
+##' character vector.
+##'
+##' @param origin Optional vector of length 1 with class \code{"Date"}
+##' or character that can be coerced to this class. Gives the origin
+##' for the transformation of dates into numeric values. The default
+##' value is \code{1970-01-01}, see \code{\link{Date}}.
+##'
+##' @param knots A vector with class \code{"Date"} or a vector that
+##' can be coerced to the \code{"Date"} class, giving the location of
+##' the knots as in \code{\link[splines]{ns}}.
+##' 
+##' @param boundaryKnots A vector with class \code{"Date"} or a
+##' vector that can be coerced to the \code{"Date"} class, giving the
+##' location of the boundary knots in \code{\link[splines]{ns}}.
+##'
+##' @param constant Logical passed as \code{intercept} to
+##' \code{\link[splines]{ns}}.
+##' 
+##' @return A matrix having the value of the basis functions as its
+##' columns. Each row corresponds to an element of the given
+##' \code{date} vector. By convention, the columns are named
+##' \code{"ns1"}, \code{"ns2"}, \dots The number of colums is equal to
+##' \code{df} is provided or if knots was supplied, to
+##' \code{length(knots) + 1 + constant}.
+##'
+##' @seealso The \code{\link[splines]{ns}} function used to compute
+##' the basis, and \code{\link{breaksX}}, \code{\link{polynomX}} for
+##' alternative bases.
+##'
+##' @examples
+##' date <- as.Date(sprintf("%4d-01-01", 1921:2020))
+##' X1 <- natSplineX(date = date, knots = "1950-01-01",
+##'                  boundaryKnots = c("1920-01-01", "2021-01-01"))
+##' plot(date, X1[ , 1], ylim = range(X1), type = "n", ylab = "")
+##' matlines(date, X1, type = "l")
+##' 
+natSplineX <- function(date,
+                       origin = NULL,
+                       knots,
+                       boundaryKnots,
+                       constant = TRUE) {
+
+    t <- as.numeric(date) / 365.25
     
+    knots <- as.Date(knots)
+    tKnots <- as.numeric(knots) / 365.25
+    
+    boundaryKnots <- as.Date(boundaryKnots)
+    tboundaryKnots <- as.numeric(boundaryKnots)  / 365.25
+    
+    X <- splines::ns(t, df = df,  knots = tKnots, intercept = constant,
+            Boundary.knots = tboundaryKnots)
+    
+    colnames(X) <- paste("ns", 1:ncol(X), sep = "")
+    
+    X
+    
+}
+

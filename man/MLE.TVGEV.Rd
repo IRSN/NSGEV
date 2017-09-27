@@ -8,7 +8,7 @@ MLE.TVGEV(object, y = NULL, psi0 = NULL, estim = c("optim", "nloptr"),
   parTrack = FALSE)
 }
 \arguments{
-\item{object}{A (possibly incomplete) \code{TSGEV} object.}
+\item{object}{A (possibly incomplete) \code{TVGEV} object.}
 
 \item{y}{A numeric vector giving the response to be used.}
 

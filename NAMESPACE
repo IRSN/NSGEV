@@ -2,6 +2,7 @@ useDynLib(NSGEV)
 
 importFrom("utils", "getS3method")
 import("stats")
+import("splines")
 importFrom("graphics", "abline", "lines", "matlines", "matplot",
            "mtext", "plot")
 import("methods")

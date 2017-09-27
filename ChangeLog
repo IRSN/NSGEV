@@ -1,3 +1,9 @@
+2017-09-27  yves  <deville.yves@alpestat.com>
+
+	* Added 'natSplineX' for a natural spline design.
+
+	* Fixed small problems in code and doc.
+
 2017-08-21  yves  <deville.yves@alpestat.com>
 
 	* Changed 'plot.TVGEV' to render in black and white print.

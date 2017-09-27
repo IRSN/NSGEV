@@ -68,7 +68,7 @@ psi2theta.TVGEV <- function(model, psi = NULL, date = NULL,
     } else {
         n <- length(date)
         if (!all(model$isCst)) {
-            L <- modelMatrices.TSGEV(model, date = date)
+            L <- modelMatrices.TVGEV(model, date = date)
             X <- L$X
         } else X <- NULL
         fDate <- format(date)
@@ -174,7 +174,7 @@ parIni.TVGEV <- function(object, y = NULL) {
 ##'
 ##' @title Maximum Likelihood Estimation of a \code{TVGEV} Model 
 ##' 
-##' @param object A (possibly incomplete) \code{TSGEV} object.
+##' @param object A (possibly incomplete) \code{TVGEV} object.
 ##' 
 ##' @param y A numeric vector giving the response to be used.
 ##'
@@ -576,7 +576,7 @@ bs.TVGEV <- function(object,
 ##' 
 ##' @title Build Model Matrices
 ##'
-##' @param object An object with S3 class \code{"TSGEV"}.
+##' @param object An object with S3 class \code{"TVGEV"}.
 ##'
 ##' @param date An object with class \code{"Date"} or an object that
 ##' can be coerced to this class.
@@ -601,7 +601,7 @@ bs.TVGEV <- function(object,
 ##' @seealso The function \code{\link[stats]{model.matrix}} used by
 ##' \code{\link[stats]{lm}}.
 ##' 
-modelMatrices.TSGEV  <- function(object, date = NULL) {
+modelMatrices.TVGEV  <- function(object, date = NULL) {
     
     
     if (is.null(date)) {
