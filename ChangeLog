@@ -1,3 +1,10 @@
+2017-09-29  yves  <deville.yves@alpestat.com>
+
+	* Improved the speed of the bootstrap computations in
+	'predict.TVGEV'.
+
+	* Small changes in doc.
+
 2017-09-27  yves  <deville.yves@alpestat.com>
 
 	* Added 'natSplineX' for a natural spline design.

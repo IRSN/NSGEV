@@ -91,6 +91,11 @@ p2 <- predict(res2, confintMethod = "delta")
 p3 <- predict(res2, confintMethod = "boot")
 p4 <- predict(res2, newdate = "2020-01-01", confintMethod = "proflik") 
 }
+\seealso{
+The bootstrap method \code{\link{bs.TVGEV}} for
+\code{TVGEV} objects, the formal arguments of which can be used
+here when \code{confintMethod} is chosen as \code{"boot"}.
+}
 \author{
 Yves Deville
 }

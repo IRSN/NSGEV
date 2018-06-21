@@ -30,7 +30,7 @@ the names of \code{psi} match the \code{parNames} element of
 }
 \value{
 A matrix with \code{length(date)} rows and \code{3} colums.
-The columns contain the location, eht scale and the shape GEV parameters
+The columns contain the location, the scale and the shape GEV parameters
 in that order.
 }
 \description{

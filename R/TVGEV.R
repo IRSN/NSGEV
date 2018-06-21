@@ -27,7 +27,7 @@
 ##' @param \dots Not used yet.
 ##'
 ##' @return A matrix with \code{length(date)} rows and \code{3} colums.
-##' The columns contain the location, eht scale and the shape GEV parameters
+##' The columns contain the location, the scale and the shape GEV parameters
 ##' in that order.
 ##'
 ##' @seealso The \code{\link{GEV}} for the GEV probability functions.
@@ -83,8 +83,7 @@ psi2theta.TVGEV <- function(model, psi = NULL, date = NULL,
         } else {
             theta[ , nm] <- psi[model$ind[[nm]]]
         }
-    }
-        
+    }      
 
     if (deriv) {
         
@@ -455,8 +454,8 @@ MLE.TVGEV <- function(object,
 ##' @examples
 ##'
 ##' example(TVGEV)
-##' bs <- bs.TVGEV(res2, R = 50, estim = "nloptr")
-##' 
+##' bsb <- bs(res2, R = 50, estim = "nloptr")
+##'
 ##' \dontrun{
 ##'    library(parallel)
 ##'    library(doParallel)
@@ -466,11 +465,19 @@ MLE.TVGEV <- function(object,
 ##'
 ##'    ## findings: with 'nloptr', less than 1% of the optimisations
 ##'    ## diverges, while more than 10% diverged with 'optim'.
-##'    te <- system.time(bsp <- bs.TVGEV(res2, R = 5000, estim = "nloptr",
-##'                                      parallel = TRUE))
-##'    stopCluster(cl)
+##'    te <- system.time(bspb <- bs(res2, R = 5000, estim = "nloptr",
+##'                                 parallel = TRUE))
+##'    stopCluster(cl) 
 ##' }
-##'
+##' 
+##' ## add the 'bs' results to the model object as 'boot' element,
+##' ## in order to facilitate the prediction. The number of
+##' ## bootstrap replicates in the prediction will correspond
+##' ## to the number of replications stored in the model object,
+##' ## an no longer to the default
+##' 
+##' res2$boot <- bsb
+##' predict(res2, confintMethod = "boot")
 ##' 
 bs.TVGEV <- function(object,
                      R = 100,
