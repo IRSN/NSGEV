@@ -1009,24 +1009,24 @@ plot.simulate.TVGEV <- function(x, y, col = "gray",
 }
 
 ## *************************************************************************
-## Extract the vector of coefficients from a \code{TVGEV} object.
-##
-## @title Coefficients of a \code{TVGEV} object
-##
-## @param object A \code{TVGEV} object.
-## 
-## @param type Character. When \code{"psi"}, the vector of model
-## parameters is returned. When instead \code{type} is \code{"theta"},
-## the matrix of GEV parameters is returned, with one row by block
-## (or observation) and one column for each of the GEV parameters
-## \code{"loc"}, \code{"scale"} and \code{"shape"}.
-##
-## @param ... Not used yet.
-## 
-## @return Vector \eqn{\mathbf{\psi}}{\psi} of coefficients, or
-## matrix with the GEV parameters \eqn{\mathbf{\theta}_i}{\theta_i}
-## as its rows.
-## 
+##' Extract the vector of coefficients from a \code{TVGEV} object.
+##' 
+##' @title Coefficients of a \code{TVGEV} object
+##'
+##' @param object A \code{TVGEV} object.
+##' 
+##' @param type Character. When \code{"psi"}, the vector of model
+##' parameters is returned. When instead \code{type} is \code{"theta"},
+##' the matrix of GEV parameters is returned, with one row by block
+##' (or observation) and one column for each of the GEV parameters
+##' \code{"loc"}, \code{"scale"} and \code{"shape"}.
+##'
+##' @param ... Not used yet.
+##' 
+##' @return Vector \eqn{\mathbf{\psi}}{\psi} of coefficients, or
+##' matrix with the GEV parameters \eqn{\mathbf{\theta}_i}{\theta_i}
+##' as its rows.
+##' 
 coef.TVGEV <- function(object, type = c("psi", "theta"),  ...) {
     type <- match.arg(type)
     if (type == "psi") return(object$estimate)

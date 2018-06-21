@@ -3,7 +3,7 @@
 \name{predictUncond}
 \alias{predictUncond}
 \title{Prediction of Unconditional or Non-Stationary Return Levels
-for a \code{NSGEV} object or \code{TVGEV} object}
+for a \code{TVGEV} or a \code{NSGEV} Object}
 \usage{
 predictUncond(object, period = NULL, level = 0.95, newdata = NULL,
   newdate = NULL, newdateFrom = NULL, resample = FALSE,
@@ -11,7 +11,7 @@ predictUncond(object, period = NULL, level = 0.95, newdata = NULL,
   "boot", "proflik"), out = c("data.frame", "array"), trace = 0, ...)
 }
 \arguments{
-\item{object}{A \code{NSGEV} or \code{TVGEV} model.}
+\item{object}{A \code{TVGEV} or a \code{NSGEV} model object.}
 
 \item{period}{A numeric vector giving the periods at which the
 Return Levels will be computed.}
@@ -78,8 +78,8 @@ period \eqn{T = T_i} under the constraint on the log-likelihood.
 }
 }
 \description{
-Prediction of unconditional or Non-Stationary Return Levels for a
-\code{NSGEV} or a \code{TVGEV} object.
+Prediction of Unconditional or Non-Stationary Return Levels for a
+\code{TVGEV} or a \code{NSGEV} object.
 }
 \details{
 For a Non-Stationary GEV model, the Return Level corresponding to
@@ -121,15 +121,20 @@ of regression-like model does not make sense. The interest should
 rather focus on a moderately large period.
 
 \item For each period \eqn{T}, the Return Level is computed using
-the $T$ blocks \eqn{t_0}, \eqn{t_0 + 1}, \dots, \eqn{t_0 + T -1}
+the \eqn{T} blocks \eqn{t_0}, \eqn{t_0 + 1}, \dots, \eqn{t_0 + T -1}
 so the different periods \eqn{T} appearing on a Return Level plot
 correspond to different prediction horizons. As a result, the
 quantile or confidence bounds do not depend as smoothly of \eqn{T}
 as they do for conditional predictions.
- 
+
 }
 }
 
+\examples{
+example(TVGEV)
+pu <- predictUncond(res2, newdateFrom = "2020-01-01")
+pu
+}
 \author{
 Yves Deville
 }

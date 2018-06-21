@@ -1,6 +1,6 @@
 ## ************************************************************************
-##' Prediction of unconditional or Non-Stationary Return Levels for a
-##' \code{NSGEV} or a \code{TVGEV} object.
+##' Prediction of Unconditional or Non-Stationary Return Levels for a
+##' \code{TVGEV} or a \code{NSGEV} object.
 ##'
 ##' For a Non-Stationary GEV model, the Return Level corresponding to
 ##' a given period (e.g. 100 years) depends on the value of the
@@ -13,9 +13,9 @@
 ##' no longer depends of the covariates or on a specific block.
 ##' 
 ##' @title Prediction of Unconditional or Non-Stationary Return Levels
-##' for a \code{NSGEV} object or \code{TVGEV} object
+##' for a \code{TVGEV} or a \code{NSGEV} Object
 ##'
-##' @param object A \code{NSGEV} or \code{TVGEV} model.
+##' @param object A \code{TVGEV} or a \code{NSGEV} model object.
 ##'
 ##' @param period A numeric vector giving the periods at which the
 ##' Return Levels will be computed.
@@ -109,13 +109,18 @@
 ##' rather focus on a moderately large period.
 ##'
 ##' \item For each period \eqn{T}, the Return Level is computed using
-##' the $T$ blocks \eqn{t_0}, \eqn{t_0 + 1}, \dots, \eqn{t_0 + T -1}
+##' the \eqn{T} blocks \eqn{t_0}, \eqn{t_0 + 1}, \dots, \eqn{t_0 + T -1}
 ##' so the different periods \eqn{T} appearing on a Return Level plot
 ##' correspond to different prediction horizons. As a result, the
 ##' quantile or confidence bounds do not depend as smoothly of \eqn{T}
 ##' as they do for conditional predictions.
-##'  
+##'
 ##' }
+##'
+##' @examples
+##' example(TVGEV)
+##' pu <- predictUncond(res2, newdateFrom = "2020-01-01")
+##' pu
 predictUncond <- function(object,
                           period = NULL,
                           level = 0.95,
@@ -150,7 +155,8 @@ predictUncond <- function(object,
             fm <- formals(getS3method("bs", class(object)))
             ind <- !(names(dots) %in% names(fm))
             if (any(ind)) {
-                dotsText2 <- paste(sprintf("'%s'", names(dots)[ind]), collapse = ", ")
+                dotsText2 <- paste(sprintf("'%s'", names(dots)[ind]),
+                                   collapse = ", ")
                 stop("the formals ", dotsText2, " are passed to 'bs'\n",
                      "method but are nor formals of it.")
             }
@@ -193,9 +199,9 @@ predictUncond <- function(object,
             }
             
         } else {
-            warning("For unconditional predictions, the normal use is via the formal ",
-                    "argument 'newdateFrom' to specify consecutive blocks. Using ",
-                    "the 'newdate' argument can be misleading.")
+            warning("For unconditional predictions, the normal use is via ",
+                    "the formal argument 'newdateFrom' to specify consecutive ",
+                    "blocks. Using the 'newdate' argument can be misleading.")
                     
         }
         nd <- length(newdate)
@@ -226,8 +232,8 @@ predictUncond <- function(object,
         
         if (trace) {
 
-            cat(sprintf("The confidence bound are obtained by the  '%s' method.\n",
-                        confintMethod))
+            cat(sprintf(paste("The confidence bound are obtained by the '%s'",
+                              " method.\n"), confintMethod))
         }
         
         if (any(level >= 1.0)) stop("values in 'level' must be < 1.0")
@@ -325,13 +331,15 @@ predictUncond <- function(object,
         ##          " of length one (for now)")
         ## }
         
-        diagno <- array(NA,
-                        dim = c(length(period), 2L, length(level), 4L),
-                        dimnames = list(period, c("L", "U"), level,
-                            c("status", "objective", "constraint", "gradDist")))
-        Psi <- array(NA,
-                     dim = c(length(period), 2L, length(level),  object$p),
-                     dimnames = list(period, c("L", "U"), level, object$parNames))
+        diagno <-
+            array(NA,
+                  dim = c(length(period), 2L, length(level), 4L),
+                  dimnames = list(period, c("L", "U"), level,
+                      c("status", "objective", "constraint", "gradDist")))
+        Psi <-
+            array(NA,
+                  dim = c(length(period), 2L, length(level),  object$p),
+                  dimnames = list(period, c("L", "U"), level, object$parNames))
         
         for (iPer in seq_along(period)) {
             if (period[iPer] <= nd) {
@@ -376,12 +384,12 @@ predictUncond <- function(object,
             if (confintMethod == "none") {
                 RL <- data.frame(Period = period, RL)
             } else {
-                ## ====================================================================
+                ## ============================================================
                 ## UGGLY CODE: there must be a simpler and more
                 ## efficient way of doing that. The problem is that we
                 ## want to drop the "Type" dimension but not the
                 ## "Level" dimension even when it has no extension
-                ## ====================================================================
+                ## ============================================================
                 
                 df <- list()
                 for (nm in c("Quant", "L", "U")) {
@@ -409,8 +417,9 @@ predictUncond <- function(object,
     }
     attr(RL, "diagno") <- diagno
     attr(RL, "psi") <- Psi
-    attr(RL, "title") <- sprintf("Integrated Return Levels for periods starting at  %s",
-                                 format(newdateFrom))
+    attr(RL, "title") <-
+        sprintf("Integrated Return Levels for periods starting at  %s",
+                format(newdateFrom))
     attr(RL, "type") <- "unconditional"
     invisible(RL)
     
