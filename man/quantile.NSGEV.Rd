@@ -13,7 +13,7 @@
 \item{probs}{Vector of probabilities.}
 
 \item{data}{A data frame with the covariates. If \code{NULL}, the
-data frama affached to the model given in \code{object} is used.}
+data frame affached to the model given in \code{object} is used.}
 
 \item{psi}{Vecor of model coefficients.}
 

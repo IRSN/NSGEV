@@ -2,7 +2,6 @@
 % Please edit documentation in R/allNSGEVMethods.R
 \name{coef.NSGEV}
 \alias{coef.NSGEV}
-\alias{coef.TVGEV}
 \title{Coefficients of a \code{NSGEV} object}
 \usage{
 \method{coef}{NSGEV}(object, type = c("psi", "theta"), ...)

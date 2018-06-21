@@ -99,8 +99,6 @@ plot.NSGEV <- function(x, y, which = 1,
 
 ##*****************************************************************************
 ##' Extract the vector of coefficients from a NSGEV object.
-##'
-##' @aliases coef.TVGEV
 ##' 
 ##' @title Coefficients of a \code{NSGEV} object
 ##'
