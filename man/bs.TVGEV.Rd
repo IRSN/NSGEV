@@ -57,7 +57,7 @@ target number as given in \code{R}.
 \examples{
 
 example(TVGEV)
-bs <- bs.TVGEV(res2, R = 50, estim = "nloptr")
+bsb <- bs(res2, R = 50, estim = "nloptr")
 
 \dontrun{
    library(parallel)
@@ -68,10 +68,18 @@ bs <- bs.TVGEV(res2, R = 50, estim = "nloptr")
 
    ## findings: with 'nloptr', less than 1\% of the optimisations
    ## diverges, while more than 10\% diverged with 'optim'.
-   te <- system.time(bsp <- bs.TVGEV(res2, R = 5000, estim = "nloptr",
-                                     parallel = TRUE))
-   stopCluster(cl)
+   te <- system.time(bspb <- bs(res2, R = 5000, estim = "nloptr",
+                                parallel = TRUE))
+   stopCluster(cl) 
 }
 
+## add the 'bs' results to the model object as 'boot' element,
+## in order to facilitate the prediction. The number of
+## bootstrap replicates in the prediction will correspond
+## to the number of replications stored in the model object,
+## an no longer to the default
+
+res2$boot <- bsb
+predict(res2, confintMethod = "boot")
 
 }

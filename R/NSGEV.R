@@ -498,7 +498,7 @@ NSGEV <- function(formulas,
 ##' @param probs Vector of probabilities.
 ##' 
 ##' @param data A data frame with the covariates. If \code{NULL}, the
-##' data frama affached to the model given in \code{object} is used.
+##' data frame affached to the model given in \code{object} is used.
 ##'
 ##' @param psi Vecor of model coefficients.
 ##'

@@ -57,6 +57,10 @@
 ##' confidence level). The data frame is in 'long' format, with
 ##'  different rows for multiple levels.
 ##'
+##' @seealso The bootstrap method \code{\link{bs.TVGEV}} for
+##' \code{TVGEV} objects, the formal arguments of which can be used
+##' here when \code{confintMethod} is chosen as \code{"boot"}.
+##' 
 ##' @section Caution: When \code{confintMethod} is set to
 ##' \code{"loglik"} the required computing time is huge because
 ##' several constrained optimisations are required. Since the marginal
@@ -265,16 +269,42 @@ predict.TVGEV <- function(object,
                         Type = c("Quant", "L", "U"), Level = fLevel)) 
 
         diagno <- NULL
+
+        mM <- modelMatrices.TVGEV(object, date = newdate)
+
+        ## ==================================================================
+        ## changed on 2017-09-29. The previous function 'myFun' was
+        ## very slow because the model matrices were recomputed many
+        ## times.  This is now MUCH better although some savings still
+        ## can be reached.
+        ## ===================================================================
         
-        myFun <- function(psi, prob) {
-            theta <- psi2theta(model = object, psi = psi, date = newdate)
+        myFun0 <- function(psi, prob) {
+            
+            theta <- array(NA, dim = c(n, 3L),
+                           dimnames = list(fDate, parNames.GEV))
+            
+            for (nm in parNames.GEV) {
+                if (!object$isCst[nm]) {
+                    theta[ , nm] <- mM$X[[nm]] %*% psi[object$ind[[nm]]]
+                } else {
+                    theta[ , nm] <- psi[object$ind[[nm]]]
+                }
+            }      
+                
             qGEV(prob, theta[ , 1], theta[ , 2], theta[ , 3])
         }
+
+        ## myFun <- function(psi, prob) {
+        ##     theta <- psi2theta(model = object, psi = psi, date = newdate,
+        ##                        checkNames = FALSE)
+        ##     qGEV(prob, theta[ , 1], theta[ , 2], theta[ , 3])
+        ## }
         
         for (iPer in seq_along(period)) {
             ## 'Quant' is a matrix with n rows and B columns. XXX Caution if n == 1.
             ## the dimension is lost!
-            Quant <- apply(object$boot$estimate, MARGIN = 1, FUN = myFun, prob = prob[iPer])
+            Quant <- apply(object$boot$estimate, MARGIN = 1, FUN = myFun0, prob = prob[iPer])
             if (n == 1L) {
                 dim(Quant) <- c(n, nrow(object$boot$estimate))
             }
