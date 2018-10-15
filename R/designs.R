@@ -128,6 +128,11 @@ breaksX <- function(date,
 ##' @seealso \code{breaksX} for a basis of Truncated Power functions.
 ##' and \code{TVGEV} to for Time Varying GEV models.
 ##'
+##' @section Caution: As a general rule, it is a good practice to
+##' choose \code{origin} close to the centre of the time period. This
+##' is especially important when a polynomial of degree \eqn{>= 2} is
+##' used since problems of convergence are likely to occur otherwise.
+##' 
 ##' @examples
 ##'
 ##' date <- seq(from = as.Date("1996-01-01"),

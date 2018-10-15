@@ -10,8 +10,8 @@
 Random Generation for the Generalized Extreme Value (GEV)
 Distribution}
 \usage{
-dGEV(x, loc = 0, scale = 1, shape = 0, log = FALSE, deriv = FALSE,
-  hessian = FALSE, impl = c("C", "R"))
+dGEV(x, loc = 0, scale = 1, shape = 0, log = FALSE,
+  deriv = FALSE, hessian = FALSE, impl = c("C", "R"))
 
 pGEV(q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
   deriv = FALSE, impl = c("C", "R"))

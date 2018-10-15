@@ -6,7 +6,8 @@
 \usage{
 \method{predict}{TVGEV}(object, newdate = NULL, period = NULL,
   level = 0.95, confintMethod = c("delta", "none", "boot", "proflik"),
-  out = c("data.frame", "array"), biasCorrect = FALSE, trace = 1L, ...)
+  out = c("data.frame", "array"), biasCorrect = FALSE, trace = 1L,
+  ...)
 }
 \arguments{
 \item{object}{An object with S3 class \code{"TVGEV"}}

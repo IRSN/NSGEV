@@ -4,7 +4,8 @@
 \alias{plot.bfts}
 \title{Plot for Block Functional Time Series \code{bfts} Objects}
 \usage{
-\method{plot}{bfts}(x, y, gg = TRUE, col = "orangered", fill = NA, ...)
+\method{plot}{bfts}(x, y, gg = TRUE, col = "orangered", fill = NA,
+  ...)
 }
 \arguments{
 \item{x}{A \code{bfts} object such as returned by the \code{density} and

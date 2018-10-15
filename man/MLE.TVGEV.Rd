@@ -4,8 +4,8 @@
 \alias{MLE.TVGEV}
 \title{Maximum Likelihood Estimation of a \code{TVGEV} Model}
 \usage{
-MLE.TVGEV(object, y = NULL, psi0 = NULL, estim = c("optim", "nloptr"),
-  parTrack = FALSE)
+MLE.TVGEV(object, y = NULL, psi0 = NULL, estim = c("optim",
+  "nloptr"), parTrack = FALSE)
 }
 \arguments{
 \item{object}{A (possibly incomplete) \code{TVGEV} object.}

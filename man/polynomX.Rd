@@ -40,6 +40,13 @@ Varying GEV models corresponding to \code{TVGEV} objects. Since
 the response then usually corresponds to block maxima, the date
 variable gives either the begining or the end of each block.
 }
+\section{Caution}{
+ As a general rule, it is a good practice to
+choose \code{origin} close to the centre of the time period. This
+is especially important when a polynomial of degree \eqn{>= 2} is
+used since problems of convergence are likely to occur otherwise.
+}
+
 \examples{
 
 date <- seq(from = as.Date("1996-01-01"),
