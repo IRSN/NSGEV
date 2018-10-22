@@ -1,3 +1,8 @@
+2018-10-15  yves  <deville.yves@alpestat.com>
+
+	* Warn about the need of centering in the documentation of
+	`polynomX`.
+
 2017-09-29  yves  <deville.yves@alpestat.com>
 
 	* Improved the speed of the bootstrap computations in
