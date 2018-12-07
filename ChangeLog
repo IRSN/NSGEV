@@ -1,3 +1,8 @@
+2018-12-07  yves  <deville.yves@alpestat.com>
+
+	* BUG fix: in 'rGEV' the function simulated an exponential rather
+	than a Gumbel when shape = 0.
+
 2018-10-15  yves  <deville.yves@alpestat.com>
 
 	* Warn about the need of centering in the documentation of

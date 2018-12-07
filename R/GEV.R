@@ -490,7 +490,8 @@ rGEV <- function (n, loc = 0.0, scale = 1.0, shape = 0.0) {
         nl <- sum(ind)
         n_ind <- nl * n
         U <- array(runif(n_ind), dim = c(nl, n))
-        r[ind, ] <- loc[ind, drop = FALSE] - scale[ind, drop = FALSE] * log(U)
+        r[ind, ] <- loc[ind, drop = FALSE] - scale[ind, drop = FALSE] *
+            log(-log(U))
     }
     
     ## non-Gumbel xi != 0.0
