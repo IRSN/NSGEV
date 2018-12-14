@@ -148,7 +148,7 @@ predict.NSGEV <- function(object, period = NULL,
                           type = RLType, deriv = TRUE)
                 grad <- attr(res, "gradient")
                 pred[i, "quant"] <- res
-                sd <- grad %*% object$vcov %*% t(grad)
+                sd <- sqrt(grad %*% object$vcov %*% t(grad))
                 CL[i , ] <- res + qCI * sd
             }
         }

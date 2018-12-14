@@ -1,3 +1,9 @@
+2018-12-14  yves  <deville.yves@alpestat.com>
+
+	* BUG fix: the computation of the confidence intervals using the
+	"delta" method was wrong in 'predict.TVGEV', 'predict.NSGEV' and
+	'predictUncond' due to a missing sqrt.
+
 2018-12-07  yves  <deville.yves@alpestat.com>
 
 	* BUG fix: in 'rGEV' the function simulated an exponential rather

@@ -232,7 +232,7 @@ predict.TVGEV <- function(object,
             ## standard deviation of the RL estimate.
             ## XXX could be faster with a 'crossprod' using the Cholesky root
             ## of 'covPsi'
-            sdRL <- apply(gradpsi, 1, function(x)  t(x) %*% covPsi %*% x)
+            sdRL <- sqrt(apply(gradpsi, 1, function(x)  t(x) %*% covPsi %*% x))
 
             ## could probably be done in one step?
             RL[ , iPer, "Quant",  ] <- Quant[ , iPer] 

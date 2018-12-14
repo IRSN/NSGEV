@@ -279,7 +279,7 @@ predictUncond <- function(object,
                           deriv = TRUE)
                 grad <- attr(res, "gradient")
                 RL[i, "Quant", 1L] <- res
-                sd <- as.vector(grad %*% object$vcov %*% t(grad))
+                sd <- sqrt(as.vector(grad %*% object$vcov %*% t(grad)))
                 RL[i , c("L", "U"),  ] <- res + qCI * sd
             }
         }
