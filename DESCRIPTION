@@ -2,7 +2,7 @@ Package: NSGEV
 Type: Package
 Title: Non-Stationary GEV Time Series
 Version: 0.1.0
-Date: 2018-10-15
+Date: 2018-12-27
 Author: Yves Deville <deville.yves@alpestat.com>
 Maintainer: Yves Deville <deville.yves@alpestat.com>
 Description: Utility functions for Non-Stationary time series with GEV margins.
@@ -11,4 +11,4 @@ LazyData: yes
 Imports: methods, splines, numDeriv, nloptr, reshape2
 Depends: Renext, ismev, extRemes, ggplot2
 Suggests: parallel, doParallel, foreach
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
