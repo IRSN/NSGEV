@@ -466,8 +466,8 @@ SEXP Call_pGEV(SEXP q,               /*  double                          */
 	if (!INTEGER(lowerTailFlag)[0]) {
 	  rval[i] = 1.0 - rval[i];
 	  rgrad[i] = -rval[i];
-	  rgrad[i + n] = -rval[i + n];
-	  rgrad[i + 2 * n] = -rval[i + 2 * n];
+	  rgrad[i + n] = -rgrad[i + n];
+	  rgrad[i + 2 * n] = -rgrad[i + 2 * n];
 	}
 	
       }   /* non-NA case     */
