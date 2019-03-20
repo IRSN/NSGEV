@@ -28,8 +28,9 @@
           if (((length(loc) > 1L) && (length(loc) < n)) ||
               ((length(scale) > 1L) && (length(scale) < n)) ||
               ((length(shape) > 1L) && (length(shape) < n)) ) {
-              stop("when 'x' has length 1, the lengths of the non-scalar elements",
-                   "among 'loc', 'scale' and 'shape' must be the same")
+              stop("when 'x' has length 1, the lengths of the non-scalar ",
+                   "elements among 'loc', 'scale' and 'shape' must be ",
+                   "the same")
           }
           x <- rep(x, n)
           loc <- rep(loc, length.out = n)
@@ -155,15 +156,14 @@ dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
     
     if (impl == "C") {
         
-        res <- .Call("Call_dGEV",
+        res <- .Call(Call_dGEV,
                      as.double(x),
                      as.double(loc),
                      as.double(scale),
                      as.double(shape),
                      as.integer(log),
                      as.integer(deriv),
-                     as.integer(hessian),
-                     PACKAGE = "NSGEV")
+                     as.integer(hessian))
 
         n <- length(res)
         if (deriv) {
@@ -177,7 +177,8 @@ dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
                 attr(res, "hessian") <-
                     array(attr(res, "hessian"),
                           dim = c(n, 3L, 3L),
-                          dimnames = list(rownames(x), c("loc", "scale", "shape"),
+                          dimnames = list(rownames(x),
+                              c("loc", "scale", "shape"),
                               c("loc", "scale", "shape")))
             }
             
@@ -224,7 +225,8 @@ dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
         d_ind <- rep(-Inf, sum(ind))
         if (deriv) {
             grad_ind <- array(0, dim = c(sum(ind), 3L),
-                              dimnames = list(rownames(L), c("loc", "scale", "shape")))
+                              dimnames = list(rownames(L),
+                                  c("loc", "scale", "shape")))
         }
         z_ind <- z[ind]
         V_ind <- 1.0 + L[ind, "shape"] * z_ind
@@ -241,10 +243,13 @@ dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
                 U_ind <- (1.0 + xi_ind - W_ind) / V_ind / sigma_ind
               
                 grad_ind[ind2, "loc"] <- U_ind[ind2]
-                grad_ind[ind2, "scale"] <- -1.0 / sigma_ind[ind2] + z_ind[ind2] * U_ind[ind2]
-                grad_ind[ind2, "shape"] <- log(V_ind[ind2]) * (1.0 - W_ind[ind2]) /
+                grad_ind[ind2, "scale"] <- -1.0 / sigma_ind[ind2] +
+                    z_ind[ind2] * U_ind[ind2]
+                grad_ind[ind2, "shape"] <- log(V_ind[ind2]) *
+                    (1.0 - W_ind[ind2]) /
                     xi_ind[ind2] / xi_ind[ind2] -
-                        z_ind[ind2] * U_ind[ind2] * sigma_ind[ind2] / xi_ind[ind2]    
+                        z_ind[ind2] * U_ind[ind2] * sigma_ind[ind2] /
+                            xi_ind[ind2]    
             }
             
         }
@@ -277,14 +282,13 @@ pGEV <- function (q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
     
     if (impl == "C") {
         
-        res <- .Call("Call_pGEV",
+        res <- .Call(Call_pGEV,
                      as.double(q),
                      as.double(loc),
                      as.double(scale),
                      as.double(shape),
                      as.integer(lower.tail),
-                     as.integer(deriv),
-                     PACKAGE = "NSGEV")
+                     as.integer(deriv))
 
         n <- length(res)
         if (deriv) {
@@ -349,7 +353,8 @@ pGEV <- function (q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
                 grad_ind[ind2, ] <-
                     c("loc" =  -Z_ind2 / V_ind2 / sigma_ind2,
                       "scale" = -z_ind2 * Z_ind2 / V_ind2 / sigma_ind2,
-                      "shape" = -Z_ind2 * (log(V_ind2) / xi_ind2  - z_ind2 / V_ind2) / xi_ind2)      
+                      "shape" = -Z_ind2 * (log(V_ind2) / xi_ind2  -
+                                               z_ind2 / V_ind2) / xi_ind2)      
             } else {
                 p_ind[ind2] <- exp(-V_ind[ind2]^(-1.0 / xi_ind[ind2]))
             }
@@ -387,15 +392,14 @@ qGEV <- function (p, loc = 0.0, scale = 1.0, shape = 0.0, lower.tail = TRUE,
     
     if (impl == "C") {
         
-        res <- .Call("Call_qGEV",
+        res <- .Call(Call_qGEV,
                      as.double(p),
                      as.double(loc),
                      as.double(scale),
                      as.double(shape),
                      as.integer(lower.tail),
                      as.integer(deriv),
-                     as.integer(hessian),
-                     PACKAGE = "NSGEV")
+                     as.integer(hessian))
         
         n <- length(res)
         if (deriv) {
@@ -408,7 +412,8 @@ qGEV <- function (p, loc = 0.0, scale = 1.0, shape = 0.0, lower.tail = TRUE,
                 attr(res, "hessian") <-
                     array(attr(res, "hessian"),
                           dim = c(n, 3L, 3L),
-                          dimnames = list(rownames(p), c("loc", "scale", "shape"),
+                          dimnames = list(rownames(p),
+                              c("loc", "scale", "shape"),
                               c("loc", "scale", "shape")))
             }
         }
@@ -447,12 +452,14 @@ qGEV <- function (p, loc = 0.0, scale = 1.0, shape = 0.0, lower.tail = TRUE,
         A_ind <- -log(L[ind, "x"])
         xi_ind <- L[ind, "shape"]
         V_ind <- (1.0 - A_ind^(-xi_ind)) / xi_ind
-        q[ind] <- L[ind, "loc"] + L[ind, "scale"] * (A_ind^(-xi_ind) - 1.0) / xi_ind
+        q[ind] <- L[ind, "loc"] + L[ind, "scale"] *
+            (A_ind^(-xi_ind) - 1.0) / xi_ind
         if (deriv) {
             grad[ind, ] <-
                 c("loc" = rep(1.0, sum(ind)),
                   "scale" = -V_ind,
-                  "shape" = L[ind, "scale"] * (V_ind - log(A_ind) * (-xi_ind * V_ind + 1.0)) / xi_ind)
+                  "shape" = L[ind, "scale"] *
+                      (V_ind - log(A_ind) * (-xi_ind * V_ind + 1.0)) / xi_ind)
         }
     }
     if (deriv) {

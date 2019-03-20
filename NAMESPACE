@@ -1,4 +1,4 @@
-useDynLib(NSGEV)
+useDynLib(NSGEV, .registration = TRUE)
 
 importFrom("utils", "getS3method")
 import("stats")
