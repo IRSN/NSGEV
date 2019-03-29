@@ -84,7 +84,8 @@ quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
 ##' 
 ##' @param date An object that can be coerced to the
 ##' class\code{"Date"} giving the date of the blocks for which the
-##' density will be evaluated.
+##' density will be evaluated. By default, three dates are selected
+##' in the date vector attached to \code{x}.
 ##'
 ##' @param psi Vector of model coefficients. By default, the vector of
 ##' estimated coefficients in \code{x} is used.
@@ -118,7 +119,9 @@ density.TVGEV <- function(x, xValue = NULL,
                           psi = NULL,
                           log = FALSE, ...) {
     
-    if (is.null(date)) date <- x$fDate
+    if (is.null(date)) {
+        date <- selectDate(x$fDate)
+    }
     if (is.null(psi)) psi <- x$estimate
     
     n <- length(date)
@@ -162,7 +165,9 @@ cdf.TVGEV <- function(x,
                       psi = NULL,
                       log = FALSE, ...) {
     
-    if (is.null(date)) date <- x$fDate
+    if (is.null(date)) {
+        date <- selectDate(x$fDate)
+    }
     if (is.null(psi)) psi <- x$estimate
     
     n <- length(date)

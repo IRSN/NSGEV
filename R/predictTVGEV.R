@@ -759,8 +759,10 @@ plot.predict.TVGEV <- function(x, y, gg = TRUE, bw = TRUE, ... ) {
                          mapping = aes(x = Period, y = Quant, colour = "orangered"),
                          size = 1)
     g1 <- g1 + theme_bw()
-    g1 <- g1 + scale_x_log10(breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000))
-    ## g
+    ## g1 <- g1 + scale_x_log10(breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000))
+    g1 <- g1 + scale_x_log10(breaks = c(1, 10, 100, 1000),
+              minor_breaks = c(1, 20, 50, 100, 200, 500, 1000))
+    
     g1 <- g1 + theme(plot.title = element_text(face = "bold", size = 12),
                      axis.text.x = element_text(angle = 0),
                      axis.title = element_text(face = 'bold', size = 12),

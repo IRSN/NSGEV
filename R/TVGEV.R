@@ -955,8 +955,8 @@ simulate.TVGEV <- function (object, nsim = 1, seed = NULL,
     
     attr(sim, "date") <- newdate
     
-    class(sim) <- "simulate.TVGEV"
-    
+    ## class(sim) <- "simulate.TVGEV"
+    class(sim) <- c("bts", "matrix")
     sim
 
 }
@@ -1047,10 +1047,34 @@ coef.TVGEV <- function(object, type = c("psi", "theta"),  ...) {
     }
 }
 
+## ****************************************************************************
+##' Variance-covariance matrix for a \code{TVGEV} object.
+##'
+##' @title Variance-Covariance Matrix for a \code{TVGEV} Object.
+##'
+##' @param object An object with class \code{"TVGEV"} representing a
+##' time-varying GEV model.
+##'
+##' @param ... Not used.
+##'
+##' @return The variance-covariance matrix.
+##' 
 vcov.TVGEV <- function(object, ...) {
     object$vcov
 }
 
+## ****************************************************************************
+##' Extract log-likelihood.
+##'
+##' @title Extract Log-Likelihood
+##'
+##' @param object An object with class \code{"TVGEV"} representing a
+##' time-varying GEV model.
+##'
+##' @param ... Not used.
+##'
+##' @return The maximized log-Likelihood.
+##' 
 logLik.TVGEV <- function(object, ...) {
     res <- object$logLik
     attr(res, "df") <- object$df
@@ -1058,12 +1082,25 @@ logLik.TVGEV <- function(object, ...) {
     res
 }
 
+## ****************************************************************************
+##' \code{summary} method for the class \code{TVGEV}.
+##'
+##' @title \code{summary} Method for the Class \code{TVGEV}.
+##'
+##' @param object An object with class \code{"TVGEV"}.
+##' 
+##' @param ... Not used.
+##'
+##' @return A list of summary statistics.
+##' 
 summary.TVGEV <- function(object, ...) {
     res <- object
     class(res) <- "summary.TVGEV"
     res
 }
 
+## ****************************************************************************
+## @rdname summary.TVGEV
 print.summary.TVGEV <- function(x, ...) {
     
     cat("Call:\n")

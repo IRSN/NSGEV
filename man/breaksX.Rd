@@ -24,8 +24,11 @@ character vector.}
 unit value is added.}
 }
 \value{
-A matrix with the value of the basis functions as its
-columns.
+An object of class \code{"bts"} inheriting from
+\code{"matrix"}. This is essentially a numeric matrix with the
+value of the basis functions as its columns. The rows are in
+correspondence with the elements of the \code{date} vector given
+on input.
 }
 \description{
 Build a design matrix to describe breaks in a linear trend.
@@ -67,8 +70,7 @@ removed.
 
 date <- as.Date(sprintf("\%4d-01-01", 1921:2020)) 
 X1 <- breaksX(date = date, breaks = c("1970-01-01", "1990-01-01"))
-plot(date, X1[ , 1], ylim = range(X1), type = "n", ylab = "")
-matlines(date, X1, type = "l") 
+plot(X1) 
 }
 \author{
 Yves Deville

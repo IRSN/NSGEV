@@ -26,8 +26,11 @@
 ##' @param constant Logical. If \code{TRUE} a column with constant
 ##' unit value is added.
 ##'
-##' @return A matrix with the value of the basis functions as its
-##' columns.
+##' @return An object of class \code{"bts"} inheriting from
+##' \code{"matrix"}. This is essentially a numeric matrix with the
+##' value of the basis functions as its columns. The rows are in
+##' correspondence with the elements of the \code{date} vector given
+##' on input.
 ##'
 ##' @details
 ##'
@@ -58,8 +61,7 @@
 ##' 
 ##' date <- as.Date(sprintf("%4d-01-01", 1921:2020)) 
 ##' X1 <- breaksX(date = date, breaks = c("1970-01-01", "1990-01-01"))
-##' plot(date, X1[ , 1], ylim = range(X1), type = "n", ylab = "")
-##' matlines(date, X1, type = "l") 
+##' plot(X1) 
 breaksX <- function(date,
                     degree = 1L,
                     origin = NULL,
@@ -89,6 +91,9 @@ breaksX <- function(date,
         X <- cbind(X, dif)
     }
 
+    attr(X, "date") <- rownames(X) <- format(date, "%Y-%m-%d")
+    class(X) <- c("bts", "matrix")
+    
     X
     
 }
@@ -115,10 +120,11 @@ breaksX <- function(date,
 ##' for the transformation of dates into numeric values. The default
 ##' value is \code{1970-01-01}, see \code{\link{Date}}.
 ##'
-##' @return A matrix having the value of the basis functions as its
-##' columns. Each row corresponds to an element of the given
-##' \code{date} vector. By convention, the columns are named
-##' \code{Cst} then \code{t1}, \code{t2}, \dots.
+##' @return An object with class \code{"bts"} inheriting from
+##' \code{"matrix"}. This is essentially a numeric matrix having the
+##' value of the basis functions as its columns. Each row corresponds
+##' to an element of the given \code{date} vector. By convention, the
+##' columns are named \code{Cst} then \code{t1}, \code{t2}, \dots.
 ##' 
 ##' @note This function is intended to provide regressors for Time
 ##' Varying GEV models corresponding to \code{TVGEV} objects. Since
@@ -139,6 +145,7 @@ breaksX <- function(date,
 ##'             to = as.Date("2016-12-31"), by = "years")
 ##'
 ##' X <- polynomX(date)
+##' plot(X)
 polynomX <- function(date, degree = 2, origin = NULL) {
 
     if (degree < 1) stop("'degree' must be >= 1")
@@ -156,9 +163,9 @@ polynomX <- function(date, degree = 2, origin = NULL) {
     }
     X <- outer(tt, 0:degree, FUN = "^")
     colnames(X) <- c("Cst", paste("t", 1:degree, sep = ""))
-    rownames(X) <- format(date, "%Y-%m-%d")
+    rownames(X) <- attr(X, "date") <- format(date, "%Y-%m-%d")
     attr(X, "origin") <- origin
-    
+    class(X) <- c("bts", "matrix")
     X
 }
 
@@ -195,12 +202,13 @@ polynomX <- function(date, degree = 2, origin = NULL) {
 ##' @param constant Logical passed as \code{intercept} to
 ##' \code{\link[splines]{ns}}.
 ##' 
-##' @return A matrix having the value of the basis functions as its
-##' columns. Each row corresponds to an element of the given
-##' \code{date} vector. By convention, the columns are named
-##' \code{"ns1"}, \code{"ns2"}, \dots The number of colums is equal to
-##' \code{df} is provided or if knots was supplied, to
-##' \code{length(knots) + 1 + constant}.
+##' @return An object with class \code{"bts"} inheriting from
+##' \code{"matrix"}. This is essentially a numeric matrix having the
+##' value of the basis functions as its columns. Each row corresponds
+##' to an element of the given \code{date} vector. By convention, the
+##' columns are named \code{"ns1"}, \code{"ns2"}, \dots The number of
+##' colums is equal to \code{df} is provided or if knots was supplied,
+##' to \code{length(knots) + 1 + constant}.
 ##'
 ##' @seealso The \code{\link[splines]{ns}} function used to compute
 ##' the basis, and \code{\link{breaksX}}, \code{\link{polynomX}} for
@@ -210,8 +218,7 @@ polynomX <- function(date, degree = 2, origin = NULL) {
 ##' date <- as.Date(sprintf("%4d-01-01", 1921:2020))
 ##' X1 <- natSplineX(date = date, knots = "1950-01-01",
 ##'                  boundaryKnots = c("1920-01-01", "2021-01-01"))
-##' plot(date, X1[ , 1], ylim = range(X1), type = "n", ylab = "")
-##' matlines(date, X1, type = "l")
+##' plot(X1)
 ##' 
 natSplineX <- function(date,
                        origin = NULL,
@@ -231,6 +238,9 @@ natSplineX <- function(date,
             Boundary.knots = tboundaryKnots)
     
     colnames(X) <- paste("ns", 1:ncol(X), sep = "")
+    rownames(X) <- attr(X, "date") <- format(date, "%Y-%m-%d")
+
+    class(X) <- c("bts", "matrix")
     
     X
     

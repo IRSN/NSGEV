@@ -19,10 +19,11 @@ for the transformation of dates into numeric values. The default
 value is \code{1970-01-01}, see \code{\link{Date}}.}
 }
 \value{
-A matrix having the value of the basis functions as its
-columns. Each row corresponds to an element of the given
-\code{date} vector. By convention, the columns are named
-\code{Cst} then \code{t1}, \code{t2}, \dots.
+An object with class \code{"bts"} inheriting from
+\code{"matrix"}. This is essentially a numeric matrix having the
+value of the basis functions as its columns. Each row corresponds
+to an element of the given \code{date} vector. By convention, the
+columns are named \code{Cst} then \code{t1}, \code{t2}, \dots.
 }
 \description{
 Build a design matrix for polynomial regression.
@@ -53,6 +54,7 @@ date <- seq(from = as.Date("1996-01-01"),
             to = as.Date("2016-12-31"), by = "years")
 
 X <- polynomX(date)
+plot(X)
 }
 \seealso{
 \code{breaksX} for a basis of Truncated Power functions.

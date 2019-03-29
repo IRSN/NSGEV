@@ -295,7 +295,7 @@ pGEV <- function (q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
             attr(res, "gradient") <-
                 array(attr(res, "gradient"),
                       dim = c(n, 3),
-                      dimnames = list(rownames(q), c("loc", "scale", "shape")))
+                      dimnames = list(NULL, c("loc", "scale", "shape")))
         }
         return(res)
         

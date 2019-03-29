@@ -21,7 +21,8 @@ probability > 0.001 for each observation.}
 
 \item{date}{An object that can be coerced to the
 class\code{"Date"} giving the date of the blocks for which the
-density will be evaluated.}
+density will be evaluated. By default, three dates are selected
+in the date vector attached to \code{x}.}
 
 \item{psi}{Vector of model coefficients. By default, the vector of
 estimated coefficients in \code{x} is used.}

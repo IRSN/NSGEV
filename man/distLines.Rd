@@ -19,8 +19,18 @@ The distance.
 Distance between two lines.
 }
 \details{
-The vectors \code{x1} \code{x1} are scaled to have unit
-Euclidean norm and to have the same direction. The distance
+This function is used to build diagnostics during the
+construction of profile-likelihood confidence intervals. So the
+function is not intended to be used by itself.
+
+The vectors \code{x1} and \code{x2} are scaled to have an
+unit Euclidean norm and to have the same direction. The distance
 between the lines is simply the distance between the unit vectors
 on the unit sphere.
+}
+\note{
+When a constrained optimisation is used for the
+determination of the lower or upper bound of the interval, we have
+to check that the gradient of the objective and that of the
+constraint are colinear, which is performed with this function.
 }

@@ -5,7 +5,8 @@
 \alias{lines.bts}
 \title{Time-Plot of \code{bts} Objects for Block Time Series}
 \usage{
-\method{plot}{bts}(x, y, gg = TRUE, col1 = "darkgray", ...)
+\method{plot}{bts}(x, y, gg = TRUE, col1 = "darkgray",
+  facets = FALSE, ...)
 
 \method{lines}{bts}(x, y, col1 = "gray", alpha = NULL, ...)
 }
@@ -19,8 +20,13 @@ such as the GEV parameters of a \code{TVGEV} model.}
 drawn and returned by the function. If \code{FALSE} a standard
 plot is shown and the function returns nothing.}
 
-\item{col1}{Colour to be used when there are too many time series
-to use one colour for each.}
+\item{col1}{A colour which is used in the case where \code{x} has
+more than 12 columns. In this case, all the curves are drawn using
+the colour \code{col1}.}
+
+\item{facets}{Logical. If \code{True}, the columns of \code{x} will
+be shown each in a facet. Only works if the number of columns is
+between 2 and 12.}
 
 \item{...}{Further parameter passed to graphical functions.}
 
@@ -37,7 +43,8 @@ Time-plot of a \code{bts} object.
 \note{
 When a plot is built with \code{gg = TRUE}, using the
 \code{lines} method later will have no effect, because this method
-is designed to work on standard graphics.
+is designed to work on standard graphics, and not with graphics
+produced by \pkg{ggplot2}.
 }
 \examples{
 example(TVGEV)

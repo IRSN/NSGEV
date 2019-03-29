@@ -28,12 +28,13 @@ location of the boundary knots in \code{\link[splines]{ns}}.}
 \code{\link[splines]{ns}}.}
 }
 \value{
-A matrix having the value of the basis functions as its
-columns. Each row corresponds to an element of the given
-\code{date} vector. By convention, the columns are named
-\code{"ns1"}, \code{"ns2"}, \dots The number of colums is equal to
-\code{df} is provided or if knots was supplied, to
-\code{length(knots) + 1 + constant}.
+An object with class \code{"bts"} inheriting from
+\code{"matrix"}. This is essentially a numeric matrix having the
+value of the basis functions as its columns. Each row corresponds
+to an element of the given \code{date} vector. By convention, the
+columns are named \code{"ns1"}, \code{"ns2"}, \dots The number of
+colums is equal to \code{df} is provided or if knots was supplied,
+to \code{length(knots) + 1 + constant}.
 }
 \description{
 Build a design matrix for a natural spline basis.
@@ -51,8 +52,7 @@ one outside of the boundary knots.
 date <- as.Date(sprintf("\%4d-01-01", 1921:2020))
 X1 <- natSplineX(date = date, knots = "1950-01-01",
                  boundaryKnots = c("1920-01-01", "2021-01-01"))
-plot(date, X1[ , 1], ylim = range(X1), type = "n", ylab = "")
-matlines(date, X1, type = "l")
+plot(X1)
 
 }
 \seealso{
