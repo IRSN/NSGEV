@@ -1,0 +1,199 @@
+\documentclass[a4,11pt]{article}
+
+%%=================================================================
+%% Utilisrer [trans] ou [handouts] pour eliminer les ``pause''
+%%=================================================================
+
+% Copyright 2003 by Till Tantau <tantau@cs.tu-berlin.de>.
+%
+% This program can be redistributed and/or modified under the terms
+% of the LaTeX Project Public License Distributed from CTAN
+% archives in directory macros/latex/base/lppl.txt.
+
+%
+% The purpose of this example is to show how \part can be used to
+% organize a lecture.
+%
+%%=================================================================
+%% Commentaire YVES DEVILLE 
+%% Ceci est pour faire en 4 transparents/pages.  Si
+%% pgfpages est installe correctement et en version recente.
+%%=================================================================
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{amsmath,bbold}
+\usepackage{natbib}
+\usepackage{cancel}
+\usepackage{caption}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{aeguill}
+\usepackage{textcomp}
+\usepackage{pdfcolmk}
+\usepackage{listings}
+\usepackage{fancybox}
+\lstloadlanguages{R}
+\lstloadlanguages{C}
+
+%\usepackage{pgfcore}
+\usepackage{pgf,pgfarrows}
+\usepackage{pgfpages}
+%%\pgfpagesuselayout{4 on 1}[a4paper, landscape]
+\usepackage{fullpage}
+
+\usepackage{tikz}
+\usepackage{fancybox}
+\usepackage{verbatim}
+\usetikzlibrary{decorations.pathreplacing,shapes.misc}
+\usepackage{hyperref}
+
+%%=============================================================================
+%% Couleurs
+%%=============================================================================
+%
+\definecolor{MonVert}{rgb}{0.398,0.801,0.000} 
+\definecolor{MonVertF}{rgb}{0.133,0.543,0.133}
+\definecolor{MonRouge}{rgb}{0.300,0.060,0.660}
+\definecolor{MonBleuC}{rgb}{0.000,0.602,0.801} 
+\definecolor{SteelBlue2}{rgb}{0.359375,0.671875,0.9296875}
+%%\definecolor{orange}{rgb}{0.8,0.1470,0.0}
+\definecolor{Orange}{rgb}{0.8,0.1470,0.0}
+\definecolor{SteelBlue4}{rgb}{0.212, 0.392, 0.545}
+\definecolor{SteelBlue3}{rgb}{0.30859,0.578125,0.800781}
+\definecolor{MonBleu}{rgb}{0.212, 0.392, 0.545}
+\definecolor{Violet}{rgb}{0.212, 0.392, 0.545}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{figure*}
+  \centering \sf \small
+
+  \begin{tikzpicture} [thick,scale=0.7, every node/.style={scale=0.7}]
+        
+
+    \draw[draw = red, line width = 1.2pt, fill = orange!20] (-2.4, 1.9) rectangle (-1.6, -0.9);
+ 
+    \begin{scope}[shift={(0, 0)}]
+
+      \draw[fill = orange!40, draw = orange] (-3.6, -1) rectangle (-0.4, 2);
+      
+      \draw[draw = orange, line width = 1.2pt, fill = orange!20] (-2.4, 1.9)
+      rectangle (-1.6, -0.9);
+ 
+      \foreach \i / \b in { 1 / 1, 2.1 / 2, 4.9 / B} {
+        \node at (-3.2 , 2 - 0.5 * \i) {$y^{[1]}_\b$};  
+        \node at (-2.0 , 2 - 0.5 * \i) {$y^{[r]}_\b$};
+        \node at (-0.8 , 2 - 0.5 * \i) {$y^{[R]}_\b$};
+      }
+      \foreach \x in { -3.2, -2.0, -0.8} {
+        \node at (\x, 0.3) {$\vdots$};
+      }
+      
+      \node( ) at (-2.0, -1.4) {$B \times R$ "re-sampled"};
+       
+    \end{scope}
+
+    \draw[draw = MonBleu, fill = MonBleu!10] (0.3, 2.2)
+    rectangle (10.9, -2.4);
+    
+    \begin{scope}[shift={(4.2, 0)}]
+
+      
+      \draw[fill = MonBleu!40, draw = MonBleu] (-3.6, -1) rectangle (-0.4, 2);
+
+      \draw[draw = MonBleu, line width = 1.2pt, fill = MonBleu!20] (-2.4, 1.9)
+      rectangle (-1.6, -0.9);
+
+      \foreach \i / \b in { 1 / 1, 2.1 / 2, 4.9 / B} {
+        \node at (-3.2 , 2 - 0.5 * \i) {$\widehat{\mu}^{[1]}_\b$};  
+        \node at (-2.0 , 2 - 0.5 * \i) {$\widehat{\mu}^{[r]}_\b$};
+        \node at (-0.8 , 2 - 0.5 * \i) {$\widehat{\mu}^{[R]}_\b$};
+      }
+      \foreach \x in { -3.2, -2.0, -0.8} {
+        \node at (\x, 0.3) {$\vdots$};
+      }
+
+      \node( ) at (-2.0, -1.4) {$B \times R$ "location"};
+      
+    \end{scope}
+    
+
+    \begin{scope}[shift={(7.6, 0)}]
+      
+      \draw[fill = MonBleu!40, draw = MonBleu] (-3.6, -1) rectangle (-0.4, 2);
+  
+      \draw[draw = MonBleu, line width = 1.2pt, fill = MonBleu!20] (-2.4, 1.9)
+      rectangle (-1.6, -0.9);
+      
+      \foreach \i / \b in { 1 / 1, 2.1 / 2, 4.9 / B} {
+        \node at (-3.2 , 2 - 0.5 * \i) {$\widehat{\sigma}^{[1]}_\b$};  
+        \node at (-2.0 , 2 - 0.5 * \i) {$\widehat{\sigma}^{[r]}_\b$};
+        \node at (-0.8 , 2 - 0.5 * \i) {$\widehat{\sigma}^{[R]}_\b$};
+      }
+      \foreach \x in { -3.2, -2.0, -0.8} {
+        \node at (\x, 0.3) {$\vdots$};
+      }
+
+      \node( ) at (-2.0, -1.4) {$B \times R$ "scale"};
+       
+    \end{scope}
+
+    \begin{scope}[shift={(11.0, 0)}]
+      
+      \draw[fill = MonBleu!40, draw = MonBleu] (-3.6, -1) rectangle (-0.4, 2);
+  
+      \draw[draw = MonBleu, line width = 1.2pt, fill = MonBleu!20] (-2.4, 1.9)
+      rectangle (-1.6, -0.9);
+
+      \foreach \i / \b in { 1 / 1, 2.1 / 2, 4.9 / B} {
+        \node at (-3.2 , 2 - 0.5 * \i) {$\widehat{\xi}^{[1]}_\b$};  
+        \node at (-2.0 , 2 - 0.5 * \i) {$\widehat{\xi}^{[r]}_\b$};
+        \node at (-0.8 , 2 - 0.5 * \i) {$\widehat{\xi}^{[R]}_\b$};
+      }
+      \foreach \x in { -3.2, -2.0, -0.8} {
+        \node at (\x, 0.3) {$\vdots$};
+      }
+
+      \node( ) at (-2.0, -1.4) {$B \times R$ "shape"};
+    \end{scope}
+
+    \begin{scope}[shift={(7.6, 5)}]
+      
+      \draw[fill = MonVert!40, draw = MonVert] (-3.6, -1) rectangle (-0.4, 2);
+
+      \draw[draw = MonVert, line width = 1.2pt, fill = MonVert!20] (-2.4, 1.9)
+      rectangle (-1.6, -0.9);
+
+      \foreach \i / \b in { 1 / 1, 2.1 / 2, 5 / p} {
+        \node at (-3.2 , 2 - 0.5 * \i) {$\widehat{\psi}^{[1]}_{\b}$};  
+        \node at (-2.0 , 2 - 0.5 * \i) {$\widehat{\psi}^{[r]}_{\b}$};
+        \node at (-0.8 , 2 - 0.5 * \i) {$\widehat{\psi}^{[R]}_{\b}$};
+      }
+      \foreach \x in { -3.2, -2.0, -0.8} {
+        \node at (\x, 0.3) {$\vdots$};
+      }
+      \node( ) at (-2.0, 2.36) {$p \times R$ "psi"};
+    \end{scope}
+
+    \node( ) at (7.6 -2.0, -2.0) {array "theta"};
+
+    \draw[->, red, very thick, draw opacity=0.7] (-2.0, 1.9)  --
+    node[ midway, above, sloped] {MLE} 
+     (-2.4 + 7.6, -0.9 + 5);
+
+    \foreach \s in {4.2, 7.6, 11.0 } 
+    \draw[->, red, very thick, dashed, draw opacity=0.6] (-2.0 + 7.6, -0.9 + 5) -- 
+    %% node[ midway, above, sloped] {psi2theta} 
+    (-2.0 + \s, 1.9);
+    \node[red] at (-2.0 + 7.6, 3) {psi2theta};
+  \end{tikzpicture}
+  \captionsetup{labelformat=empty}
+  \caption{\sf \scriptsize Bootstrap of a \texttt{TVGEV} object; $p:=$ number of model parameters}
+
+\end{figure*}
+
+
+\end{document}
+

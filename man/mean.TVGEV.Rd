@@ -35,7 +35,7 @@ Expectation or moments of a \code{TVGEV} model.
 }
 \examples{
 example(TVGEV)
-plot(mean(res1))
+autoplot(mean(res1))
 }
 \seealso{
 \code{\link{quantile.TVGEV}}

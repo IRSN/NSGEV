@@ -26,7 +26,7 @@
 ##' @examples
 ##' example(TVGEV)
 ##' q <- quantile(res1)
-##' plot(q)
+##' autoplot(q)
 ##' 
 quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
                            date = NULL,
@@ -227,7 +227,7 @@ cdf.TVGEV <- function(x,
 ##'
 ##' @examples
 ##' example(TVGEV)
-##' plot(mean(res1))
+##' autoplot(mean(res1))
 mean.TVGEV <- function(x,
                        date = NULL,
                        psi = NULL, ...) {

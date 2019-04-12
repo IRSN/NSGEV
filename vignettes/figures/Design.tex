@@ -1,0 +1,128 @@
+\documentclass[a4,11pt]{article}
+
+%%=================================================================
+%% Utilisrer [trans] ou [handouts] pour eliminer les ``pause''
+%%=================================================================
+
+% Copyright 2003 by Till Tantau <tantau@cs.tu-berlin.de>.
+%
+% This program can be redistributed and/or modified under the terms
+% of the LaTeX Project Public License Distributed from CTAN
+% archives in directory macros/latex/base/lppl.txt.
+
+%
+% The purpose of this example is to show how \part can be used to
+% organize a lecture.
+%
+%%=================================================================
+%% Commentaire YVES DEVILLE 
+%% Ceci est pour faire en 4 transparents/pages.  Si
+%% pgfpages est installe correctement et en version recente.
+%%=================================================================
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{amsmath,bbold}
+\usepackage{natbib}
+\usepackage{cancel}
+\usepackage{caption}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{aeguill}
+\usepackage{textcomp}
+\usepackage{pdfcolmk}
+\usepackage{listings}
+\usepackage{fancybox}
+\lstloadlanguages{R}
+\lstloadlanguages{C}
+
+%\usepackage{pgfcore}
+\usepackage{pgf,pgfarrows}
+\usepackage{pgfpages}
+%%\pgfpagesuselayout{4 on 1}[a4paper, landscape]
+\usepackage{fullpage}
+
+\usepackage{tikz}
+\usepackage{fancybox}
+\usepackage{verbatim}
+\usetikzlibrary{decorations.pathreplacing,shapes.misc}
+\usepackage{hyperref}
+
+%%=============================================================================
+%% Couleurs
+%%=============================================================================
+%
+\definecolor{MonVert}{rgb}{0.398,0.801,0.000} 
+\definecolor{MonVertF}{rgb}{0.133,0.543,0.133}
+\definecolor{MonRouge}{rgb}{0.300,0.060,0.660}
+\definecolor{MonBleuC}{rgb}{0.000,0.602,0.801} 
+\definecolor{SteelBlue2}{rgb}{0.359375,0.671875,0.9296875}
+%%\definecolor{orange}{rgb}{0.8,0.1470,0.0}
+\definecolor{Orange}{rgb}{0.8,0.1470,0.0}
+\definecolor{SteelBlue4}{rgb}{0.212, 0.392, 0.545}
+\definecolor{SteelBlue3}{rgb}{0.30859,0.578125,0.800781}
+\definecolor{MonBleu}{rgb}{0.212, 0.392, 0.545}
+\definecolor{Violet}{rgb}{0.212, 0.392, 0.545}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{figure*}
+  \centering \sf \small
+
+  \begin{tikzpicture}[thick,scale=0.7, every node/.style={scale=0.7}]
+
+    \draw[fill = orange!40, draw = orange] (-4, -1) rectangle (-1, 2);
+    \node( ) at (-2.5, -1.4) {
+      %% \parbox{4cm}{
+        data frame with $B$ rows 
+        % \begin{list}{$ \bullet$}{ }
+        % \item can contain more columns
+        % \item the names of the date and response
+        % \end{list}
+        %% }
+    };
+      
+    
+    \draw[fill = MonVert!40, draw = MonVert] (2, -1) rectangle (7, 2);
+    \node( ) at (4.75, -1.4) {bts with $B$ rows};
+
+    \draw[draw = red, line width = 1.2pt,
+    fill = orange!20] (-3.8, 1.8) rectangle (-3.2, -0.8);
+
+    \foreach \i / \b in { 1 / 1, 2 / 2, 5 / B} {
+      \node at (-3.5 , 2 - 0.5 * \i) {$t_\b$};  
+      \node at (-2.7 , 2 - 0.5 * \i) {$y_\b$}; 
+      \node at (2.8 , 2 - 0.5 * \i) {$x_1(t_\b)$}; 
+      \node at (4.0 , 2 - 0.5 * \i) {$x_2(t_\b)$};  
+      \node at (6.0 , 2 - 0.5 * \i) {$x_p(t_\b)$};
+    }
+    \foreach \x in { -3.5, -2.7, 2.8, 4.0, 6.0} {
+        \node at (\x, 0.5) {$\vdots$};
+    }
+    
+    \node[right, red](Date) at (-5.5, 2.5) {\texttt{date}};
+    \node[right](Response) at (-5.7, 3.0) {\texttt{response}};
+
+    \draw[->, red] (Date) -- (-3.5, 2.5) -- (-3.5, 1.83);
+    \draw[->] (Response) -- (-2.7, 3.0) -- (-2.7, 1.83);
+ 
+    \node[rectangle, draw = MonVertF, rounded corners = 0.2cm] (Design) 
+    at (4, 3.3) { 
+      \parbox{3cm}{
+        \texttt{design} function\\
+        \texttt{function(date)}\{\}
+      }};
+
+    \draw[->, MonVertF, very thick] (-3.2, 1.8) -- (Design);
+    \draw[->, MonVertF, very thick] (Design) -- (4.5, 2.2);
+
+  \end{tikzpicture}
+  \captionsetup{labelformat=empty}
+  \caption{\sf \scriptsize Using a design function in \texttt{TVGEV}.}
+
+\end{figure*}
+
+
+\end{document}
+

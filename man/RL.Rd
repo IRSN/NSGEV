@@ -114,7 +114,7 @@ RLe <- RL(res1, period = 200, date = nd, plot = TRUE)
 RLa <- RL(res1, period = 200, date = nd, plot = TRUE, type = "average")
 ## check the value of 'RLA'
 q <- quantile(res2, prob = 1.0 - 1.0 / 200, date = nd)
-plot(q)
+autoplot(q)
 mean(q[1:200])
 
 }

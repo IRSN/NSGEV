@@ -34,6 +34,6 @@ time-varying model.
 \examples{
 example(TVGEV)
 q <- quantile(res1)
-plot(q)
+autoplot(q)
 
 }
