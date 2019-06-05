@@ -2,12 +2,9 @@
 % Please edit documentation in R/bts.R
 \name{bts}
 \alias{bts}
-\alias{[.bts}
 \title{Create a \code{bts} Object Representing a Block Time-Series}
 \usage{
 bts(x, dateFrom, date)
-
-\method{[}{bts}(x, ..., drop = FALSE)
 }
 \arguments{
 \item{x}{A matrix with the time-series components as its columns.}

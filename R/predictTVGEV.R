@@ -93,7 +93,8 @@ predict.TVGEV <- function(object,
                           ...) {
 
     dots <- match.call(expand.dots = FALSE)$...
-
+    confintMethod <- match.arg(confintMethod)
+    
     if (length(dots)) {
         dotsText <- paste(sprintf("'%s'", names(dots)), collapse = ", ")
         if (confintMethod %in% c("none", "delta", "proflik")) {
@@ -131,7 +132,7 @@ predict.TVGEV <- function(object,
     prob <- 1.0 - 1.0 / period
     fPeriod <- format(period)
     
-    method <- match.arg(confintMethod)
+    method <- confintMethod
     if (!missing(biasCorrect) && (method != "boot")) {
         warning("the argument 'biasCorrect' provided will not ",
                 "be used since 'confintMethod' != \"boot\"")
@@ -431,12 +432,29 @@ predict.TVGEV <- function(object,
          
          g <- function(psi, level, prob, iDate, chgSign = FALSE, object) {
              
+             ## ellL <- object$negLogLik + qchisq(level, df = 1) / 2.0
+             ## res <- object$negLogLikFun(psi = psi,
+             ##                            deriv = TRUE,
+             ##                            object = object)
+             ## list("constraints" = res$objective - ellL,
+             ##      "jacobian" = res$gradient)
+
+
+             psi1 <- psi
+             names(psi1) <- object$parNames
+             sigma <- min(psi2theta(model = object, psi = psi1)[ , 2])
+             
              ellL <- object$negLogLik + qchisq(level, df = 1) / 2.0
-             res <- object$negLogLikFun(psi = psi,
-                                        deriv = TRUE,
-                                        object = object)
-             list("constraints" = res$objective - ellL,
-                  "jacobian" = res$gradient)
+             res <- object$negLogLikFun(psi = psi, object = object, deriv = TRUE)
+             
+             if (!is.na(sigma) && (sigma > 0)) {
+                 res2 <- list("constraints" = res$objective - ellL,
+                              "jacobian" = res$gradient)
+             } else {
+                 res2 <-  list("constraints" = 1,
+                               "jacobian" = rep(NaN, object$p))
+             }
+             res2 
              
          }
          
@@ -583,20 +601,22 @@ predict.TVGEV <- function(object,
                                     cat("        Gradients\n")
                                     print(rbind("        g" = checkg$jacobian,
                                                 "        f" = checkf$gradient))
-                                    cat("\n")
+                                    cat("XXX\n")
                                 }
                             }
 
                             ## It seems that the distance reached is smaller when
                             ## 'T' is large.
+                            ## Changed on 2019-06-03. As chosen, the limit 'gradLim'
+                            ## produces "false positive" for divergence.
 
                             gradLim <- 1.0 / period^0.6
 
                             if (!inherits(resOpt, "try-error") &&
                                 (resOpt$status %in% c(3, 4)) &&
-                                (checkg$constraints > constrCheck) &&
-                                (!is.na(gradDist)) &&
-                                (gradDist < gradLim)) {
+                                (any(checkg$constraints > constrCheck))) {
+                                ## && (!any(is.na(gradDist))) &&
+                                ## (all(gradDist < gradLim))) {
 
                                 optDone <- TRUE
                                 psiIniPrec <- resOpt[["solution"]]
@@ -690,7 +710,7 @@ predict.TVGEV <- function(object,
 ##'
 ##' @note This function is intended to work with predictions computed
 ##' for a possibly large number of periods (to get smooth curves) but
-##' with only a small number of dates, each apearing in a facet. So
+##' with only a small number of dates, each appearing in a facet. So
 ##' the number of dates is limited to \code{6}. Similarily, the number
 ##' of confidence levels can not be \code{> 3}.
 ##' 
@@ -708,7 +728,7 @@ plot.predict.TVGEV <- function(x, y, gg = TRUE, bw = TRUE, ... ) {
         dotsText <- paste(sprintf("'%s'", names(dots)), collapse = ", ")
         warning("dots '...' not used yet in this method: ",
                 "the formals ", dotsText, " will be ignored. ",
-                "Use the ggplot fonctions to change the apearance ",
+                "Use the ggplot fonctions to change the appearance ",
                 "of the graph.")
     }
     

@@ -15,7 +15,7 @@ understandable format.}
 \item{yearName}{Character. Optional column name for a year. When
 given, the column must be either numeric or character.}
 
-\item{...}{Note used.}
+\item{...}{Not used.}
 }
 \value{
 An object with class \code{"bts"} inheriting from

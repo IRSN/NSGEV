@@ -275,8 +275,8 @@ dGEV <- function(x, loc = 0.0, scale = 1.0, shape = 0.0, log = FALSE,
 }
 
 ##' @rdname GEV
-pGEV <- function (q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
-                  deriv = FALSE, impl = c("C", "R")) {
+pGEV <- function(q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
+                 deriv = FALSE, impl = c("C", "R")) {
 
     impl <- match.arg(impl)
     
@@ -377,8 +377,8 @@ pGEV <- function (q, loc = 0, scale = 1, shape = 0, lower.tail = TRUE,
 }
 
 ##' @rdname GEV
-qGEV <- function (p, loc = 0.0, scale = 1.0, shape = 0.0, lower.tail = TRUE,
-                  deriv = FALSE, hessian = FALSE, impl = c("C", "R")) {
+qGEV <- function(p, loc = 0.0, scale = 1.0, shape = 0.0, lower.tail = TRUE,
+                 deriv = FALSE, hessian = FALSE, impl = c("C", "R")) {
 
     if (min(p, na.rm = TRUE) < 0.0 || max(p, na.rm = TRUE) > 1.0) 
         stop("`p' must contain probabilities in [0, 1]")
@@ -470,7 +470,7 @@ qGEV <- function (p, loc = 0.0, scale = 1.0, shape = 0.0, lower.tail = TRUE,
 }
 
 ##' @rdname GEV
-rGEV <- function (n, loc = 0.0, scale = 1.0, shape = 0.0) {
+rGEV <- function(n, loc = 0.0, scale = 1.0, shape = 0.0) {
     
     if (any(is.na(loc)) || !all(is.finite(loc))) {
         stop("'loc' must contain non-NA finite numeric values")  

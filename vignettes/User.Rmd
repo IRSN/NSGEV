@@ -1,9 +1,9 @@
 ---
-title: "Time-Varying Models in NSGEV DRAFT version a"
+title: "Time-Varying Models in NSGEV"
 author: "Yves Deville"
-date: "12/04/2019"
+date: "07/06/2019"
 output:
-  pdf_document:
+  html_vignette:
     toc: true
 vignette: >
   %\VignetteIndexEntry{Time-Varying Models in NSGEV}
@@ -21,19 +21,23 @@ KABLE <- TRUE
 library(NSGEV)
 library(ismev)
 ```
-$\color{red}\text{XXX TODO. Citations: packages, more useful ref. Complete XXX}$.  
 
+		      
+This document was created with **NSGEV** `r packageVersion("NSGEV")`.
+		      
 # Scope
 	  
 The **NSGEV** package provides a class of R objects representing
 models for observations following a Time-Varying Generalized Extreme
-Value (GEV) distribution, usually block maxima. This class of models
-is named `"TVGEV"`.  These models are specific Non-Stationary GEV
-models: *only slowly varying functions of the time can be used as
+Value (GEV) distribution, usually block maxima, as described in the
+chapter 6 of the book by Coles [@Coles_ExtremeValues]. This class of
+models is named `"TVGEV"`.  These models are specific Non-Stationary
+GEV models: *only slowly varying functions of the time can be used as
 covariates*. They can be fitted by using CRAN packages such as
-**ismev**, **evd**, **extRemes** and more. However with these
-packages, the specificities of the Time-Varying context are not taken
-into account, and it is quite difficult for instance to compute
+**ismev** [@pack_ismev], **evd** [@pack_evd], **extRemes**
+[@pack_extRemes] and more. However with these packages, the
+particularities of the Time-Varying context are not taken into
+account, and it is quite difficult for instance to compute
 predictions. The `TVGEV` class and its methods have the following
 features.
 
@@ -52,9 +56,7 @@ features.
   of the classical **graphics** package. 
     
 The present vignette shows how models can be specified and fitted,
-and illustrates the use of the principal methods.
-
-
+and illustrates the use of the principal methods. 
 
 # A simple linear trend on the GEV location
 
@@ -105,7 +107,7 @@ fite1 <- extRemes::fevd(x = TXMax,
 Note that a classical *formula* is used to specify the model as it is
 done for linear models with `lm` or `glm`. By default, a formula implies
 the use of a constant. So the formula `~ Year` indeed implies the
-existence of coefficient $\mu_0$ in $\mu(t) = \mu_0 + \mu_1 t$. We
+existence of the coefficient $\mu_0$ in $\mu(t) = \mu_0 + \mu_1 t$. We
 could have used equivalently an explicit constant with `~ 1 +
 Year`. On the contrary, a model with no constant $\mu(t) = \mu_1 t$
 would have been specified by using the formula `~ Year - 1`. This
@@ -227,10 +229,10 @@ anova(fitNConst, fitNLin)
 
 ```
 
-The $p$-value is `r ifelse(anova(fitNConst, fitNLin)[["Pr(>W)"]][2] > 0.05, "> 0.05", "< 0.005")`,
-so if we assume that there could be a global linear trend on the
-location, we would reject the null hypothesis that the slope $\mu_1$
-differs from zero at the $5\%$ level.
+The $p$-value is `r ifelse(anova(fitNConst, fitNLin)[["Pr(>W)"]][2] >
+0.05, "> 0.05", "< 0.005")`, so if we assume that there could be a
+global linear trend on the location, we would reject the null
+hypothesis $H_0: \mu_1 = 0$ at the $5\%$ level.
 
 We can investigate different forms of trend, using different designs.
 
@@ -356,7 +358,7 @@ corresponding to an infinite return period $T=\infty$.
       
 	
 The two models corresponding to the objects `fitNLin` and `fitNBreak` are
-*nested*: by seting $\mu_2 = 0$ in the second model, we retrieve the
+*nested*: by setting $\mu_2 = 0$ in the second model, we retrieve the
 first one.  So we can perform a likelihood-ratio test as above.
 	    
 
@@ -428,8 +430,14 @@ c("Breaks" = BIC(fitNBreak), "Natural Spline" = BIC(fitNNS))
 
 ## Possible numerical problems
 
-$\color{red}\text{XXX Explain and illustrate the need to set the time
-origin}$.  
+A possible source of problems, the design matrices created by the
+design functions can take large values. Indeed, a date is considered
+as a number of days for a given origin; for a long series we will get
+basis functions with values of several thousands or even much more
+when polynomials with degree $>1$ are used. In order to facilitate the
+task of maximizing the likelihood, it is worth using the `origin`
+formal argument of the provided design functions, setting it to a date
+close to the mean date of the series.
 
 	
 	 
@@ -472,7 +480,7 @@ by setting the `trace` argument.
 pBreakPL <- predict(fitNBreak, confintMethod = "proflik", trace = 0)
 plot(pBreakPL)
     
-```	  
+```
 
 ## Unconditional return levels
 
@@ -481,14 +489,39 @@ framework. These are obtained by aggregating several times
 corresponding to a prediction period. Many definitions are possible;
 a natural requirement is that the usual definition continues to
 hold when a stationary model is considered as time-varying.	      
+
+Following Parey et al [@PareyEtAl_DifRetLev], we can define the return
+level corresponding to $T$ years as the level $\rho$ such that the
+number $N$ of exceedances over $\rho$ in the $T$ "next years" has unit
+expectation $\mathbb{E}(N) = 1$. The notion of "next" year is relative
+to a time origin that can be chosen.
+
+```{r fitNBreakpredictUnCond}
+pUCBreak <- predictUncond(fitNBreak, newdateFrom = "2020-01-01",
+                          confintMethod = "proflik", trace = 0)
+plot(pUCBreak)
+kable(pUCBreak, digits = 2)
     
-$\color{red}\text{XXX Explain and illustrate the Time-Varying return
-level of Parey et al.}$.
+```
 
+For instance the return level corresponding to $T=30$ years for the
+origin `"2020-01-01"` should be exceeded once (on average) during the
+ten years 2021 to 2050. This level is estimated here to be
+`r round(subset(pUCBreak, Period == 30)$Quant, digits = 2)` Celsius.
 
-    	  
-	 
-
+Note that an alternative definition of the return level can be
+implemented as a function $\rho(\boldsymbol{\psi})$ of the parameter
+vector $\boldsymbol{\psi}$ of the model. Under quite general
+conditions, such a return level can be regarded as a parameter of the
+model in a re-parameterization of it, hence we can infer on it as we
+do for a parameter. To achieve this in practice, the return level must
+be implemented as a R function with signature `function(object, psi)`
+where `object` has class `"TVGEV"` and `psi` stands for the parameter
+vector. The `profLik` method can then be used to infer on the return
+level using the profile-likelihood method, see `?profLik.TVGEV`. This
+method can work for any smooth function having the previous signature.
+		   
+  
 # Simulate from a fitted model
 
 The `simulate` method is implemented in many R packages, with the aim
@@ -569,17 +602,36 @@ autoplot(thetas, facets = TRUE)
 	     
 ## Marginal distributions
 
-Several methods can be used to assess the marginal distribution of $Y_b$
-for a specific time $t_b$.   
+Several methods can be used to assess the marginal distribution of
+$Y_b$ for a specific time $t_b$ or at a collection of times given by a
+`date` argument. With the default `date = NULL`, the methods
+`quantile`, `mean`, `moments` for the class `"TVGEV"` return time
+series objects that can be "autoplotted" to plot the quantiles or the
+mean (expectation) against the date as it was shown
+before. The help page with examples can be displayed in the usual way, e.g.
+with `?quantile.TVGEV`.
 
-$\color{red}\text{XXX Illustrate the use of the mean, moment and density methods}$.
+	
+The `density` and `cdf` methods both return a functional time series:
+a collection of functions depending on the date. These can be
+autoplotted as well.
+    
+```{r fitNBreakDens}
+autoplot(density(fitNBreak), fill = TRUE)
+```
+        
+If needed, the time series with class `"bts"` can be coerced into a
+standard time series inheriting from `"ts"` for which many methods
+have been written in different packages.    
+
+
  
 # Bootstrap
 
 ## Principle
    
 A large number $R$ of response vectors $\mathbf{y}^{[r]}$ are
-simulated or "resampled" corresponding to $r=1$, $\dots$, $R$. These
+simulated or "re-sampled" corresponding to $r=1$, $\dots$, $R$. These
 simulated values can be stored into a matrix with $B$ rows and $R$
 columns. For each vector $\mathbf{y}^{[r]}$, the MLE
 ${\widehat{\boldsymbol{\psi}}}^{[r]}$ of the "psi" parameter vector
@@ -664,8 +716,7 @@ example, the conditional return level $\rho_b(m)$ corresponding the
 the period of $m$ blocks and for the given time $t_b$ can be inferred by using the
 quantiles of the return periods which are computed as $q_{\text{GEV}}(p;
 \,\widehat{\boldsymbol{\theta}}_b^{[r]})$ for $p:= 1 - 1/T$.
-
-
+  					  
 
 # Strengths and limitations of `TVGEV`
 
@@ -715,8 +766,8 @@ plot(myDate, x, type = "o", xlab = "")
 
 
 	
-The **lubridate** package has functions that can help to cope with
-date.
+The **lubridate** package [@pack_lubridate] has functions that can
+help to cope with date.
 				  
 
 ## Adding new design functions
@@ -734,5 +785,107 @@ You can add new design functions. A design function:
   This object should be created either by using the `bts` function
   (creator for the class) or by simply giving the class `c("bts", "matrix")`
   to a matrix with the suitable attribute.
+
+## Estimating the break with a broken line trend
+
+Let us consider again the broken line trend discussed above,
+namely
+	
+$$
+\mu(t) = \mu_0 + \mu_1 t + \mu_2  [t - t_0]_+.
+$$
+	
+As mentioned before, the date $t_0$ of a change of slope can be
+considered as an unknown parameter, but the model then no longer has
+the form for `TVGEV` objects, so it can no longer be estimated by
+using directly the `TVGEV` function. Yet we can find the value of
+$t_0$ by maximizing the log-likelihood over a vector of candidate
+values: estimating a `TVGEV` model for each value will provide
+the corresponding log-likelihoods. For a given year we can create a
+suitable formatted date with the `sprintf` function as follows
+   
+```{r kink1}
+yearBreaks <- c(1940, 1950, 1955, 1960:2000, 2005, 2010)
+res <- list()
+
+for (ib in seq_along(yearBreaks)) {
+    d <- sprintf("%4d-01-01", yearBreaks[[ib]])
+    floc <- as.formula(sprintf("~ t1 + t1_%4d", yearBreaks[[ib]]))
+    res[[d]] <- TVGEV(data = df, response = "TXMax", date = "Date",
+                      design = breaksX(date = Date, breaks = d, degree = 1),
+                      loc = floc)
+}
+```
+
+We now have a list `res` of `length(yearBreaks)` objects and the
+log-likelihood of each object can be extracted by using `logLik`. So
+we can plot the log-likelihood against the year and find the "best"
+object with maximal log-likelihood.
+
+     	
+```{r kink2}
+ll <- sapply(res, logLik)
+plot(yearBreaks, ll, type = "o", pch = 21, col = "orangered",
+     lwd = 2, bg = "gold", xlab = "break", ylab = "log-lik")
+grid()
+iMax <- which.max(ll)
+abline(v = yearBreaks[iMax])
+abline(h = ll[iMax] - c(0, qchisq(0.95, df = 1) /2),
+       col = "SpringGreen3", lwd = 2)
+```	
+
+Although the points show a profiled log-likelihood, the regularity
+conditions that must hold in ML estimation are not fulfilled, because
+the log-likelihood is not differentiable w.r.t. $t_0$. As a
+consequence, the usual level (shown as the lower horizontal line in green
+here) does not provide a confidence interval on the unknown $t_0$.
+    
+## Constraints on the parameters, fixed parameters
+   
+As an experimental feature, inequality constraints on the parameters
+$\psi_i$ can be imposed. The constraints are simple "box" constraints
+of the form $\psi^{\text{L}}_i \leqslant \psi_i \leqslant
+\psi^{\text{U}}_i$ where $\psi^{\text{L}}_i$ and $\psi^{\text{U}}_i$
+are given. These constraints can only be used when the likelihood is
+maximized with the `nloptr` package.  If needed, they can be given for
+some parameters only, letting the other bounds fixed at their default
+values $\psi^{\text{L}}_i = -\infty$ and $\psi^{\text{U}}_i = \infty$.
+
+In practice, the constraints are given by using a named vector,
+and hence the names of the parameters must be known. These
+names can be retrieved if needed by first using `estim = "none"`.
+
+```{r constr}     
+fitNBreak2 <-
+    TVGEV(data = df, response = "TXMax", date = "Date",
+          design = breaksX(date = Date, breaks = "1970-01-01", degree = 1),
+          loc = ~ t1 + t1_1970,
+          estim = "nloptr",
+          coefLower = c("xi_0" = -0.15), coefUpper = c("xi_0" = 0.0))
+coef(fitNBreak2)
+```	
+         
+The GEV shape parameter $\xi$ is usually taken as constant, not
+time-varying; inasmuch the log-likelihood is $\infty$ when $\xi < -1$,
+a lower bound $\psi^{\text{L}}_i > -1$ should normally be set. In
+practice, this is usually not needed because for numerical reasons the
+optimization will converge to a local maximum with $\xi > -1$ and a
+finite log-likelihood rather than to a parameter vector with the
+infinite maximal log-likelihood.
+      
+The constraints can be used to set a parameter to a given value
+$\psi_i^\star$ by taking $\psi^{\text{L}}_i := \psi_i^\star$ and
+$\psi^{\text{U}}_i := \psi_i^\star$.
+
+```{r constr2} 		       
+fitNBreak3 <-
+    TVGEV(data = df, response = "TXMax", date = "Date",
+          design = breaksX(date = Date, breaks = "1970-01-01", degree = 1),
+          loc = ~ t1 + t1_1970,
+          estim = "nloptr",
+          coefLower = c("mu_t1" = -0.02, "xi_0" = -0.2),
+          coefUpper = c("mu_t1" = -0.02, "xi_0" = 0.1))
+coef(fitNBreak3)
+```
 
 # References

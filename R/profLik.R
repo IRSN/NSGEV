@@ -48,7 +48,8 @@ profLik <- function(object, fun, ...) {
 ##' @param deriv Logical. If \code{TRUE}, the function \code{fun} is
 ##' assumed to provide a gradient vector as an attribute named
 ##' \code{"gradient"} of the result. For now \code{deriv} can only be
-##' \code{TRUE}.
+##' \code{TRUE}, which implies that \code{fun} \emph{must} compute the
+##' gradient.
 ##'
 ##' @param trace Level of verbosity; \code{trace = 0} prints nothing.
 ##'
@@ -102,7 +103,7 @@ profLik <- function(object, fun, ...) {
 ##'     res
 ##' }
 ##'
-##' profLik.TVGEV(object = res1, fun = myfun, deriv = TRUE)
+##' pl <- profLik(object = res1, fun = myfun, deriv = TRUE)
 ##' 
 ##' confint(res1, method = "proflik")
 profLik.TVGEV <- function(object,
@@ -145,14 +146,14 @@ profLik.TVGEV <- function(object,
 
     opts1 <-
         list("algorithm" = "NLOPT_LD_AUGLAG",
-             "xtol_rel" = 1.0e-8, "ftol_abs" = 1.0e-4, "ftol_rel" = 1.0e-8,
+             "xtol_rel" = 1.0e-6, "ftol_abs" = 1.0e-6, "ftol_rel" = 1.0e-6,
              "maxeval" = 3000,
              "check_derivatives" = FALSE,
              "local_opts" = list("algorithm" = "NLOPT_LD_MMA",
-                 "xtol_rel" = 1.0e-8,
+                 "xtol_rel" = 1.0e-6,
                  "maxeval" = 3000,
-                 "ftol_abs" = 1.0e-4,
-                 "ftol_rel" = 1.0e-8),
+                 "ftol_abs" = 1.0e-6,
+                 "ftol_rel" = 1.0e-6),
              "print_level" = 0)
     
     if (trace >= 2) {
@@ -185,17 +186,29 @@ profLik.TVGEV <- function(object,
                  return(list("objective" = res, "gradient" = gradpsi))
              }
         }
-    
+
+        ## changed on 2019-06-04: add a constraint on the minimum of
+        ## the GEV scales which must be positive. Without this
+        ## constraint, the optimisation accepts negative values of
+        ## the scale and diverges.
+        
         g <- function(psi, object, level, chgSign) {
-            
+
+            psi1 <- psi
+            names(psi1) <- object$parNames
+            sigma <- min(psi2theta(model = object, psi = psi1)[ , 2])
+
             ellL <- object$negLogLik + qchisq(level, df = 1) / 2.0
-            res <- object$negLogLikFun(psi = psi,
-                                       object = object,
-                                       deriv = TRUE)
+            res <- object$negLogLikFun(psi = psi, object = object, deriv = TRUE)
             
-            list("constraints" = res$objective - ellL,
-                 "jacobian" = res$gradient)
-            
+            if (!is.na(sigma) && (sigma > 0)) {
+                res2 <- list("constraints" = res$objective - ellL,
+                             "jacobian" = res$gradient)
+            } else {
+                res2 <-  list("constraints" = 1,
+                              "jacobian" = rep(NaN, object$p))
+            }
+            res2 
         }
         
     } else {
@@ -234,14 +247,14 @@ profLik.TVGEV <- function(object,
     sign <- c("L" = 1.0, "U" = -1.0)
     chgSign <- c("L" = 0.0, "U" = 1.0)
     
-    for (LU in c("L", "U")) {
+    for (LU in c("U", "L")) {
         
         for (iLev in seq_along(level)) {
             
             lev <- level[iLev]
             
             if (trace) {
-                cat(sprintf("\no %s bound for level %s\n",
+                cat(sprintf("\n\no %s bound for level %s\n",
                             labs[LU], fLevel[iLev]))
             }
             
@@ -253,8 +266,28 @@ profLik.TVGEV <- function(object,
             
             if ((iLev > 1L) && !is.null(psiPrec)) {
                 psi0 <- psiPrec
+                if (trace > 1) {
+                    cat("\nInitialising with the previous conf. level\n")
+                }
             } else {
                 psi0 <- psiHat
+                if (trace > 1) {
+                    cat("\nInitialising with the MLE\n")
+                }
+                ## if (LU == "U") {
+                ##     if (trace > 1) {
+                ##         cat("\nInitialising with the MLE\n")
+                ##     }
+                ## } else {
+                ##     if (!any(is.na(Psi["U", iLev, ]))) {
+                ##         psi0 <- 2.0 * psi0 - 1.0 * Psi["U", iLev, ]
+                ##         if (trace > 1) {
+                ##             cat("\nInitialising by symmetrising the solution for the upper bound\n")
+                ##         }
+                ##     } else {
+                ##         cat("\nInitialising with the MLE because of failure for \"U\"\n")
+                ##     }
+                ## }
             }
             
             resOpt <- try(nloptr::nloptr(x0 = psi0,

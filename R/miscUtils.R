@@ -126,11 +126,11 @@ formatLevel <- function(level) {
 
 ## copy of stats:::format_perc
 
-formatPerc <- function (x,
-                         digits = max(2L, getOption("digits")),
-                         probability = TRUE, 
-                         use.fC = length(x) < 100,
-                         ...) {
+formatPerc <- function(x,
+                       digits = max(2L, getOption("digits")),
+                       probability = TRUE, 
+                       use.fC = length(x) < 100,
+                       ...) {
     if (length(x)) {
         if (probability)  x <- 100 * x
         paste0(if (use.fC) 

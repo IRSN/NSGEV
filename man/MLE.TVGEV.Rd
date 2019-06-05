@@ -4,8 +4,11 @@
 \alias{MLE.TVGEV}
 \title{Maximum Likelihood Estimation of a \code{TVGEV} Model}
 \usage{
-MLE.TVGEV(object, y = NULL, psi0 = NULL, estim = c("optim",
-  "nloptr"), parTrack = FALSE)
+MLE.TVGEV(object, y = NULL,
+          psi0 = NULL, estim = c("optim", "nloptr"),
+          coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
+          coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
+          parTrack = FALSE)
 }
 \arguments{
 \item{object}{A (possibly incomplete) \code{TVGEV} object.}
@@ -15,6 +18,11 @@ MLE.TVGEV(object, y = NULL, psi0 = NULL, estim = c("optim",
 \item{psi0}{Numeric vector of initial values for the parameters.}
 
 \item{estim}{Character giving the optimisation to be used.}
+
+\item{coefLower, coefUpper}{Numeric vectors or \code{NULL} giving
+bounds on the parameters. These are used overwrite the "normal"
+values which are \code{-Inf} and \code{Inf}. These arguments are
+only used when \code{estim} is \code{"nloptr"}.}
 
 \item{parTrack}{\code{Logical}. If \code{TRUE}, all parameters at
 which an evaluation of the log-Likelihood will be stored and
@@ -27,11 +35,22 @@ of a \code{TVGEV} object.
 \description{
 Maximum Likelihood Estimation of a \code{TVGEV} model.
 }
+\note{
+The box constraints on parameters defined by
+\code{coefLower} and \code{coefUpper} should not be active at the
+optimum. If this happens, the inference will be misleading. Note
+that these constaints can be used to set some parameters to a
+given value by using the same value for the lower and the upper
+bound. In this case the fact that the inference is misleading is
+clear from the fact that the number of parameters in the object is
+wrong.
+}
 \section{Caution}{
  For now it is assumed that the shape parameter
-is constant. This assumtion is used to set the bounds on the shape
-parameter: the lower bound is \code{-0.9} and the upper bound is
-\code{2.0}.
+is constant, hence is equal to the element named \code{xi_0} in
+the parameter vector. This assumption is used to set the bounds on
+the shape parameter when \code{estim} is set to \code{"nloptr"}:
+the lower bound is \code{-0.9} and the upper bound is \code{2.0}.
 }
 
 \author{

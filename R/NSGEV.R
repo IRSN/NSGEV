@@ -409,7 +409,7 @@ NSGEV <- function(formulas,
    ##==========================================================================
    ## Perform Maximum Likelihood estimation
    ##==========================================================================
-
+   est <- match.arg(est)
 
    if ( (is.character(est) && est != "none") ||
        (is.logical(est) && est)) {

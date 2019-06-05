@@ -172,6 +172,14 @@ parIni.TVGEV <- function(object, y = NULL) {
 ##' Maximum Likelihood Estimation of a \code{TVGEV} model.
 ##'
 ##' @title Maximum Likelihood Estimation of a \code{TVGEV} Model 
+##'
+##' @usage
+##'
+##' MLE.TVGEV(object, y = NULL,
+##'           psi0 = NULL, estim = c("optim", "nloptr"),
+##'           coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
+##'           coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
+##'           parTrack = FALSE)
 ##' 
 ##' @param object A (possibly incomplete) \code{TVGEV} object.
 ##' 
@@ -181,6 +189,11 @@ parIni.TVGEV <- function(object, y = NULL) {
 ##'
 ##' @param estim Character giving the optimisation to be used.
 ##'
+##' @param coefLower,coefUpper Numeric vectors or \code{NULL} giving
+##' bounds on the parameters. These are used overwrite the "normal"
+##' values which are \code{-Inf} and \code{Inf}. These arguments are
+##' only used when \code{estim} is \code{"nloptr"}.
+##' 
 ##' @param parTrack \code{Logical}. If \code{TRUE}, all parameters at
 ##' which an evaluation of the log-Likelihood will be stored and
 ##' returned.
@@ -191,16 +204,28 @@ parIni.TVGEV <- function(object, y = NULL) {
 ##' @author Yves Deville
 ##'
 ##' @section Caution: For now it is assumed that the shape parameter
-##' is constant. This assumtion is used to set the bounds on the shape
-##' parameter: the lower bound is \code{-0.9} and the upper bound is
-##' \code{2.0}.
+##' is constant, hence is equal to the element named \code{xi_0} in
+##' the parameter vector. This assumption is used to set the bounds on
+##' the shape parameter when \code{estim} is set to \code{"nloptr"}:
+##' the lower bound is \code{-0.9} and the upper bound is \code{2.0}.
+##'
+##' @note The box constraints on parameters defined by
+##' \code{coefLower} and \code{coefUpper} should not be active at the
+##' optimum. If this happens, the inference will be misleading. Note
+##' that these constaints can be used to set some parameters to a
+##' given value by using the same value for the lower and the upper
+##' bound. In this case the fact that the inference is misleading is
+##' clear from the fact that the number of parameters in the object is
+##' wrong.
 ##' 
 MLE.TVGEV <- function(object,
                       y = NULL,
                       psi0 = NULL,
                       estim = c("optim", "nloptr"),
+                      coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
+                      coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
                       parTrack = FALSE) {
-
+    
     parNames.GEV <- c("loc", "scale", "shape")
      
     estim <- match.arg(estim)
@@ -303,8 +328,9 @@ MLE.TVGEV <- function(object,
     }
         
     cvg <- TRUE
+        
     if (estim == "optim") {
-
+        
         res$fit <- try(optim(par = psi0,
                              fn = negLogLikFun1,
                              deriv = FALSE,
@@ -334,11 +360,37 @@ MLE.TVGEV <- function(object,
 
         ## XXX caution! this works when the shape is constant only!!!
         p <- object$p
-        lb <- rep(-Inf, p)
-        lb[p] <- -0.9
-        ub <- rep(Inf, p)
-        ub[p] <- 2.0
         
+        lb <- rep(-Inf, p)
+           
+        if (length(coefLower)) {
+            lm <- match(names(coefLower), object$parNames)
+            if ((length(lm) != length(coefLower)) ||
+                any(is.na(lm))) {
+                stop("when given, 'coefLower' must be a named vector ",
+                     "with suitable element names")
+            }
+            lb[lm] <- coefLower
+        } 
+        
+        ub <- rep(Inf, p)
+        
+        if (length(coefUpper)) {
+            um <- match(names(coefUpper), object$parNames)
+            if ((length(um) != length(coefUpper)) ||
+                any(is.na(lm))) {
+                stop("when given, 'coefUpper' must be a named vector ",
+                     "with suitable element names")
+            }
+            ub[lm] <- coefUpper
+        }
+
+        ind <- (psi0 < lb) | (psi0 > ub)
+
+        if (any(ind)) {
+            psi0[ind] <- (lb[ind] + ub[ind]) / 2.0 
+        }
+    
         res$fit <- try(nloptr(x0 = psi0,
                               eval_f = negLogLikFun,
                               lb = lb,
@@ -348,8 +400,13 @@ MLE.TVGEV <- function(object,
                               object = object))
         
         if (!inherits(res$fit, "try-error")) {
-            if (res$fit$status > 0 ) {
+            if (res$fit$status > 0) {
                 estimate <- res$fit$solution
+                if (any(estimate <= lb) || any(estimate >= ub)) {
+                    warning("some estimated parameters at ",
+                            "the bounds, inference results are misleading")
+                }
+
                 names(estimate) <- object$parNames
                 res$estimate <- estimate
                 res$negLogLik <- res$fit$objective
@@ -359,16 +416,16 @@ MLE.TVGEV <- function(object,
         }
         
     }
-
+    
     if (!cvg) {
-        warning("covergence not reached in optimisation")
+        warning("convergence not reached in optimisation")
         estimate <- rep(NA, object$p)
         names(estimate) <- object$parNames
         res$negLogLik <- NA
         res$estimate <- estimate
         res$logLik <- NA
     } else {
-        
+
         res$logLik <- -res$negLogLik
         psiHat <- res$estimate
         ## compute theta 
@@ -532,23 +589,25 @@ bs.TVGEV <- function(object,
         
         if (requireNamespace("foreach", quietly = TRUE)) {
             Psi <-
-                foreach::"%dopar%"(foreach::foreach(b = 1:ncol(y),
-                                                    .export = c("MLE.TVGEV", "parIni.TVGEV"),
-                                                    .packages = c("nloptr", "NSGEV", "numDeriv"),
-                                                    .combine = "rbind"), {
-                                       res <- try(MLE.TVGEV(object, y = y[ , b], estim = estim, ...),
-                                                  silent = TRUE)
-                                       if (!inherits(res, "try-error")) {
-                                           est <- res$estimate
-                                       } else est <- NULL
-                                       est
-                                   })
+                foreach::"%dopar%"(
+                    foreach::foreach(b = 1:ncol(y),
+                                     .export = c("MLE.TVGEV", "parIni.TVGEV"),
+                                     .packages = c("nloptr", "NSGEV", "numDeriv"),
+                                     .combine = "rbind"), {
+                                         res <- try(MLE.TVGEV(object, y = y[ , b],
+                                                              estim = estim, ...),
+                                                    silent = TRUE)
+                                         if (!inherits(res, "try-error")) {
+                                             est <- res$estimate
+                                         } else est <- NULL
+                                         est
+                                     })
             
             nlL <- rep(NA, ncol(y))
         } else {
             stop("the package 'foreach' could not be used")
         }
-            
+        
     } else {
         
         for (b in 1:R) {
@@ -656,6 +715,15 @@ modelMatrices.TVGEV  <- function(object, date = NULL) {
 ##' unless the use of \code{predict} or \code{RL} will not be possible.
 ##' 
 ##' @title Time-Varying GEV Model.
+##'
+##' @usage
+##' TVGEV(data, date, response, design = NULL,
+##'       loc = ~ 1, scale = ~ 1, shape = ~ 1,
+##'       psi0 = NULL, estim = c("optim", "nloptr", "none"),
+##'       parTrack = FALSE,
+##'       coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
+##'       coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
+##'       trace = 0) 
 ##' 
 ##' @param data A data frame containing at least the two required
 ##' variables with their names given in \code{date} and
@@ -694,6 +762,14 @@ modelMatrices.TVGEV  <- function(object, date = NULL) {
 ##' \code{"psi"} in a list named \code{"tracked"} which contains as
 ##' well the value of the objective.
 ##' 
+##' @param coefLower,coefUpper Numeric vectors or \code{NULL} giving
+##' bounds on the parameters. These are used overwrite the "normal"
+##' values which are \code{-Inf} and \code{Inf}. These arguments are
+##' only used when \code{estim} is \code{"nloptr"} and are anyway not
+##' taken into account in the inference. So the inference is
+##' misleading when some box constraints are active at the optimum,
+##' see \code{\link{MLE.TVGEV}}.
+##' 
 ##' @param trace Integer level of verbosity.
 ##'
 ##' @section Caution: The call passed in the \code{design} formal will
@@ -727,6 +803,9 @@ modelMatrices.TVGEV  <- function(object, date = NULL) {
 ##' 
 ##' @author Yves Deville
 ##'
+##' @seealso \code{\link{MLE.TVGEV}} for some details on the
+##' maximum-likelihood estimation.
+##' 
 ##' @examples
 ##'
 ##' ## transform a numeric year into a date
@@ -796,7 +875,6 @@ modelMatrices.TVGEV  <- function(object, date = NULL) {
 ##'            col = "SpringGreen3", lwd = 2)
 ##'
 ##' }
-
 TVGEV <- function(data,
                   date,
                   response,
@@ -807,6 +885,8 @@ TVGEV <- function(data,
                   psi0 = NULL,
                   estim = c("optim", "nloptr", "none"),
                   parTrack = FALSE,
+                  coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
+                  coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
                   trace = 0) {
 
     estim <- match.arg(estim)
@@ -892,20 +972,34 @@ TVGEV <- function(data,
     ## tv$theta <- attr(negLogLik(, "theta")
     class(tv) <- "TVGEV"
 
-    res <- MLE.TVGEV(object = tv,
-                     y = NULL,
-                     psi0 = psi0,
-                     estim = estim,
-                     parTrack = parTrack) 
-
-    ## copy
-    for (nm1 in names(res)) {
-        tv[[nm1]] <- res[[nm1]]
+    if ((estim != "nloptr") && (!missing(coefLower) || !missing(coefUpper))) {
+        warning("'coefLower' and 'coefUpper' are only used when ",
+                "'estim' is set to \"nloptr\". They will be ignored.")
+    }
+            
+    if (estim != "none") {
+        res <- MLE.TVGEV(object = tv,
+                         y = NULL,
+                         psi0 = psi0,
+                         estim = estim,
+                         coefLower = coefLower,
+                         coefUpper = coefUpper,
+                         parTrack = parTrack) 
+        
+        ## copy
+        for (nm1 in names(res)) {
+            tv[[nm1]] <- res[[nm1]]
+        }
+        
+        tv$theta <- psi2theta(tv, psi = tv$estimate)
+        rownames(tv$theta) <- tv$fDate
+    } else {
+        tv$estimate <- rep(NA, p)
+        names(tv$estimate) <- parNames
+        tv$negLogLik <- NA
+        tv$logLik <- NA
     }
     
-    tv$theta <- psi2theta(tv, psi = tv$estimate)
-    rownames(tv$theta) <- tv$fDate
-
     tv
     
 }

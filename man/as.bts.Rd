@@ -9,7 +9,7 @@ as.bts(object, ...)
 \arguments{
 \item{object}{An object to be coerced into a \code{bts} object.}
 
-\item{...}{}
+\item{...}{Extra arguments for methods.}
 }
 \value{
 An object with class \code{"bts"}.

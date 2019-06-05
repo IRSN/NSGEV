@@ -4,9 +4,13 @@
 \alias{TVGEV}
 \title{Time-Varying GEV Model.}
 \usage{
-TVGEV(data, date, response, design = NULL, loc = ~1, scale = ~1,
-  shape = ~1, psi0 = NULL, estim = c("optim", "nloptr", "none"),
-  parTrack = FALSE, trace = 0)
+TVGEV(data, date, response, design = NULL,
+      loc = ~ 1, scale = ~ 1, shape = ~ 1,
+      psi0 = NULL, estim = c("optim", "nloptr", "none"),
+      parTrack = FALSE,
+      coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
+      coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
+      trace = 0)
 }
 \arguments{
 \item{data}{A data frame containing at least the two required
@@ -45,6 +49,14 @@ vector is tracked during the optimisation (i.e. at each call of
 the objective) and all the values are returned as a matrix
 \code{"psi"} in a list named \code{"tracked"} which contains as
 well the value of the objective.}
+
+\item{coefLower, coefUpper}{Numeric vectors or \code{NULL} giving
+bounds on the parameters. These are used overwrite the "normal"
+values which are \code{-Inf} and \code{Inf}. These arguments are
+only used when \code{estim} is \code{"nloptr"} and are anyway not
+taken into account in the inference. So the inference is
+misleading when some box constraints are active at the optimum,
+see \code{\link{MLE.TVGEV}}.}
 
 \item{trace}{Integer level of verbosity.}
 }
@@ -163,6 +175,10 @@ cbind("fevd" = res0$results$value,
            col = "SpringGreen3", lwd = 2)
 
 }
+}
+\seealso{
+\code{\link{MLE.TVGEV}} for some details on the
+maximum-likelihood estimation.
 }
 \author{
 Yves Deville

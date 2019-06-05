@@ -32,7 +32,7 @@ Plot predict Results for \code{TVGEV}.
 \note{
 This function is intended to work with predictions computed
 for a possibly large number of periods (to get smooth curves) but
-with only a small number of dates, each apearing in a facet. So
+with only a small number of dates, each appearing in a facet. So
 the number of dates is limited to \code{6}. Similarily, the number
 of confidence levels can not be \code{> 3}.
 }

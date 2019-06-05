@@ -15,10 +15,22 @@ import("extRemes", except = c("qqplot", "qqnorm"))
 import("numDeriv")
 import("nloptr")
 
-exportPattern("^[[:alpha:]]+")
+## exportPattern("^[[:alpha:]]+")
+export(psi2theta, bs, cdf, moment, profLik,
+       parNames, bts,
+       rho2psi,
+       breaksX, polynomX, natSplineX,
+       dGEV, pGEV, qGEV, rGEV,
+       transFormula, blockDuration, rNames,     ## miscutils
+       selectDate, distLines, opacity,          ## miscutils
+       RL,
+       TVGEV, NSGEV,
+       profLik.TVGEV,
+       predictUncond,
+       as.NSGEV,
+       as.bts)
 
 S3method(parNames, default)
-
 
 S3method(as.NSGEV, fevd)
 S3method(as.NSGEV, gev.fit)
@@ -68,7 +80,9 @@ S3method(autolayer, bts)
 S3method(plot, bts)
 S3method(print, bts)
 S3method(lines, bts)
+S3method(as.bts, data.frame)
 S3method(as.data.frame, bts)
+S3method(as.ts, bts)
 S3method("[", bts)
 S3method(window, bts)
 

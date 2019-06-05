@@ -18,7 +18,7 @@
 ##' 
 autoplot.bts <- function(object, col1 = "darkgray", facets = FALSE, ...) {
     
-    value <- variable <- NULL
+    value <- variable <- type <- Date <- NULL
     nc <- ncol(object)
     ylab <- attr(object, "label")
     if (is.null(ylab)) ylab <- ""
@@ -34,7 +34,8 @@ autoplot.bts <- function(object, col1 = "darkgray", facets = FALSE, ...) {
     g <- ggplot()
     
     if (nc == 1L) {
-        df <- data.frame(Date = as.Date(attr(object, "date")), value = unclass(object)[ , 1L])
+        df <- data.frame(Date = as.Date(attr(object, "date")),
+                         value = unclass(object)[ , 1L])
         g <- g + geom_line(data = df,
                            mapping = aes(x = Date, y = value),
                            alpha = alpha, colour = col)
@@ -71,12 +72,12 @@ autoplot.bts <- function(object, col1 = "darkgray", facets = FALSE, ...) {
    
 }
 
-## ********************************************************************************************************
+## ************************************************************************************
 ##' @rdname autoplot.bts
 ##' 
 autolayer.bts <- function(object, col1 = "darkgray", ...) {
     
-    value <- variable <- NULL
+    value <- variable <- type <- Date <- NULL
     nc <- ncol(object)
     ylab <- attr(object, "label")
     if (is.null(ylab)) ylab <- ""
@@ -84,7 +85,8 @@ autolayer.bts <- function(object, col1 = "darkgray", ...) {
     alpha <- opacity(nc)
     
     if (nc == 1L) {
-        df <- data.frame(Date = as.Date(attr(object, "date")), value = unclass(object)[ , 1L])
+        df <- data.frame(Date = as.Date(attr(object, "date")),
+                         value = unclass(object)[ , 1L])
         geom_line(data = df,
                   mapping = aes(x = Date, y = value),
                   alpha = alpha, colour = col)
@@ -139,7 +141,7 @@ autolayer.bts <- function(object, col1 = "darkgray", ...) {
 autoplot.bfts <- function(object,
                           col = "orangered",
                           fill = NA, ...) {
-    Fun <- Date <- NULL
+    Fun <- Date <- x <- NULL
     
     if (nrow(object) > 12) {
         stop("too many rows")

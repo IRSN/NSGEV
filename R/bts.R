@@ -179,6 +179,7 @@ as.data.frame.bts <- function(x, row.names = NULL,
                               longFormat = FALSE,
                                    ...) {
 
+    type <- value <- Date <- NULL
     if ("Date" %in% colnames(x)) {
         stop("Invalid colnames \"Date\" in 'x'")
     }
@@ -202,7 +203,7 @@ as.data.frame.bts <- function(x, row.names = NULL,
 ##'
 ##' @param object An object to be coerced into a \code{bts} object.
 ##'
-##' @param ... 
+##' @param ... Extra arguments for methods.
 ##'
 ##' @return An object with class \code{"bts"}.
 ##' 
@@ -224,7 +225,7 @@ as.bts <- function(object, ...) {
 ##' @param yearName Character. Optional column name for a year. When
 ##' given, the column must be either numeric or character.
 ##'
-##' @param ... Note used.
+##' @param ... Not used.
 ##'
 ##' @return An object with class \code{"bts"} inheriting from
 ##' \code{"matrix"}.
@@ -325,8 +326,8 @@ as.bts.data.frame <- function(object, dateName, yearName, ...) {
 ##' example(TVGEV)
 ##' plot(coef(res1, type = "theta"))
 plot.bts <- function(x, y, gg = TRUE, col1 = "darkgray", facets = FALSE, ...) {
-
-    value <- variable <- NULL
+    
+    value <- variable <- Date <- NULL
     nc <- ncol(x)
     ylab <- attr(x, "label")
     if (is.null(ylab)) ylab <- ""
@@ -469,7 +470,16 @@ plot.bfts <- function(x, y, gg = TRUE,
     
 }
 
-##' @rdname bts
+##' Extracts parts of a \code{bts} object.
+##'
+##' @title Extract Parts of a \code{bts} Object
+##'
+##' @param x A \code{bts} object.
+##' 
+##' @param ... Elements to extract or replace. 
+##'
+##' @param drop \code{Logical}. If \code{TRUE} the result is coerced to the
+##' lowest possible dimension. 
 ##' 
 `[.bts` <- function(x, ..., drop = FALSE) {
     L <- list()
@@ -563,4 +573,23 @@ window.bts <- function(x, start, end, extend = FALSE, ... ) {
     class(xNew) <- c("bts", "matrix")
     xNew
 
+}
+
+## ****************************************************************************
+##' Coerce a \code{bts} object into a \code{ts} time series object.
+##'
+##' @title Coerce a \code{bts} Object into a \code{ts} Time Series Object
+##'
+##' @param x A \code{bts} object.
+##'
+##' @param ... Not used.
+##' 
+##' @return An object inheriting from the \code{"ts"} S3 class.
+##' 
+as.ts.bts <- function(x, ...) {
+    nc <- ncol(x)
+    d <- as.Date(attr(x, "date"))
+    startYear <- as.numeric(format(d[1], "%Y"))
+    bd <- blockDuration(d)
+    ts(data = x, start = startYear, frequency = 1 / bd)
 }

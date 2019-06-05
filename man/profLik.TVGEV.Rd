@@ -22,7 +22,8 @@ be used use more arguments, see \bold{Details}.}
 \item{deriv}{Logical. If \code{TRUE}, the function \code{fun} is
 assumed to provide a gradient vector as an attribute named
 \code{"gradient"} of the result. For now \code{deriv} can only be
-\code{TRUE}.}
+\code{TRUE}, which implies that \code{fun} \emph{must} compute the
+gradient.}
 
 \item{trace}{Level of verbosity; \code{trace = 0} prints nothing.}
 
@@ -87,7 +88,7 @@ myfun <- function(psi, object) {
     res
 }
 
-profLik.TVGEV(object = res1, fun = myfun, deriv = TRUE)
+pl <- profLik(object = res1, fun = myfun, deriv = TRUE)
 
 confint(res1, method = "proflik")
 }
