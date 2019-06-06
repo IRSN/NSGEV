@@ -1,9 +1,9 @@
 ---
 title: "Time-Varying Models in NSGEV"
 author: "Yves Deville"
-date: "07/06/2019"
+date: "`r Sys.Date()`"
 output:
-  html_vignette:
+  rmarkdown::html_vignette:
     toc: true
 vignette: >
   %\VignetteIndexEntry{Time-Varying Models in NSGEV}
