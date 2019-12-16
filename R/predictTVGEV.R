@@ -271,8 +271,10 @@ predict.TVGEV <- function(object,
 
         diagno <- NULL
 
-        mM <- modelMatrices.TVGEV(object, date = newdate)
-
+        if (!all(object$isCst)) {
+            mM <- modelMatrices.TVGEV(object, date = newdate)
+        }
+        
         ## ==================================================================
         ## changed on 2017-09-29. The previous function 'myFun' was
         ## very slow because the model matrices were recomputed many
@@ -614,7 +616,7 @@ predict.TVGEV <- function(object,
 
                             if (!inherits(resOpt, "try-error") &&
                                 (resOpt$status %in% c(3, 4)) &&
-                                (any(checkg$constraints > constrCheck))) {
+                                (all(checkg$constraints > constrCheck))) {
                                 ## && (!any(is.na(gradDist))) &&
                                 ## (all(gradDist < gradLim))) {
 
