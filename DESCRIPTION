@@ -1,7 +1,7 @@
 Package: NSGEV
 Type: Package
 Title: Non-Stationary GEV Time Series
-Version: 0.1.3
+Version: 0.1.4
 Date: 2019-12-16
 Author: Yves Deville <deville.yves@alpestat.com>
 Maintainer: Yves Deville <deville.yves@alpestat.com>
@@ -12,5 +12,5 @@ Imports: methods, splines, numDeriv, nloptr, reshape2, tidyr, forecast
 Depends: Renext, ismev, extRemes, ggplot2
 Suggests: parallel, doParallel, foreach, testthat, rmarkdown, knitr, png
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

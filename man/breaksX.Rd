@@ -4,8 +4,7 @@
 \alias{breaksX}
 \title{Design Matrix with Breaks in a Linear Trend}
 \usage{
-breaksX(date, degree = 1L, origin = NULL, breaks = NULL,
-  constant = FALSE)
+breaksX(date, degree = 1L, origin = NULL, breaks = NULL, constant = FALSE)
 }
 \arguments{
 \item{date}{A vector with class \code{"Date"} or a vector that can

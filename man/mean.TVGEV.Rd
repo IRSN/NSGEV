@@ -7,8 +7,7 @@
 \usage{
 \method{mean}{TVGEV}(x, date = NULL, psi = NULL, ...)
 
-\method{moment}{TVGEV}(x, which = "variance", date = NULL,
-  psi = NULL, ...)
+\method{moment}{TVGEV}(x, which = "variance", date = NULL, psi = NULL, ...)
 }
 \arguments{
 \item{x}{An \code{TVGEV} object.}

@@ -4,8 +4,7 @@
 \alias{simulate.TVGEV}
 \title{Simulate from a \code{TVGEV} Object}
 \usage{
-\method{simulate}{TVGEV}(object, nsim = 1, seed = NULL,
-  newdate = NULL, psi = NULL, ...)
+\method{simulate}{TVGEV}(object, nsim = 1, seed = NULL, newdate = NULL, psi = NULL, ...)
 }
 \arguments{
 \item{object}{An object of class \code{"TVGEV"} representing a

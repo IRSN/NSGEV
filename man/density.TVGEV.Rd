@@ -6,11 +6,9 @@
 \title{Compute TVGEV Densities or Cumulative Distribution
 Functions}
 \usage{
-\method{density}{TVGEV}(x, xValue = NULL, date = NULL, psi = NULL,
-  log = FALSE, ...)
+\method{density}{TVGEV}(x, xValue = NULL, date = NULL, psi = NULL, log = FALSE, ...)
 
-\method{cdf}{TVGEV}(x, qValue = NULL, date = NULL, psi = NULL,
-  log = FALSE, ...)
+\method{cdf}{TVGEV}(x, qValue = NULL, date = NULL, psi = NULL, log = FALSE, ...)
 }
 \arguments{
 \item{x}{A \code{TVGEV} object.}

@@ -4,8 +4,14 @@
 \alias{NSGEV}
 \title{Non-Stationary GEV Model}
 \usage{
-NSGEV(formulas, data, response = NULL, psi = NULL, est = c("none",
-  "optim", "nloptr"), trace = 0)
+NSGEV(
+  formulas,
+  data,
+  response = NULL,
+  psi = NULL,
+  est = c("none", "optim", "nloptr"),
+  trace = 0
+)
 }
 \arguments{
 \item{formulas}{A named list with three formulas.}

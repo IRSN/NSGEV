@@ -4,8 +4,7 @@
 \alias{negLogLik}
 \title{Evaluate the negative log-likelihood of a NSGEV model}
 \usage{
-negLogLik(psi, model, data = NULL, y = NULL, deriv = TRUE,
-  checkNames = TRUE)
+negLogLik(psi, model, data = NULL, y = NULL, deriv = TRUE, checkNames = TRUE)
 }
 \arguments{
 \item{psi}{Vector of NSGEV parameters.}

@@ -4,10 +4,17 @@
 \alias{predict.NSGEV}
 \title{Prediction of Return Levels for a \code{NSGEV} object}
 \usage{
-\method{predict}{NSGEV}(object, period = NULL, newdata = NULL,
-  resample = FALSE, RLType = c("exceed", "average"),
-  confInt = c("delta", "none", "proflik"), confLevel = 0.95,
-  trace = 0, ...)
+\method{predict}{NSGEV}(
+  object,
+  period = NULL,
+  newdata = NULL,
+  resample = FALSE,
+  RLType = c("exceed", "average"),
+  confInt = c("delta", "none", "proflik"),
+  confLevel = 0.95,
+  trace = 0,
+  ...
+)
 }
 \arguments{
 \item{object}{A \code{NSGEV} model.}

@@ -4,8 +4,7 @@
 \alias{quantile.NSGEV}
 \title{Compute \code{NSGEV} Quantiles}
 \usage{
-\method{quantile}{NSGEV}(x, probs = c(0.9, 0.95, 0.99), data = NULL,
-  psi = NULL, ...)
+\method{quantile}{NSGEV}(x, probs = c(0.9, 0.95, 0.99), data = NULL, psi = NULL, ...)
 }
 \arguments{
 \item{x}{A \code{NSGEV} object.}

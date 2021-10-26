@@ -4,8 +4,7 @@
 \alias{density.NSGEV}
 \title{Compute NSGEV Densities}
 \usage{
-\method{density}{NSGEV}(x, xValue = NULL, data = NULL, psi = NULL,
-  log = FALSE, ...)
+\method{density}{NSGEV}(x, xValue = NULL, data = NULL, psi = NULL, log = FALSE, ...)
 }
 \arguments{
 \item{x}{A \code{NSGEV} object.  Note that the name of this formal

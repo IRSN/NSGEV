@@ -4,8 +4,14 @@
 \alias{bs.TVGEV}
 \title{Bootstrap for a \code{TVGEV} Model}
 \usage{
-\method{bs}{TVGEV}(object, R = 100, type = c("param", "NP"),
-  estim = "optim", parallel = FALSE, ...)
+\method{bs}{TVGEV}(
+  object,
+  R = 100,
+  type = c("param", "NP"),
+  estim = "optim",
+  parallel = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{A \code{TVGEV} object.}

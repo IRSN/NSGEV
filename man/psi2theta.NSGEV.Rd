@@ -5,8 +5,7 @@
 \title{Compute the Matrix of GEV Parameters from the Vector of
 Model Parameters 'psi' and the Data}
 \usage{
-\method{psi2theta}{NSGEV}(model, psi, data = NULL, deriv = TRUE,
-  checkNames = TRUE, ...)
+\method{psi2theta}{NSGEV}(model, psi, data = NULL, deriv = TRUE, checkNames = TRUE, ...)
 }
 \arguments{
 \item{model}{The GEV model: an object with class \code{"NSGEV"}.}

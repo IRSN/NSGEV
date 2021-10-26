@@ -5,8 +5,7 @@
 \title{Simulate Paths from a \code{NSGEV} Model Conditional on the
 Covariates}
 \usage{
-\method{simulate}{NSGEV}(object, nsim = 1, seed = NULL, data = NULL,
-  psi = NULL, ...)
+\method{simulate}{NSGEV}(object, nsim = 1, seed = NULL, data = NULL, psi = NULL, ...)
 }
 \arguments{
 \item{object}{A NSGEV model.}

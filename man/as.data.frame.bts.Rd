@@ -4,8 +4,7 @@
 \alias{as.data.frame.bts}
 \title{Coerce an \code{bts} Object into a Data Frame}
 \usage{
-\method{as.data.frame}{bts}(x, row.names = NULL, optional = FALSE,
-  longFormat = FALSE, ...)
+\method{as.data.frame}{bts}(x, row.names = NULL, optional = FALSE, longFormat = FALSE, ...)
 }
 \arguments{
 \item{x}{An object with class \code{bts} representing a by-block time

@@ -4,10 +4,17 @@
 \alias{predict.TVGEV}
 \title{Predict Method for \code{TVGEV} Objects}
 \usage{
-\method{predict}{TVGEV}(object, newdate = NULL, period = NULL,
-  level = 0.95, confintMethod = c("delta", "none", "boot", "proflik"),
-  out = c("data.frame", "array"), biasCorrect = FALSE, trace = 1L,
-  ...)
+\method{predict}{TVGEV}(
+  object,
+  newdate = NULL,
+  period = NULL,
+  level = 0.95,
+  confintMethod = c("delta", "none", "boot", "proflik"),
+  out = c("data.frame", "array"),
+  biasCorrect = FALSE,
+  trace = 1L,
+  ...
+)
 }
 \arguments{
 \item{object}{An object with S3 class \code{"TVGEV"}}

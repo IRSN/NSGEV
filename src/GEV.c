@@ -550,7 +550,7 @@ SEXP Call_qGEV(SEXP p,               /*  double                          */
   int n, np, nloc, nscale, nshape, i, ip, iloc, iscale, ishape,
     deriv = INTEGER(derivFlag)[0], hessian = INTEGER(hessianFlag)[0] ;
   
-  double eps = 1e-6, A, logA, V, xi;
+  double eps = 1e-6, A, logA, V, xi, prob;
   
   SEXP val;
   
@@ -619,7 +619,6 @@ SEXP Call_qGEV(SEXP p,               /*  double                          */
 	rhess[i + 4 * n] = 0.0;
       }
       
-
       if (ISNA(rp[ip]) || (rscale[iscale] <= 0.0)) {
 	// Rprintf("NA case\n");
 
@@ -640,11 +639,13 @@ SEXP Call_qGEV(SEXP p,               /*  double                          */
       } else {
 
 	if (!INTEGER(lowerTailFlag)[0]) {
-	  rp[ip] = 1.0 - rp[ip];
+	  prob = 1.0 - rp[ip];
+	} else {
+	  prob = rp[ip];
 	}
 
 	xi = rshape[ishape];
-	A = -log(rp[ip]);
+	A = -log(prob);
 	logA = log(A);
 
 	if (fabs(xi) < eps) {
@@ -713,13 +714,15 @@ SEXP Call_qGEV(SEXP p,               /*  double                          */
 	rval[i] = NA_REAL;
 		
       } else {
-		
+	
 	if (!INTEGER(lowerTailFlag)[0]) {
-	  rp[ip] = 1.0 - rp[ip];
+	  prob = 1.0 - rp[ip];
+	} else {
+	  prob = rp[ip];
 	}
-
+      
 	xi = rshape[ishape];
-	A = -log(rp[ip]);
+	A = -log(prob);
 
 	if (fabs(xi) < eps) {
 

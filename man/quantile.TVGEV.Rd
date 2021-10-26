@@ -4,8 +4,7 @@
 \alias{quantile.TVGEV}
 \title{Compute Quantiles for a \code{TVGEV} Object}
 \usage{
-\method{quantile}{TVGEV}(x, probs = c(0.9, 0.95, 0.99), date = NULL,
-  psi = NULL, ...)
+\method{quantile}{TVGEV}(x, probs = c(0.9, 0.95, 0.99), date = NULL, psi = NULL, ...)
 }
 \arguments{
 \item{x}{A \code{TVGEV} object representing a time-varying GEV

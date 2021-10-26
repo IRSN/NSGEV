@@ -5,10 +5,20 @@
 \title{Prediction of Unconditional or Non-Stationary Return Levels
 for a \code{TVGEV} or a \code{NSGEV} Object}
 \usage{
-predictUncond(object, period = NULL, level = 0.95, newdata = NULL,
-  newdate = NULL, newdateFrom = NULL, resample = FALSE,
-  RLType = c("exceed", "average"), confintMethod = c("delta", "none",
-  "boot", "proflik"), out = c("data.frame", "array"), trace = 0, ...)
+predictUncond(
+  object,
+  period = NULL,
+  level = 0.95,
+  newdata = NULL,
+  newdate = NULL,
+  newdateFrom = NULL,
+  resample = FALSE,
+  RLType = c("exceed", "average"),
+  confintMethod = c("delta", "none", "boot", "proflik"),
+  out = c("data.frame", "array"),
+  trace = 0,
+  ...
+)
 }
 \arguments{
 \item{object}{A \code{TVGEV} or a \code{NSGEV} model object.}

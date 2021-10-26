@@ -5,8 +5,14 @@
 \title{Compute the Matrix of GEV Parameters from the Vector of
 Model Parameters 'psi' and the Data}
 \usage{
-\method{psi2theta}{TVGEV}(model, psi = NULL, date = NULL,
-  deriv = FALSE, checkNames = TRUE, ...)
+\method{psi2theta}{TVGEV}(
+  model,
+  psi = NULL,
+  date = NULL,
+  deriv = FALSE,
+  checkNames = TRUE,
+  ...
+)
 }
 \arguments{
 \item{model}{The \code{TVGEV} object.}

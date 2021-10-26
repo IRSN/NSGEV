@@ -4,8 +4,14 @@
 \alias{plot.NSGEV}
 \title{Plot method for \code{NSGEV} object}
 \usage{
-\method{plot}{NSGEV}(x, y, which = 1, pLim = c(0.01, 0.99),
-  showQuant = c(0.5, 0.95, 0.99), ...)
+\method{plot}{NSGEV}(
+  x,
+  y,
+  which = 1,
+  pLim = c(0.01, 0.99),
+  showQuant = c(0.5, 0.95, 0.99),
+  ...
+)
 }
 \arguments{
 \item{x}{A NSGEV object}

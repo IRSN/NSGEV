@@ -4,9 +4,16 @@
 \alias{confint.TVGEV}
 \title{Confidence Intervals for a \code{TVGEV} Object}
 \usage{
-\method{confint}{TVGEV}(object, parm = NULL, level = 0.95,
-  method = c("delta", "boot", "proflik"), trace = 1L, round = TRUE,
-  out = c("array", "data.frame"), ...)
+\method{confint}{TVGEV}(
+  object,
+  parm = NULL,
+  level = 0.95,
+  method = c("delta", "boot", "proflik"),
+  trace = 1L,
+  round = TRUE,
+  out = c("array", "data.frame"),
+  ...
+)
 }
 \arguments{
 \item{object}{An object with class \code{"TVGEV"}.}

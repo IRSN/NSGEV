@@ -4,8 +4,7 @@
 \alias{profLik.TVGEV}
 \title{Profile-Likelihood Inference for \code{TVGEV} Objects}
 \usage{
-\method{profLik}{TVGEV}(object, fun, level = 0.95, deriv = TRUE,
-  trace = 0, ...)
+\method{profLik}{TVGEV}(object, fun, level = 0.95, deriv = TRUE, trace = 0, ...)
 }
 \arguments{
 \item{object}{A \code{TVGEV} object.}
@@ -77,7 +76,7 @@ res1 <- TVGEV(data = df, response = "TXMax", date = "Date",
 
 ## define a function of the parameter vector: here the first component
 ## This is for illustration only since the the result can be obtained
-## using the 'confint' method with \\code{method = "proflik"}, which
+## using the 'confint' method with \code{method = "proflik"}, which
 ## gives the confidence intervals for each of the parameters.
 
 myfun <- function(psi, object) {

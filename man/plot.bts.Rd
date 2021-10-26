@@ -5,8 +5,7 @@
 \alias{lines.bts}
 \title{Time-Plot of \code{bts} Objects for Block Time Series}
 \usage{
-\method{plot}{bts}(x, y, gg = TRUE, col1 = "darkgray",
-  facets = FALSE, ...)
+\method{plot}{bts}(x, y, gg = TRUE, col1 = "darkgray", facets = FALSE, ...)
 
 \method{lines}{bts}(x, y, col1 = "gray", alpha = NULL, ...)
 }
