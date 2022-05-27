@@ -1,7 +1,0 @@
-
-
-* TODO stats: write cdf.NSGEV and RL.NSGEV similar to 'quantile' and
-'density' functions
-
-
-  
