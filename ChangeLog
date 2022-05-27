@@ -1,3 +1,16 @@
+2022-05-27 yves  <deville.yves@alpestat.com>
+
+	* A Taylor expansion is now used for the probability functions and
+	their derivatives for a shape close to zero. This avoids a very
+	small discontinuity that occured for very small shapes.  This new
+	feature seems to be specific to NSGEV.
+ 	
+2021-10-26 yves  <deville.yves@alpestat.com>
+
+	* BUG fix: the quantile function did not work correctly with
+	(non-default) low.tail = FALSE due to a missuse of the .Call
+	interface.
+	
 2018-12-14  yves  <deville.yves@alpestat.com>
 
 	* BUG fix: the computation of the confidence intervals using the

@@ -38,7 +38,7 @@ SEXP Call_dGEV(SEXP x,             /*  double                          */
   int n, nx, nloc, nscale, nshape, i, ix, iloc, iscale, ishape,
     deriv = INTEGER(derivFlag)[0], hessian = INTEGER(hessianFlag)[0];
   
-  double eps = 1e-6, z, emz, V, xi;
+  double eps = 2e-4, z, emz, V, xi, xiz, dlogfdz;
   
   SEXP val;
   
@@ -161,11 +161,17 @@ SEXP Call_dGEV(SEXP x,             /*  double                          */
 
 	  } else {
 	    emz = exp(-z);
-	    rval[i] = -log(rscale[iscale]) - z - emz;
-	    
-	    rgrad[i] = (1.0 - emz) / sigma;
-	    rgrad[i + n] =  (-1.0 + z * (1.0 - emz)) / sigma;
-	    rgrad[i + 2 * n] = z * z * (1.0 - emz) / 2.0 - z;
+
+	    // improved approximation base on Taylor expansion
+	    xiz = xi * z;
+	    rval[i] = -log(rscale[iscale]) - z - emz +
+	      xiz * (0.5 * ((1.0 - emz) * z - 2.0) -
+		     xiz * (-12.0 + 8.0 * (1.0 - emz) * z + 3.0 * z * z * emz) / 24.0);
+	    dlogfdz = -(1.0 - emz) - 0.5 * (2.0 - 2.0 * (1.0 - emz) * z - emz * z * z) * xi; 
+	    rgrad[i] = - dlogfdz / sigma;
+	    rgrad[i + n] =  (-1.0 - z * dlogfdz) / sigma;
+	    rgrad[i + 2 * n] = z * z * (1.0 - emz) / 2.0 - z +
+	      (12.0 - 8.0 * (1.0 - emz) * z - 3.0 * emz * z * z) * xiz * z / 12.0;
 	    
 	    if (hessian) {
 	      
@@ -221,7 +227,8 @@ SEXP Call_dGEV(SEXP x,             /*  double                          */
 	      rhess[i + 5 * n] = (z * W * (-L2 + zVm1) / V  + zVm1 - (xi + 1.0) * zVm2) / sigma;
 	      rhess[i + 7 * n] = rhess[i + 5 * n];
 	      // row 'xi'
-	      rhess[i + 8 * n] = - (L2 * L2  + (-2.0 * L2 + zVm2) / xi) * W + (- 2.0 * L2 + (xi + 1.0) * zVm2) / xi;
+	      rhess[i + 8 * n] = - (L2 * L2  + (-2.0 * L2 + zVm2) / xi) * W +
+		(- 2.0 * L2 + (xi + 1.0) * zVm2) / xi;
 
 	    }
 	    
@@ -306,8 +313,12 @@ SEXP Call_dGEV(SEXP x,             /*  double                          */
 	if (fabs(xi) < eps) {
 	  
 	  emz = exp(-z);
-	  rval[i] = -log(rscale[iscale]) - z - emz;	  
-	  
+	  // rval[i] = -log(rscale[iscale]) - z - emz;	  
+	  // improved approximation base on Taylor expansion
+	  xiz = xi * z;
+	  rval[i] = -log(rscale[iscale]) - z - emz +
+	    xiz * (0.5 * ((1.0 - emz) * z - 2.0) -
+		   xiz * (-12.0 + 8.0 * (1.0 - emz) * z + 3.0 * z * z * emz) / 24.0);
 	} else {
 	  
 	  V = 1.0 + xi * z;
@@ -353,7 +364,7 @@ SEXP Call_pGEV(SEXP q,               /*  double                          */
   int n, nq, nloc, nscale, nshape, i, iq, iloc, iscale, ishape,
     deriv = INTEGER(derivFlag)[0];
   
-  double eps = 1e-6, z, emz, V, Z, W, xi;
+  double eps = 2e-4, z, emz, V, Z, W, xi, ee, eemz = 1.0, dFdz = 0.0;
   
   SEXP val;
   
@@ -420,13 +431,18 @@ SEXP Call_pGEV(SEXP q,               /*  double                          */
 	    rgrad[i] = 0.0;
 	    rgrad[i + n] = 0.0;
 	    rgrad[i + 2 * n] = 0.0;
-	  } else { 
+	  } else {
+	    
+	    // improved approximation
 	    emz = exp(-z);
-	    rval[i] = exp(-emz);
-	    Z = emz * rval[i];
-	    rgrad[i] = -Z / rscale[iscale];
-	    rgrad[i + n] =  -z * Z / rscale[iscale];
-	    rgrad[i + 2 * n] = -z * z * Z / 2.0;
+	    ee = exp(-emz);
+	    rval[i] = ee * (1.0 + emz * z * z * xi *
+			    (-0.5 + (8.0 - 3.0 * (1.0 - emz) * z) * xi * z / 24.0));
+	    eemz = ee * emz;
+	    dFdz = eemz * (1.0 +  0.5 * z * ( -2.0  + (1.0 - emz) * z) * xi);
+	    rgrad[i] = - dFdz / rscale[iscale];
+	    rgrad[i + n] =  -z * dFdz / rscale[iscale];
+	    rgrad[i + 2 * n] = eemz * (z * z * (-0.5  + z * (8.0 - 3.0 * (1.0 - emz) * z) * xi / 12.0));
 	  }
 
 	  // Rprintf("%4d, %4d, %6.3f, %7.2f, %6.3f, %6.3f", i, ishape, xi, z, Z, rscale[iscale]);
@@ -497,14 +513,16 @@ SEXP Call_pGEV(SEXP q,               /*  double                          */
 	xi = rshape[ishape];
 
 	if (fabs(xi) < eps) {
-
+	  
+	  // improved approximation
 	  emz = exp(-z);
-	  rval[i] = exp(-emz);
-
+	  ee = exp(-emz);
+	  rval[i] = ee * (1.0 + emz * z * z * xi *
+			  (-0.5 + (8.0 - 3.0 * (1.0 - emz) * z) * xi * z / 24.0));
 	} else {
 	  
 	  V = 1.0 + xi * z;
-	
+	  
 	  if (V > 0.0) { 
 	    W = pow(V, - 1.0 / xi);
 	    rval[i] = exp(-W);
@@ -550,7 +568,7 @@ SEXP Call_qGEV(SEXP p,               /*  double                          */
   int n, np, nloc, nscale, nshape, i, ip, iloc, iscale, ishape,
     deriv = INTEGER(derivFlag)[0], hessian = INTEGER(hessianFlag)[0] ;
   
-  double eps = 1e-6, A, logA, V, xi, prob;
+  double eps = 2e-4, A, logA, V, xi, prob;
   
   SEXP val;
   
@@ -650,11 +668,14 @@ SEXP Call_qGEV(SEXP p,               /*  double                          */
 
 	if (fabs(xi) < eps) {
 
-	  rval[i] = rloc[iloc] - rscale[iscale] * logA;
+	  // improved approximation base on Taylor expansion
+	  
+	  rval[i] = rloc[iloc] + rscale[iscale] * logA *
+	    (-1.0 + logA * xi * (0.5 - logA * xi / 6.0)) ;
 
 	  rgrad[i] = 1.0;
-	  rgrad[i + n] = -logA;
-	  rgrad[i + 2 * n] = rscale[iscale] * logA * logA / 2.0;
+	  rgrad[i + n] = logA * (-1.0  + 0.5 * logA * xi);
+	  rgrad[i + 2 * n] = rscale[iscale] * logA * logA * (0.5 - logA * xi / 3.0);
 
 	  if (hessian) {
 	    // row 'sigma'
@@ -727,8 +748,12 @@ SEXP Call_qGEV(SEXP p,               /*  double                          */
 	if (fabs(xi) < eps) {
 
 	  logA = log(A);
-	  rval[i] = rloc[iloc] - rscale[iscale] * logA;	  
+
+	  // rval[i] = rloc[iloc] - rscale[iscale] * logA;
 	  
+	  // improved approximation
+	  rval[i] = rloc[iloc] + rscale[iscale] * logA *
+	    (-1.0 + logA * xi * (0.5 - logA * xi / 6.0));
 	} else {
 	  V = (1.0 - pow(A, - xi)) / xi;
 	  rval[i] = rloc[iloc] - rscale[iscale] * V;  

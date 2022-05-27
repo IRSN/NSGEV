@@ -1,13 +1,23 @@
-context("GEV")
-
 ## ***************************************************************************
 ## AUTHOR: Yves Deville <deville.yves@alpestat.com>
 ## GOAL: Test the implementation of the GEV distribution (C code used via
 ## .Call)
+##
+## The most difficult thing seems to be to have the good hessian of
+## the quantile function when the shape 'xi' is very small, say 'xi' =
+## 1e-4 or less. The results depends much on the value of 'eps' in the
+## code 'GEV.c'. The value of eps should not be too small and a good
+## choice seems to be around eps = 2e-4.
+##
+## NOT every thing is tested. We do not test that 'lower.tail' works
+## as expected, ...
+##
 ## ***************************************************************************
 
+library(NSGEV)
 library(numDeriv)
 library(testthat)
+context("GEV")
 
 set.seed(1234)
 
@@ -43,7 +53,7 @@ n <- 100
 mu <- rnorm(1)
 sigma <- rexp(1)
 
-for (xi in c(-0.1, -1e-4, 0.0, 1e-4, 0.1)) {
+for (xi in c(-0.2, -0.1, -1e-4, -1e-7, 0.0, 1e-7, 1e-4, 0.1, 0.2)) {
     
     x <- rGEV(n, loc = mu, scale = sigma, shape = xi)
     
@@ -66,107 +76,84 @@ for (xi in c(-0.1, -1e-4, 0.0, 1e-4, 0.1)) {
 ## gradient.
 ## ==========================================================================
 
+funs <- list("log-density" = dGEV, "distribution" = pGEV, "quantile" = qGEV)
+Hessian <- c("log-density" = TRUE, "distribution" = FALSE, "quantile" = TRUE)
+
 n <- 1
 mu <- rnorm(1)
 sigma <- rexp(1)
-xi <- rnorm(1, sd = 0.1)
-x <- as.vector(rGEV(n = n, loc = mu, scale = sigma, shape = xi))
 
-f <- function(theta) {
-    dGEV(x, loc = theta[1], scale = theta[2], shape = theta[3], log = TRUE)
+for (nm in names(funs)) {
+
+    Args <- ArgsVal <- as.list(formals(funs[[nm]]))
+    
+    if (nm == "log-density") {
+        Args[["log"]] <- ArgsVal[["log"]] <- TRUE
+    }
+    if ("deriv" %in% names(Args)) ArgsVal[["deriv"]] <- TRUE
+    if ("hessian" %in% names(Args)) {
+        ArgsVal[["hessian"]] <- TRUE
+        hessian <- TRUE
+    } else hessian <- FALSE
+    
+
+    for (xi in c(-0.2, -0.1, -1e-4, -1e-7, 0.0, 1e-7, 1e-4, 0.1, 0.2)) {
+
+        if (nm == "quantile") {
+            x <- runif(1)
+        } else {
+            x <- as.vector(rGEV(n = 1, loc = mu, scale = sigma, shape = xi))
+        }
+        
+        Args[[1]] <- ArgsVal[[1]] <- x
+        
+        theta0 <- c(loc = mu, scale = sigma, shape = xi)
+        
+        f <- function(theta) {
+            Args[["loc"]] <- theta[1]
+            Args[["scale"]] <- theta[2]
+            Args[["shape"]] <- theta[3]
+            do.call(funs[[nm]], Args)
+        }
+
+        ArgsVal[["loc"]] <- mu
+        ArgsVal[["scale"]] <- sigma
+        ArgsVal[["shape"]] <- xi
+
+        fval <- do.call(funs[[nm]], ArgsVal)
+        
+        ## =====================================================================
+        ## Check the gradient
+        ## =====================================================================
+        
+        Jnum <- jacobian(func = f, x = theta0)
+        J <- attr(fval, "gradient")
+        
+        cond <- (max(abs(J - Jnum)) < 4e-4) ||
+            (max(abs(J - Jnum) / (abs(J) + 1e-9)) < 4e-3)
+        
+        test_that(desc = sprintf("Gradient of the GEV %s", nm),
+                  expect_true(cond))
+
+        ## =====================================================================
+        ## Note that for the Hessian we do not expect a precision
+        ## as high as for the gradient
+        ## =====================================================================
+        
+        if (hessian) {
+            Hnum <- hessian(func = f, x = theta0)
+            H <- drop(attr(fval, "hessian"))
+            cond <- (max(abs(H - Hnum)) < 4e-2) ||
+                (max(abs(H - Hnum) / (abs(H) + 1e-9)) < 4e-2)
+            if (is.na(cond) || !cond) {
+                cat(sprintf("testing hessian xi = %6.3f\n", xi))
+                print(H)
+                print(Hnum)
+            }
+            test_that(desc = sprintf("Hessian of the GEV %s", nm),
+                      expect_true(cond))
+        }
+            
+    }
 }
-
-fval <- dGEV(x = x, loc = mu, scale = sigma, shape = xi, log = TRUE,
-             deriv = TRUE, hessian = TRUE)
-
-theta0 <- c(loc = mu, scale = sigma, shape = xi)
-Jnum <- jacobian(func =f, x = theta0)
-Hnum <- hessian(func = f, x = theta0)
-
-test_that(desc = "Gradient of the GEV log-density",
-            expect_lt(max(abs(attr(fval, "gradient") - Jnum)), 1e-6))
-
-test_that(desc = "Hessian of the GEV log-lik",
-            expect_lt(max(abs(drop(attr(fval, "hessian")) - Hnum)),
-                      1e-4))
-
-## ==========================================================================
-## check that the Hessian of the log-likelihood is OK
-## ==========================================================================
-
-n <- 300
-mu <- rnorm(1)
-sigma <- rexp(1)
-xi <- rnorm(1, sd = 0.1)
-y <- as.vector(rGEV(n = n, loc = mu, scale = sigma, shape = xi))
-theta <- c(loc = mu, scale = sigma, shape = xi)
-
-## this is for numerical differentiation
-f2 <- function(theta, y) {
-    sum(dGEV(x = y, loc = theta[1], scale = theta[2],
-             shape = theta[3], log = TRUE))
-}
-
-## this is to get the Hessian as an attribute
-fval <- dGEV(x = y, loc = mu, scale = sigma, shape = xi, log = TRUE,
-             deriv = TRUE, hessian = TRUE)
-
-H2 <- apply(attr(fval, "hessian"), MARGIN = c(2, 3), FUN = sum)
-H2num <- hessian(func = f2, x = theta, y = y)
-
-test_that(desc = "Hessian of the GEV log-lik",
-            expect_lt(max(abs(H2 - H2num)), 1e-3))
-
-
-## ==========================================================================
-## Check the gradient and the Hessian of the quantile function
-## ==========================================================================
-
-n <- 1
-mu <- rnorm(1,)
-sigma <- rexp(1)
-xi <- rnorm(1, sd = 0.1)
-p <- runif(n)
-
-f <- function(theta) {
-    qGEV(p, loc = theta[1], scale = theta[2], shape = theta[3])
-}
-
-theta0 <- c(loc = mu, scale = sigma, shape = xi)
-fval <- qGEV(p = p, loc = mu, scale = sigma, shape = xi,
-             deriv = TRUE, hessian = TRUE)
-
-Jnum <- jacobian(func = f, x = theta0)
-Hnum <- hessian(func = f, x = theta0) 
-
-test_that(desc = "Gradient of the GEV quantile",
-            expect_lt(max(abs(attr(fval, "gradient") - Jnum)), 1e-6))
-
-test_that(desc = "Hessian of the GEV quantile",
-            expect_lt(max(abs(drop(attr(fval, "hessian")) - Hnum)),
-                      1e-4))
-
-## ==========================================================================
-## Check the gradient and the Hessian of the distribution function
-## ==========================================================================
-
-n <- 20
-mu <- rnorm(1, sd = 10)
-sigma <- rexp(1)
-xi <- rnorm(1, sd = 0.1)
-x <- rGEV(n, loc = mu, scale = sigma, shape = xi) 
-
-f <- function(theta) {
-    pGEV(x, loc = theta[1], scale = theta[2], shape = theta[3])
-}
-
-theta0 <- c(loc = mu, scale = sigma, shape = xi)
-fval <- pGEV(x, loc = mu, scale = sigma, shape = xi,
-             deriv = TRUE)
-
-Jnum <- jacobian(func = f, x = theta0)
-
-test_that(desc = "Gradient of the GEV distribution function",
-            expect_lt(max(abs(attr(fval, "gradient") - Jnum)), 1e-6))
-
-
+    

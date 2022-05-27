@@ -669,7 +669,7 @@ the `estimate` element of the result.
 mu <- apply(myBoot$estimate, MARGIN = 1,
             FUN = function(x, model) psi2theta(psi = x, model = model)[ , 1],
             model = fitNBreak)
-autoplot(bts(mu)) + ggtitle("bootstrapped values for mu")
+autoplot(bts(mu, date = fitNBreak$fDate)) + ggtitle("bootstrapped values for mu")
 ```
 	
 One the bootstrapped values for the "psi" parameters have been

@@ -12,5 +12,5 @@ Imports: methods, splines, numDeriv, nloptr, reshape2, tidyr, forecast
 Depends: Renext, ismev, extRemes, ggplot2
 Suggests: parallel, doParallel, foreach, testthat, rmarkdown, knitr, png
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
