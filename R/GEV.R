@@ -58,10 +58,11 @@
    }
 }
 
-##' Density, distribution function, quantile function and random
-##' generation for the Generalized Extreme Value (GEV) distribution
-##' with parameters \code{loc}, \code{scale} and \code{shape}.
-##'
+##' @description Density, distribution function, quantile function and
+##'     random generation for the Generalized Extreme Value (GEV)
+##'     distribution with parameters \code{loc}, \code{scale} and
+##'     \code{shape}.
+##' 
 ##' @name GEV
 ##' @rdname GEV
 ##' 
@@ -69,7 +70,6 @@
 ##' Random Generation for the Generalized Extreme Value (GEV)
 ##' Distribution
 ##'
-##' 
 ##' @param loc Location parameter. Numeric vector with suitable
 ##' length, see \bold{Details}.
 ##'
@@ -109,31 +109,47 @@
 ##' @param lower.tail Logical; if \code{TRUE} (default), probabilities are
 ##' P[X <= x], otherwise, P[X > x].
 ##'
-##' @return A numeric vector with length equal to the length of the
-##' first argument or of the parameters. When \code{deriv} is
-##' \code{TRUE}, the returned value has an attribute named
-##' \code{"gradient"} which is a matrix with \eqn{n} lines and \eqn{3}
-##' columns containing the derivatives. A row contains the partial
-##' derivatives of the corresponding element w.r.t. the three
-##' parameters \code{loc} \code{scale} and \code{shape} in that order.
+##' @return A numeric vector with length \code{n} as described in the
+##'     \bold{Details} section. When \code{deriv} is \code{TRUE}, the
+##'     returned value has an attribute named \code{"gradient"} which
+##'     is a matrix with \eqn{n} lines and \eqn{3} columns containing
+##'     the derivatives. A row contains the partial derivatives of the
+##'     corresponding element w.r.t. the three parameters \code{loc}
+##'     \code{scale} and \code{shape} in that order.
 ##'
-##' @details For the \code{d}, \code{p} and \code{q} functions, let
-##' \code{n} be the length of the first element. If \code{n > 1}, then
-##' each of the parameters \code{loc}, \code{scale} and \code{shape}
-##' must be of length \code{1} or \code{n}: in the first case, it will
-##' be recycled to have length \code{n}. When \code{n = 1} the largest
-##' length met for the three parameters, say \code{np} is used. The
-##' two other parameters must then be of length \code{1} or \code{np},
-##' and are given the length \code{np}, as well as the first argument.
-##' Note that only vectors of length one are actually recycled.
+##' @details Each of the probability function normally requires two
+##'     formulas: one for the non-zero shape case \eqn{\xi \neq 0}{\xi
+##'     != 0} and one for the zero-shape case \eqn{\xi = 0}. However
+##'     the non-zero shape formulas lead to numerical instabilities
+##'     near \eqn{\xi = 0}, especially for the derivatives
+##'     w.r.t. \eqn{\xi}. This can create problem in optimisation
+##'     tasks. To avoid this, in the C implementation a Taylor
+##'     expansion w.r.t. \eqn{\xi} is used for \eqn{|\xi| < \epsilon}
+##'     for a small positive \eqn{\epsilon}.  The expansion has order
+##'     \eqn{2} for the functions (log-density, distribution and
+##'     quantile), order \eqn{1} for their first-order derivatives and
+##'     order \eqn{0} for the second-order derivatives.
+##'
+##'     For the \code{d}, \code{p} and \code{q} functions, the GEV
+##'     parameter arguments \code{loc}, \code{scale} and \code{shape}
+##'     are recycled in the same fashion as the classical R
+##'     distribution functions in the \pkg{stats} package, see e.g.,
+##'     \code{\link[stats]{Normal}}, \code{\link[stats]{GammaDist}}, ...
+##'     Let \code{n} be the maximum length of the four arguments:
+##'     \code{x} \code{q} or \code{p} and the GEV parameter arguments,
+##'     then the four provided vectors are recycled in order to have
+##'     length \code{n}. The returned vector has length \code{n} and
+##'     the attributes \code{"gradient"} and \code{"hessian"}, whn
+##'     computed, are arrays wich dimension: \code{c(1, 3)} and
+##'     \code{c(1, 3, 3)}.
 ##'
 ##' @note With the R implementation, the gradient and Hessian of the
-##' (log) density can be \code{NaN} in the Gumbel case, i.e. when
-##' \code{shape} has a small absolute value. This occurs when \eqn{z
-##' := (x - \mu) / \sigma} is strongly negative, say \eqn{z < -20} and
-##' is due to numeric difficulties in operations involving very small
-##' and very large values. This is fixed in the C implementation which
-##' should be preferred.
+##'     (log) density can be \code{NaN} in the Gumbel case, i.e. when
+##'     \code{shape} has a small absolute value. This occurs when
+##'     \eqn{z := (x - \mu) / \sigma} is strongly negative, say \eqn{z
+##'     < -20} and is due to numeric difficulties in operations
+##'     involving very small and very large values. This is fixed in
+##'     the C implementation which should be preferred.
 ##' 
 ##' @author Yves Deville
 ##'
