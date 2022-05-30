@@ -12,16 +12,71 @@ useful to study block maxima, usually annual maxima. A popular use is
 assessing the impact of global warming using series of annual maxima
 of the daily maximal temperatures.
 
-# INSTALLATION
+## INSTALLATION
 
 This package needs compilation. Hence if you are using a MS Windows
 system you need to have the Rtools installed in order to install
 **NSGEV** from its sources.
 
+## Using the *devtools* package
 
-# NEWS
+Note that if you are using Windows, you need to have the
+[Rtools](https://cran.r-project.org/bin/windows/Rtools)
+installed. Provided that the **devtools** package is installed you can
+then in an R session use
 
-## 2022-05
+```{r, eval=FALSE}
+library(devtools)
+install_github("yvesdeville/NSGEV", dependencies = TRUE, auth_token = myToken)
+```
+
+where `myToken` stands for *your* token. This should install the
+package and make it ready to use.
+
+You can also select a specific branch or a specific commit by using
+the suitable syntax for `install_github`, see the **devtools** package
+documentation.
+
+## Clone, build and install
+
+### Cloning the repository
+
+If you do not have yet a local `NSGEV` repository, use `git clone` to
+clone the `NSGEV` repository
+
+``` bash
+git clone https://github.com/yvesdeville/NSGEV
+```
+
+This will create a `NSGEV` sub-directory of the current directory,
+i.e. the directory from which the git command was issued. Of course
+this can work only if you have the authorisation to clone.
+
+### Installation on Unix and MacOs systems
+
+With these systems you can install a package from its source. Move to
+the parent directory of your cloned repository and use the following
+command from a terminal to create a tarball source file
+
+``` bash
+R CMD build NSGEV
+```
+
+This will produce a source tarball `NSGEV_x.y.z` where `x`, `y` and
+`z` stand for the major, minor and patch version numbers. Then you can
+install from a command line
+
+``` bash
+R CMD INSTALL NSGEV_x.y.z
+```
+
+Note that you must also have all the packages required by **NSGEV**
+installed.
+
+
+## NEWS
+
+### 2022-05
 
 The probability functions (density, distribution and quantile) are now
 computed differently for small shape $\xi \approx 0$, using a Taylor
@@ -41,9 +96,13 @@ numeric computations (in C). We need to express the derivatives with a
 small number of well-chosen auxiliary variables that are computed only
 once.
 
-This feature seems to be unique among the available R packages devoted
-to extreme-value. Although very small values of $\xi$ are not
-frequently used, it turns out that the exact derivatives are difficult
-to evaluate for small $\xi$ which may have some consequences in
-optimisations. This is especially the case for the 2-nd order
-derivatives and for the quantile function.
+This feature is quite rare among the available R packages devoted to
+extreme-value, although the
+[revdbayes](https://github.com/paulnorthrop/revdbayes) package by Paul
+Northorp uses the same principle in R implementations.
+
+Even if very small values of $\xi$ are not frequently used, it turns
+out that the exact derivatives are difficult to evaluate for small
+$\xi$, which may have some bad consequences in optimisations. This is
+especially the case for the 2-nd order derivatives or for the
+log-density function.
