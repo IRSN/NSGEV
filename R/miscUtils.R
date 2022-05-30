@@ -55,9 +55,10 @@ transFormula <- function(formula, parnm) {
 ##' rNames(4, nchar = 6)
 rNames <- function(n, nchar = 3L) {
     df <- expand.grid(LETTERS, LETTERS, LETTERS)
-    LET <- apply(X = df[sample(1:676, n) ,],
+    LET <- apply(X = df[sample(1:676, n), ],
                  MARGIN = 1L,
-                 FUN = function(x) x[sample(1L:3L, sample(1L:3L))])
+                 FUN = function(x) x[sample(1L:3L,
+                                            size = sample(1L:3L, size = 1))])
     paste0(sapply(LET, paste0, collapse = ""), "")
 }
 

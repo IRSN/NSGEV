@@ -8,6 +8,7 @@ importFrom("graphics", "abline", "lines", "matlines", "matplot",
 import("methods")
 import("ggplot2")
 importFrom("reshape2", "melt")
+importFrom("forecast", "autoplot", "autolayer")
 
 import("Renext")
 importFrom("ismev", "gev.fit")

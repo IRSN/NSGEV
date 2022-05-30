@@ -275,16 +275,16 @@ RL <- function(model,
                  lwd = 2, col = "SteelBlue3",
                  main = "zero-finding", xlab = "rho", ylab = "g")
             abline(h = 0, col = "orangered")
-            if (class(res) != "try-error") {
+            if (!inherits(res, "try-error")) {
                 abline(v = res$root, col = "orangered")
             }
             mtext(side = 1, at = res$root,
                   line = 1.2, text = "rho", col = "orangered")
         }
         
-        if (class(res) == "try-error") {
+        if (inherits(res, "try-error")) {
             print(c(rhoMin, rhoMax))
-            stop("XXXX")
+            stop("Error in 'uniroot'")
         }
              
         if (abs(res$f.root) > 1e-3) stop("no solution found")
