@@ -10,6 +10,14 @@ useful to study *block maxima*, usually annual maxima. A popular use is
 assessing the impact of global warming using series of annual maxima of
 the daily maximal temperatures.
 
+## NEWS
+
+See the file [NEWS.md](https://github.com/IRSN/NSGEV/blob/main/NEWS.md).
+This file will now on be used in place of the `ChangeLog` file.
+
+The **nieve** package now used to provide the GEV distribution functions
+also has its own NEWS file.
+
 ## INSTALLATION
 
 This package needs compilation. Hence if you are using a MS Windows
@@ -68,11 +76,3 @@ Note that you must also have all the packages required by **NSGEV**
 installed.
 
 You can also use the **RStudio** IDE to install the package.
-
-## NEWS
-
-See the file [NEWS.md](https://github.com/IRSN/NSGEV/blob/main/NEWS.md).
-This file will now on be used in place of the `ChangeLog` file.
-
-The **nieve** package now used to provide the GEV distribution functions
-also has its own NEWS file.
