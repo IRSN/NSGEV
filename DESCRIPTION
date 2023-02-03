@@ -3,7 +3,12 @@ Type: Package
 Title: Non-Stationary GEV Time Series
 Version: 0.1.6
 Date: 2023-02-03
-Author: Yves Deville <deville.yves@alpestat.com>
+Authors@R:
+    c(person(given = "Yves",
+             family = "Deville",
+             role = c("cre", "aut"),
+             email = "deville.yves@alpestat.com",
+	     comment = c(ORCID = "0000-0002-1233-488X")))
 Maintainer: Yves Deville <deville.yves@alpestat.com>
 Description: Utility functions for Non-Stationary time series with GEV margins.
 License: GPL-3
