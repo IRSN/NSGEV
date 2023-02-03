@@ -280,11 +280,11 @@ MLE.TVGEV <- function(object,
         }
         
         logL <-
-            dGEV(y,
-                 loc = theta[object$indVal, "loc"],
-                 scale = theta[object$indVal, "scale"],
-                 shape = theta[object$indVal, "shape"], log = TRUE,
-                 deriv = deriv)
+            nieve::dGEV(y,
+                        loc = theta[object$indVal, "loc"],
+                        scale = theta[object$indVal, "scale"],
+                        shape = theta[object$indVal, "shape"], log = TRUE,
+                        deriv = deriv)
         
         nL <- -sum(logL)
       
@@ -508,8 +508,9 @@ MLE.TVGEV <- function(object,
 ##' of sampled coefficient vecors  will generally be smaller than the
 ##' target number as given in \code{R}.
 ##'
+##' @importFrom nieve rGEV
+##' 
 ##' @examples
-##'
 ##' example(TVGEV)
 ##' bsb <- bs(res2, R = 50, estim = "nloptr")
 ##'
@@ -565,10 +566,10 @@ bs.TVGEV <- function(object,
         y <- array(NA, dim = c(object$n, R),
                dimnames = list(NULL, paste("sim", 1:R, sep = "_")))
         
-        y[iv, ]  <- rGEV(n = R,
-                         loc = object$theta[iv, "loc"],
-                         scale = object$theta[iv, "scale"],
-                         shape = object$theta[iv, "shape"])
+        y[iv, ]  <- nieve::rGEV(n = R,
+                                loc = object$theta[iv, "loc"],
+                                scale = object$theta[iv, "scale"],
+                                shape = object$theta[iv, "shape"])
         
     } else if (type == "NP") {
        
@@ -576,10 +577,10 @@ bs.TVGEV <- function(object,
                    dim = c(nv, R))
 
         samp <- function(x) {
-            qGEV(p = sample(x, size = nv, replace = TRUE),
-                 loc = object$theta[iv, "loc"],
-                 scale = object$theta[iv, "scale"],
-                 shape = object$theta[iv, "shape"])
+            nieve::qGEV(p = sample(x, size = nv, replace = TRUE),
+                        loc = object$theta[iv, "loc"],
+                        scale = object$theta[iv, "scale"],
+                        shape = object$theta[iv, "shape"])
         }
         
         y[iv, ] <- apply(X = e, MARGIN = 2, FUN = samp) 
@@ -1039,8 +1040,9 @@ simulate.TVGEV <- function (object, nsim = 1, seed = NULL,
     
     theta <- psi2theta(model = object, psi = psi, date = newdate)
     
-    sim <- rGEV(nsim, loc = theta[, 1L], scale = theta[, 2L], 
-                shape = theta[, 3L])
+    sim <- nieve::rGEV(nsim, loc = theta[ , 1L],
+                       scale = theta[ , 2L], 
+                       shape = theta[ , 3L])
     
     dimnames(sim) <- list(rownames(theta),
                           paste("sim", 1L:nsim,  sep = ""))

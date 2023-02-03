@@ -182,7 +182,8 @@ rho2psi <- function(rho, nm1, psi_m1, model, data = NULL,
       psi[-ind] <- psi_m1
       names(psi) <- pnms
       theta <- psi2theta(model = model, psi = psi, data = data)
-      F <- pGEV(rho, loc = theta[ , 1L], scale = theta[ , 2L], shape = theta[ , 3L])
+      F <- nieve::pGEV(rho, loc = theta[ , 1L], scale = theta[ , 2L],
+                       shape = theta[ , 3L])
       s <- sum(F) - (n - 1.0)
       attr(s, "psi") <- psi
       if (DEBUG) {
@@ -249,8 +250,8 @@ negLogLik <- function(psi, model, data = NULL, y = NULL,
     n <- nrow(data)
     p <- length(psi)
     
-    logL <- dGEV(y, loc = theta[, 1L], scale = theta[, 2L],
-                 shape = theta[, 3L], log = TRUE, deriv = deriv)
+    logL <- nieve::dGEV(y, loc = theta[, 1L], scale = theta[, 2L],
+                        shape = theta[, 3L], log = TRUE, deriv = deriv)
     nl <- -sum(logL)
     if (deriv) {
         ## XXX a optimiser plus tard
@@ -542,8 +543,9 @@ quantile.NSGEV <- function(x, probs = c(0.90, 0.95, 0.99),
                        paste("Q", formatPerc(probs), sep = "")))
 
     for (i in seq_along(probs)) {
-        quant[ , i] <- qGEV(probs[i], loc = theta[ , 1L], scale = theta[, 2L],
-                            shape = theta[, 3L])
+        quant[ , i] <- nieve::qGEV(probs[i], loc = theta[ , 1L],
+                                   scale = theta[ , 2L],
+                                   shape = theta[ , 3L])
     }
     attr(quant ,"p") <- probs
     
@@ -616,8 +618,9 @@ density.NSGEV <- function(x,
                   dimnames = list(rownames(data), NULL))
     
     for (i in seq_along(xValue)) {
-        dens[ , i] <- dGEV(xValue[i], loc = theta[ , 1L], scale = theta[, 2L],
-                           shape = theta[, 3L], log = log)
+        dens[ , i] <- nieve::dGEV(xValue[i], loc = theta[ , 1L],
+                                  scale = theta[, 2L],
+                                  shape = theta[, 3L], log = log)
     }
     attr(dens ,"x") <- xValue
     dens
@@ -649,7 +652,7 @@ density.NSGEV <- function(x,
 ##'
 ##' @author Yves Deville
 ##'
-##' @seealso \code{\link{rGEV}} to simulate from varying GEV
+##' @seealso \code{\link[nieve]{rGEV}} to simulate from varying GEV
 ##' parameters.
 ##' 
 ##' @examples
@@ -674,8 +677,9 @@ simulate.NSGEV <- function(object, nsim = 1, seed = NULL,
    
    n <- nrow(data)
    theta <- psi2theta(model = object, psi = psi, data = data) 
-   sim <- rGEV(nsim, loc = theta[ , 1L], scale = theta[, 2L],
-               shape = theta[, 3L])
+    sim <- nieve::rGEV(nsim, loc = theta[ , 1L],
+                       scale = theta[ , 2L],
+                       shape = theta[ , 3L])
    dimnames(sim) <- list(rownames(data), paste("sim", 1L:nsim, sep = ""))
    
    sim

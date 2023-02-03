@@ -1,4 +1,3 @@
-useDynLib(NSGEV, .registration = TRUE)
 
 importFrom("utils", "getS3method")
 import("stats")
@@ -11,6 +10,7 @@ importFrom("reshape2", "melt")
 importFrom("forecast", "autoplot", "autolayer")
 
 import("Renext")
+import("nieve")
 importFrom("ismev", "gev.fit")
 import("extRemes", except = c("qqplot", "qqnorm"))
 import("numDeriv")
@@ -21,7 +21,7 @@ export(psi2theta, bs, cdf, moment, profLik,
        parNames, bts,
        rho2psi,
        breaksX, polynomX, natSplineX,
-       dGEV, pGEV, qGEV, rGEV,
+       ## dGEV, pGEV, qGEV, rGEV,
        transFormula, blockDuration, rNames,     ## miscutils
        selectDate, distLines, opacity,          ## miscutils
        RL,

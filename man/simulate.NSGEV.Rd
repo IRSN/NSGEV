@@ -46,7 +46,7 @@ matplot(df$t, ysim, type = "l", xlab = "t",
 matlines(df.new$t, ysim.new, type = "l", col = "firebrick")
 }
 \seealso{
-\code{\link{rGEV}} to simulate from varying GEV
+\code{\link[nieve]{rGEV}} to simulate from varying GEV
 parameters.
 }
 \author{

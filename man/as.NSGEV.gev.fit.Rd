@@ -36,7 +36,7 @@ dat <- matrix(runif(n * m), nrow = n)
 colnames(dat) <- rNames(m)
 
 ## response
-y <- drop(rGEV(n))
+y <- drop(nieve::rGEV(n))
 
 ## fit 
 fit <- gev.fit(xdat = y,             ## response     

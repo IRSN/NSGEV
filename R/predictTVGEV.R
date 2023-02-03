@@ -76,6 +76,8 @@
 ##' 
 ##' @author Yves Deville
 ##'
+##' @importFrom nieve qGEV
+##' 
 ##' @examples
 ##' example(TVGEV)
 ##' p1 <- predict(res2, confintMethod = "none")
@@ -174,10 +176,10 @@ predict.TVGEV <- function(object,
         diagno <- NULL
         
         for (iPer in seq_along(period)) {
-            RL[ , iPer] <- qGEV(p = prob[iPer],
-                                loc = theta[ , 1],
-                                scale = theta[ , 2],
-                                shape = theta[ , 3])
+            RL[ , iPer] <- nieve::qGEV(p = prob[iPer],
+                                       loc = theta[ , 1],
+                                       scale = theta[ , 2],
+                                       shape = theta[ , 3])
         }
        
         
@@ -211,11 +213,11 @@ predict.TVGEV <- function(object,
         
         for (iPer in seq_along(period)) {
  
-            Quant[ , iPer] <- quant <- qGEV(p = prob[iPer],
-                                         loc = theta[ , 1],
-                                         scale = theta[ , 2],
-                                         shape = theta[ , 3],
-                                         deriv = TRUE)
+            Quant[ , iPer] <- quant <- nieve::qGEV(p = prob[iPer],
+                                                   loc = theta[ , 1],
+                                                   scale = theta[ , 2],
+                                                   shape = theta[ , 3],
+                                                   deriv = TRUE)
             ## this is a n x p matrix
             gradtheta <- attr(quant, "gradient")
             
@@ -295,13 +297,13 @@ predict.TVGEV <- function(object,
                 }
             }      
                 
-            qGEV(prob, theta[ , 1], theta[ , 2], theta[ , 3])
+            nieve::qGEV(prob, theta[ , 1], theta[ , 2], theta[ , 3])
         }
 
         ## myFun <- function(psi, prob) {
         ##     theta <- psi2theta(model = object, psi = psi, date = newdate,
         ##                        checkNames = FALSE)
-        ##     qGEV(prob, theta[ , 1], theta[ , 2], theta[ , 3])
+        ##     nieve::qGEV(prob, theta[ , 1], theta[ , 2], theta[ , 3])
         ## }
         
         for (iPer in seq_along(period)) {
@@ -316,11 +318,12 @@ predict.TVGEV <- function(object,
             if (biasCorrect) {
                 RL[ , iPer, "Quant", ] <- t(apply(Quant, MARGIN = 1, mean))
             } else {
-                RL[ , iPer, "Quant", ] <- rep(qGEV(p = prob[iPer],
-                                                   loc = theta[ , 1],
-                                                   scale = theta[ , 2],
-                                                   shape = theta[ , 3],
-                                                   deriv = TRUE), times = nLevel)
+                RL[ , iPer, "Quant", ] <-
+                    rep(nieve::qGEV(p = prob[iPer],
+                                    loc = theta[ , 1],
+                                    scale = theta[ , 2],
+                                    shape = theta[ , 3],
+                                    deriv = TRUE), times = nLevel)
             }
         }
         
@@ -387,8 +390,8 @@ predict.TVGEV <- function(object,
                                 date = newdate[iDate],
                                 deriv = TRUE, checkNames = FALSE)
              
-             RL <- qGEV(prob, theta[ , 1], theta[ , 2], theta[ , 3],
-                        deriv = TRUE)
+             RL <- nieve::qGEV(prob, theta[ , 1], theta[ , 2],
+                               theta[ , 3], deriv = TRUE)
 
              ## 'nloptr' fails on NA and NaN!
              if (is.na(RL)) {
@@ -474,11 +477,11 @@ predict.TVGEV <- function(object,
                 
              for (iPer in seq_along(period)) {
                  
-                 quant <- qGEV(p = prob[iPer],
-                               loc = theta[iDate, 1],
-                               scale = theta[iDate, 2],
-                               shape = theta[iDate, 3],
-                               deriv = FALSE)
+                 quant <- nieve::qGEV(p = prob[iPer],
+                                      loc = theta[iDate, 1],
+                                      scale = theta[iDate, 2],
+                                      shape = theta[iDate, 3],
+                                      deriv = FALSE)
                  
                 ##  if (trace) cat(sprintf("\n   o period %d\n   ============\n",
                 ##                         period[iPer]))

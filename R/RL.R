@@ -210,8 +210,8 @@ RL <- function(model,
         ## resampling.
         ## =====================================================================
 
-        q <- qGEV(1 - 1 / B, loc = theta[ , 1L], scale = theta[ , 2L],
-                  shape = theta[ , 3L], deriv = deriv)
+        q <- nieve::qGEV(1 - 1 / B, loc = theta[ , 1L], scale = theta[ , 2L],
+                         shape = theta[ , 3L], deriv = deriv)
         
         rho <- weighted.mean(x = q, w = w_ind)
 
@@ -237,15 +237,17 @@ RL <- function(model,
         ## =====================================================================
         
         g <- function(rho) {
-            F <- pGEV(rho, loc = theta[ , 1L], scale = theta[ , 2L],
-                      shape = theta[ , 3L])
+            F <- nieve::pGEV(rho, loc = theta[ , 1L],
+                             scale = theta[ , 2L],
+                             shape = theta[ , 3L])
             s <- sum(F * w_ind) - (B - 1.0)
         }
         
         if (is.null(rhoMin) || is.null(rhoMax)) {
             ## to find the initial interval
-            q <- qGEV(1 - 1 / B, loc = theta[ , 1L], scale = theta[ , 2L],
-                      shape = theta[ , 3L], deriv = FALSE)
+            q <- nieve::qGEV(1 - 1 / B, loc = theta[ , 1L],
+                             scale = theta[ , 2L],
+                             shape = theta[ , 3L], deriv = FALSE)
             if (is.null(rhoMin)) rhoMin <- min(q)
             if (is.null(rhoMax)) rhoMax <- max(q)
 
@@ -296,12 +298,15 @@ RL <- function(model,
         ## =====================================================================
         if (deriv) {
             
-            F <- pGEV(rho, loc = theta[ , 1L], scale = theta[ , 2L],
-                      shape = theta[ , 3L], deriv = TRUE)
+            F <- nieve::pGEV(rho, loc = theta[ , 1L],
+                             scale = theta[ , 2L],
+                             shape = theta[ , 3L], deriv = TRUE)
 
             ## dg_rho is a scalar (obtained by summing on blocks)
-            dg_drho <- sum(dGEV(rho, loc = theta[ , 1L], scale = theta[ , 2L],
-                                shape = theta[ , 3L], deriv = FALSE) * w_ind)
+            dg_drho <- sum(nieve::dGEV(rho, loc = theta[ , 1L],
+                                       scale = theta[ , 2L],
+                                       shape = theta[ , 3L],
+                                       deriv = FALSE) * w_ind)
             if (plot) {
                 ## show the derivative
                 abline(a = -rho * dg_drho, b = dg_drho, col = "SpringGreen4")

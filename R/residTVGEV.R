@@ -22,6 +22,7 @@
 ##' @references Cox, D.R. and Snell E.J. (1968) "A General Definition
 ##' of Residuals".  \emph{JRSS Ser. B}, \bold{30}(2), pp. 248-275.
 ##'
+##' @importFrom nieve pGEV
 ##' 
 ##' @examples
 ##' df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))
@@ -42,12 +43,12 @@ residuals.TVGEV <- function(object,
     theta <- psi2theta(model = object, psi = NULL)
   
     if (type == "exp") {
-        e <- pGEV(Y, loc = theta[, 1L], scale = theta[, 2L], 
-                  shape = theta[, 3L], lower.tail = FALSE)
+        e <- nieve::pGEV(Y, loc = theta[, 1L], scale = theta[, 2L], 
+                         shape = theta[, 3L], lower.tail = FALSE)
         e <- -log(e)
     } else {
-        e <- pGEV(Y, loc = theta[, 1L], scale = theta[, 2L], 
-              shape = theta[, 3L], lower.tail = TRUE)
+        e <- nieve::pGEV(Y, loc = theta[, 1L], scale = theta[, 2L],
+                         shape = theta[, 3L], lower.tail = TRUE)
     }
     names(e) <- rownames(theta)
     attr(e, "date") <- object$data[ , object$date]

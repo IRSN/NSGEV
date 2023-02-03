@@ -6,7 +6,7 @@
 ##' The Hessian matrix computation relies on the exact second order
 ##' derivatives of the GEV density w.r.t the vector
 ##' \eqn{\boldsymbol{\theta}}{\theta} of GEV parameters, see
-##' \code{\link{dGEV}}. The derivatives w.r.t. the vector of model
+##' \code{\link[nieve]{dGEV}}. The derivatives w.r.t. the vector of model
 ##' parameters \eqn{\boldsymbol{psi}}{\psi} are computed by chain rule
 ##' using the linear inverse link.
 ##' 
@@ -26,6 +26,8 @@
 ##' (creator of \code{TVGEV} objects) and providing the covariance
 ##' matrix \code{vcov} by inversion is a \emph{numeric} one for now.
 ##'
+##' @importFrom nieve dGEV
+##' 
 ##' @examples
 ##' \dontrun{
 ##'    example(TVGEV)
@@ -58,11 +60,11 @@ d2negLogLikFun <- function(psi, object) {
     }
     
     logL <-
-        dGEV(yVal,
-             loc = thetaVal[ , "loc", drop = FALSE],
-             scale = thetaVal[ , "scale", drop = FALSE],
-             shape = thetaVal[ , "shape", drop = FALSE],
-             log = TRUE, deriv = TRUE, hessian = TRUE)
+        nieve::dGEV(yVal,
+                    loc = thetaVal[ , "loc", drop = FALSE],
+                    scale = thetaVal[ , "scale", drop = FALSE],
+                    shape = thetaVal[ , "shape", drop = FALSE],
+                    log = TRUE, deriv = TRUE, hessian = TRUE)
     
     H1 <- -attr(logL, "hessian")
     d2nL <- array(0.0, dim = c(object$p, object$p),

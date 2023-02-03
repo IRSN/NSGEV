@@ -52,10 +52,9 @@ quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
                        paste("Q", fProbs, sep = "")))
 
     for (i in seq_along(probs)) {
-        quant[ , i] <- qGEV(p = probs[i],
-                            loc = theta[ , 1L],
-                            scale = theta[ , 2L],
-                            shape = theta[ , 3L])
+        quant[ , i] <- nieve::qGEV(p = probs[i], loc = theta[ , 1L],
+                                   scale = theta[ , 2L],
+                                   shape = theta[ , 3L])
     }
     
     rownames(quant) <- attr(quant, "date") <- format(date)
@@ -92,8 +91,8 @@ quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
 ##'
 ##' @param log Logical. If TRUE the log-density is returned.
 ##'
-##' @param ... Other arguments to be passed to \code{dGEV} of
-##' \code{pGEV}.
+##' @param ... Other arguments to be passed to
+##'     \code{\link[nieve]{dGEV}} or \code{\link[nieve]{pGEV}}.
 ##'
 ##' @return An oject with class \code{"bfts"}. This is mainly a matrix
 ##' with one row by date. Rather than providing a time-plot of each
@@ -138,8 +137,9 @@ density.TVGEV <- function(x, xValue = NULL,
                       paste("d", fxValue, sep = "")))
     
     for (i in seq_along(xValue)) {
-        dens[ , i] <- dGEV(xValue[i], loc = theta[ , 1L], scale = theta[, 2L],
-                            shape = theta[, 3L], ...)
+        dens[ , i] <- nieve::dGEV(xValue[i], loc = theta[ , 1L],
+                                  scale = theta[, 2L],
+                                  shape = theta[, 3L], ...)
     }
 
     attr(dens, "x") <- xValue
@@ -185,8 +185,9 @@ cdf.TVGEV <- function(x,
                      paste("d", fqValue, sep = "")))
     
     for (i in seq_along(qValue)) {
-        cdf[ , i] <- pGEV(qValue[i], loc = theta[ , 1L], scale = theta[, 2L],
-                          shape = theta[, 3L], ...)
+        cdf[ , i] <- nieve::pGEV(qValue[i], loc = theta[ , 1L],
+                                 scale = theta[, 2L],
+                                 shape = theta[, 3L], ...)
     }
     
     attr(cdf, "x") <- qValue

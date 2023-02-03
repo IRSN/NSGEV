@@ -61,7 +61,6 @@ target number as given in \code{R}.
 }
 
 \examples{
-
 example(TVGEV)
 bsb <- bs(res2, R = 50, estim = "nloptr")
 

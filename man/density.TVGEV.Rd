@@ -27,8 +27,8 @@ estimated coefficients in \code{x} is used.}
 
 \item{log}{Logical. If TRUE the log-density is returned.}
 
-\item{...}{Other arguments to be passed to \code{dGEV} of
-\code{pGEV}.}
+\item{...}{Other arguments to be passed to
+\code{\link[nieve]{dGEV}} or \code{\link[nieve]{pGEV}}.}
 
 \item{qValue}{xValue Vector of probabilities at which the GEV
 densities will be evaluated. By default, a grid of value from

@@ -24,7 +24,7 @@ Exact Hessian of the negative log-likelihood function of a
 The Hessian matrix computation relies on the exact second order
 derivatives of the GEV density w.r.t the vector
 \eqn{\boldsymbol{\theta}}{\theta} of GEV parameters, see
-\code{\link{dGEV}}. The derivatives w.r.t. the vector of model
+\code{\link[nieve]{dGEV}}. The derivatives w.r.t. the vector of model
 parameters \eqn{\boldsymbol{psi}}{\psi} are computed by chain rule
 using the linear inverse link.
 }
