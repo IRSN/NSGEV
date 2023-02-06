@@ -30,11 +30,10 @@ In an R session use
 
 ``` r
 library(remotes)
-install_github("IRSN/NSGEV", dependencies = TRUE, auth_token = myToken)
+install_github("IRSN/NSGEV", dependencies = TRUE)
 ```
 
-where `myToken` stands for *your* token. This should install the package
-and make it ready to use.
+This should install the package and make it ready to use.
 
 You can also select a specific branch or a specific commit by using the
 suitable syntax for `install_github`, see the **remotes** package
