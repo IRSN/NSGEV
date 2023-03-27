@@ -16,7 +16,7 @@
 
 - The GEV probability functions `dGEV`, `pGEV`, `qGEV` and `rGEV` have
   been moved (with some changes) to the **nieve** package, available
-  both [on CRAN](https://cran.r-project.org/web/packages/nieve/index.html) 
+  both [on CRAN](N.R-project.org/package=nieve)
   and [on GitHub](https://github.com/yvesdeville/nieve/). So **NSGEV** 
   now imports these functions from ** nieve**. As a consequence the
   compiled code used by this functions has been discarded, making the

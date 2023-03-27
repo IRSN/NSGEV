@@ -41,7 +41,7 @@
 \source{
   
   The daily \code{TX} data are provided by European Data and Cimate
-  Assessment \url{http://www.ecad.eu}, and were initially provided by
+  Assessment \url{https://www.ecad.eu}, and were initially provided by
   Météo-France. They are available witin a \emph{Blended ECA dataset}
   for \emph{daily data}.
 
