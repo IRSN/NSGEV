@@ -134,7 +134,10 @@ parIni.TVGEV <- function(object, y = NULL) {
         }
     }
 
-    if (object$isCst["loc"]) {
+    ## Formerly
+    ## if (object$isCst["loc"]) {
+    ## Thanks to Jesper Ryden for pointing out the problem.
+    if (all(object$isCst)) {    
         sigma <- sqrt(6) * sd(y, na.rm = TRUE) / pi
         mu <- mean(y, na.rm = TRUE) - 0.578 * sigma
         return(c("loc" = mu, "scale" = sigma, "shape" = 0.0))
@@ -977,7 +980,7 @@ TVGEV <- function(data,
         warning("'coefLower' and 'coefUpper' are only used when ",
                 "'estim' is set to \"nloptr\". They will be ignored.")
     }
-            
+    
     if (estim != "none") {
         res <- MLE.TVGEV(object = tv,
                          y = NULL,

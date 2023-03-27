@@ -2,6 +2,14 @@
 **NSGEV** Package News
 ===========================
 
+# News in version 0.1.7
+
+## Bug fixes
+
+- The `TVGEV` function did not work when a constant location 
+  was specified along with a non-constant scale and/or shape. 
+  Thanks to Jesper Rydén.
+
 # News in version 0.1.6
 
 ## Changes
