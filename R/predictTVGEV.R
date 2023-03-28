@@ -261,7 +261,7 @@ predict.TVGEV <- function(object,
             
             object$boot <- bs(object, ...)
             
-        } else{
+        } else { 
             message("'object' embeds a bootstrap distribution. Formal arguments\n",
                     " intented to be passed to `bs` (if any) will be ignored")
         }
@@ -298,6 +298,7 @@ predict.TVGEV <- function(object,
             }      
                 
             nieve::qGEV(prob, theta[ , 1], theta[ , 2], theta[ , 3])
+            
         }
 
         ## myFun <- function(psi, prob) {
@@ -309,14 +310,19 @@ predict.TVGEV <- function(object,
         for (iPer in seq_along(period)) {
             ## 'Quant' is a matrix with n rows and B columns. XXX Caution if n == 1.
             ## the dimension is lost!
-            Quant <- apply(object$boot$estimate, MARGIN = 1, FUN = myFun0, prob = prob[iPer])
+            Quant <- apply(object$boot$estimate, MARGIN = 1, FUN = myFun0,
+                           prob = prob[iPer])
+            
             if (n == 1L) {
                 dim(Quant) <- c(n, nrow(object$boot$estimate))
             }
-            RL[ , iPer, "L", ] <- t(apply(Quant, MARGIN = 1, FUN = quantile, prob = probL))
-            RL[ , iPer, "U", ] <- t(apply(Quant, MARGIN = 1, FUN = quantile, prob = probU))
+            RL[ , iPer, "L", ] <- t(apply(Quant, MARGIN = 1, FUN = quantile,
+                                          prob = probL, na.rm = TRUE))
+            RL[ , iPer, "U", ] <- t(apply(Quant, MARGIN = 1, FUN = quantile,
+                                          prob = probU, na.rm = TRUE))
             if (biasCorrect) {
-                RL[ , iPer, "Quant", ] <- t(apply(Quant, MARGIN = 1, mean))
+                RL[ , iPer, "Quant", ] <- t(apply(Quant, MARGIN = 1, mean,
+                                                  na.rm = TRUE))
             } else {
                 RL[ , iPer, "Quant", ] <-
                     rep(nieve::qGEV(p = prob[iPer],
