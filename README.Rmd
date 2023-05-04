@@ -13,20 +13,16 @@ assessing the impact of global warming using series of annual maxima
 of the daily maximal temperatures.
 
 
-## NEWS
+# NEWS
 
 See the file [NEWS.md](https://github.com/IRSN/NSGEV/blob/main/NEWS.md). 
 This file will now on be used in place of the `ChangeLog` file.
 
-The **nieve** package now used to provide the GEV distribution
-functions also has its own NEWS file.
+The **nieve** package used to provide the GEV distribution functions
+also has its own NEWS file.
 
 
-## INSTALLATION
-
-This package needs compilation. Hence if you are using a MS Windows
-system you need to have the Rtools installed in order to install
-**NSGEV** from its sources.
+# INSTALLATION
 
 ## Using the *remotes* package
 
@@ -38,6 +34,16 @@ install_github("IRSN/NSGEV", dependencies = TRUE)
 ```
 
 This should install the package and make it ready to use.
+
+Mind that by default this does not build the vignette shipped with the
+package (long-form documentation). To build the vignette, use instead
+
+```{r, eval=FALSE}
+install_github("IRSN/NSGEV", dependencies = TRUE, build_vignettes = TRUE)
+```
+The installation will then take a longer time but the vignette will be
+accessible from the help of the package (link above the "Help Pages"
+section).
 
 You can also select a specific branch or a specific commit by using
 the suitable syntax for `install_github`. For instance to install the
@@ -52,8 +58,9 @@ See the **remotes** package documentation for more details.
 
 ### Cloning the repository
 
-If you do not have yet a local `NSGEV` repository, use `git clone` to
-clone the `NSGEV` repository
+You can also clone the repository to install the package.  If you do
+not have yet a local `NSGEV` repository, use `git clone` to clone the
+`NSGEV` repository
 
 ``` bash
 git clone https://github.com/IRSN/NSGEV
