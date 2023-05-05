@@ -13,6 +13,9 @@
 ##' @param ... Not used yet.
 ##'
 ##' @return A vector or matrix of GEV parameters.
+##'
+##' @export
+##' 
 psi2theta <- function(model, psi, ...) {
     UseMethod("psi2theta")
 }
@@ -27,6 +30,8 @@ psi2theta <- function(model, psi, ...) {
 ##' @param ... Further arguments for methods.
 ##'
 ##' @return Bootstrap results
+##'
+##' @export
 ##' 
 bs <- function(object, ...) {
     UseMethod("bs")
@@ -43,6 +48,8 @@ bs <- function(object, ...) {
 ##'
 ##' @return A structure containing discretized versions of the
 ##' marginal distribution functions for the model \code{x}.
+##'
+##' @export
 ##' 
 cdf <- function(x, ...) {
     UseMethod("cdf")
@@ -61,6 +68,8 @@ cdf <- function(x, ...) {
 ##' @param ... Further arguments for methods.
 ##'
 ##' @return A vector of moments.
+##'
+##' @moment
 ##' 
 moment <- function(x, which, ...) {
     UseMethod("moment")

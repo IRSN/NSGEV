@@ -25,6 +25,9 @@
 ##' 
 ##' @author Yves Deville
 ##'
+##' @method plot NSGEV
+##' @export
+##' 
 ##' @examples
 ##' example(NSGEV)
 ##' plot(ns1, which = 1)
@@ -117,6 +120,9 @@ plot.NSGEV <- function(x, y, which = 1,
 ##' @return Vector \eqn{\mathbf{\psi}}{\psi} of coefficients, or
 ##' matrix with the GEV parameters \eqn{\mathbf{\theta}_i}{\theta_i}
 ##' as its rows.
+##'
+##' @method coef NSGEV
+##' @export
 ##' 
 coef.NSGEV <- function(object, type = c("psi", "theta"),  ...) {
     type <- match.arg(type)
@@ -136,6 +142,8 @@ coef.NSGEV <- function(object, type = c("psi", "theta"),  ...) {
 ##'
 ##' @return The character vector of the names of the parameters of the
 ##' model.
+##'
+##' @export
 ##' 
 parNames <- function(object, ...) {
    UseMethod("parNames")
@@ -153,6 +161,10 @@ parNames <- function(object, ...) {
 ##'
 ##' @return The character vector of the names of the parameters of the
 ##' model.
+##'
+##' @method parNames default
+##' @export
+##' 
 parNames.default <- function(object, ...) {
 
     if (is.list(object)) {
@@ -177,6 +189,10 @@ parNames.default <- function(object, ...) {
 ##' @return A list with the elements of \code{objects}
 ##' and some more that can be displayed when \code{summary}
 ##' is invoked.
+##'
+##' @method summary NSGEV
+##' @export
+##' 
 summary.NSGEV <- function(object, ...) {
     
     res <- object
@@ -191,6 +207,10 @@ summary.NSGEV <- function(object, ...) {
 }
 
 ##*****************************************************************************
+##'
+##' @method print summary.NSGEV
+##' @export
+##' 
 print.summary.NSGEV <- function(x, ...) {
     
     cat("o Names of parameters (psi):\n   ",
@@ -221,6 +241,8 @@ print.summary.NSGEV <- function(x, ...) {
 }
 
 ##*****************************************************************************
+##' @method print NSGEV
+##' @export
 print.NSGEV <- function(x, ...) {
     print(summary(x))
 }
