@@ -2,7 +2,7 @@
 % Please edit documentation in R/asNSGEV.R
 \name{as.NSGEV.fevd}
 \alias{as.NSGEV.fevd}
-\title{Coerce a 'fevd' Object into a 'NSGEV' object}
+\title{Coerce a \code{fevd} Object into a \code{NSGEV} object}
 \usage{
 \method{as.NSGEV}{fevd}(x, ...)
 }
@@ -16,7 +16,8 @@ be of type \code{"GEV"}.}
 An object with class \code{"NSGEV"}.
 }
 \description{
-Coerce a 'fevd' object into a 'NSGEV' object.
+Coerce a \code{fevd} object from the \pkg{exRemes} package into a
+\code{NSGEV} object.
 }
 \section{Caution}{
  For now, only simple formulas can be used.

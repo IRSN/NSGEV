@@ -76,7 +76,12 @@
 ##' 
 ##' @author Yves Deville
 ##'
+##' @importFrom utils getS3method
 ##' @importFrom nieve qGEV
+##' @importFrom reshape2 melt
+##' @importFrom stats predict qnorm
+##' @method predict TVGEV
+##' @export
 ##' 
 ##' @examples
 ##' example(TVGEV)
@@ -724,6 +729,9 @@ predict.TVGEV <- function(object,
 ##' with only a small number of dates, each appearing in a facet. So
 ##' the number of dates is limited to \code{6}. Similarily, the number
 ##' of confidence levels can not be \code{> 3}.
+##'
+##' @method plot predict.TVGEV
+##' @export
 ##' 
 ##' @examples
 ##' example(TVGEV)
@@ -763,18 +771,21 @@ plot.predict.TVGEV <- function(x, y, gg = TRUE, bw = TRUE, ... ) {
     g1 <- ggplot(data = x)
     
     if (!is.null(x$L) && !is.null(x$U)) {
-        g1 <- g1  + geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U, group = Level,
+        g1 <- g1  + geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U,
+                                              group = Level,
                                     ## colour = Level,
                                     fill = Level),
                                 ## group = type,
                                 alpha = 0.2)
          if (bw) {
              g1 <- g1 +
-                 geom_line(mapping = aes(x = Period, y = L, group = Level, linetype = Level),
+                 geom_line(mapping = aes(x = Period, y = L, group = Level,
+                                         linetype = Level),
                            colour = "gray20",
                            alpha = 0.8)
              g1 <- g1 +
-                 geom_line(mapping = aes(x = Period, y = U, group = Level, linetype = Level),
+                 geom_line(mapping = aes(x = Period, y = U, group = Level,
+                                         linetype = Level),
                            colour = "gray20",
                            alpha = 0.8)
          } else {

@@ -2,7 +2,7 @@
 % Please edit documentation in R/asNSGEV.R
 \name{as.NSGEV.gev.fit}
 \alias{as.NSGEV.gev.fit}
-\title{Coerce a 'gev.fit' Object into a 'NSGEV' Object}
+\title{Coerce a \code{gev.fit} Object into a \code{NSGEV} Object}
 \usage{
 \method{as.NSGEV}{gev.fit}(x, data, ...)
 }
@@ -17,7 +17,8 @@
 An object with class \code{"NSGEV"}.
 }
 \description{
-Coerce a 'gev.fit' object into a 'NSGEV' object.
+Coerce a \code{gev.fit} object from the \pkg{ismev} package into a
+\code{NSGEV} object.
 }
 \note{
 A \code{gev.fit} object does not embed the set of covariates

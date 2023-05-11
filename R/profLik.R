@@ -12,6 +12,8 @@
 ##' @return The result, typically a numeric array.
 ##'
 ##' @author Yves Deville
+##'
+##' @export
 ##' 
 profLik <- function(object, fun, ...) {
     UseMethod("profLik")
@@ -82,6 +84,9 @@ profLik <- function(object, fun, ...) {
 ##' is the distance between the two directions of the gradient vectors
 ##' (objective and constraint). It should be small as well because the
 ##' gradients must be colinear at the optimum (Lagrange conditions).
+##'
+##' @method profLik TVGEV
+##' @export
 ##' 
 ##' @examples
 ##' df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))

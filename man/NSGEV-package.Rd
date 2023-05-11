@@ -15,20 +15,41 @@
 
   The DESCRIPTION file:
   \packageDESCRIPTION{NSGEV}
-  \packageIndices{NSGEV}
+  %% \packageIndices{NSGEV}
   
   This package is dedicated to some Non-Stationary Extreme Value models
-  with Generalised Extreme Value (GEV) marginal distributions. As a
-  major difference with comparable functions found in some other EV
-  packages, the model parameters can be used in several of the GEV
-  parameters \code{loc}, \code{scale} and \code{shape}.  A typical
-  example is when a scale proportional to the location needs to be
-  specified.
+  with Generalised Extreme Value (GEV) marginal distributions. Such
+  models are often used to investigate climate change from series of
+  annual maxima.
 
-  A special case is Time Varying (TV) models for which specialised
-  methods make sense to plot, predict and more. The class with name
-  \code{"TVGEV"} is dedicated to this kind of models.
+  An emphasis is put on \emph{Profile Likelihood} inference on the
+  parameters, quantiles or return levels. For that aim constrained
+  optimisations are used, relying on the \pkg{nloptr} package.
 
+  The package provides most of the classical S3 methods useful to cope
+  with fitted model objects, such as \code{predict}, \code{coef},
+  \code{vcov}, \code{confint}, \code{residuals}, \code{logLik}, ...
+
+  \itemize{
+    
+    \item \code{"NSGEV"} This class was intended to be the main class
+    when the package was created. As a major difference with other EV
+    packages, the model parameters can be used in several of the GEV
+    parameters \code{loc}, \code{scale} and \code{shape}.  A typical
+    example is when a scale proportional to the location needs to be
+    specified.
+    
+    \item \code{"TVGEV"} This class is devoted to the special case of
+    \emph{Time Varying} (TV) models using only functions of the time as
+    covariates.  Specialised methods make sense to plot, predict and
+    more.
+    
+  }
+
+  Most efforts have been put on the \code{"TVGEV"} class. In the future,
+  the \code{"NSGEV"} class could be discarded.
+ 
+  
 }
 \author{
 

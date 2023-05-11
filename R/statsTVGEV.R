@@ -23,6 +23,10 @@
 ##' quantile, but it has a \code{"date"} attributes than can be used
 ##' for plotting.
 ##'
+##' @importFrom stats quantile
+##' @method quantile TVGEV
+##' @export
+##' 
 ##' @examples
 ##' example(TVGEV)
 ##' q <- quantile(res1)
@@ -105,6 +109,10 @@ quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
 ##' @seealso \code{\link{GEV}} for the density and cdf of the GEV
 ##' distribution, \code{\link{plot.predict.TVGEV}} for the Return Level
 ##' plot.
+##'
+##' @importFrom stats density
+##' @method density TVGEV
+##' @export
 ##' 
 ##' @examples
 ##' example(TVGEV)
@@ -159,6 +167,9 @@ density.TVGEV <- function(x, xValue = NULL,
 ##' densities will be evaluated. By default, a grid of value from
 ##' \code{0.0} to \code{1.0} is used. for each observation.
 ##'
+##' @method cdf TVGEV
+##' @export
+##' 
 cdf.TVGEV <- function(x,
                       qValue = NULL,
                       date = NULL,
@@ -226,6 +237,9 @@ cdf.TVGEV <- function(x,
 ##' @seealso \code{\link{quantile.TVGEV}}
 ##' to compute quantiles of the time-varying distribution.
 ##'
+##' @method mean TVGEV
+##' @export
+##' 
 ##' @examples
 ##' example(TVGEV)
 ##' autoplot(mean(res1))
@@ -260,7 +274,9 @@ mean.TVGEV <- function(x,
 ##' @param which Description of the moment. For now only the value
 ##' \code{"variance"} is accepted, but a description for the 3-rd and 4-th
 ##' order moments should be accepted in the future.
-##' 
+##'
+##' @method moment TVGEV
+##' @export 
 moment.TVGEV <- function(x,
                          which = "variance",
                          date = NULL,

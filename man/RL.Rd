@@ -84,14 +84,14 @@ not be greater than the number of rows in \code{'data'}.
 \itemize{
 
    \item{When \code{type} is \code{"average"}, the RL is computed
-for each value of the GEV parameter and the result is simply the
-mean of the computed RLs.}
+   for each value of the GEV parameter and the result is simply
+   the mean of the computed RLs.}
 
-  \item{When \code{type} is \code{"exceed"} the RL is the value
-\eqn{\rho} for which the number of exeedances over \eqn{\rho} has
-unit expectation, as proposed by Parey et al. This value is found
-by computing the expectation and solving a non-linear equation in
-\eqn{\rho} with \code{uniroot} function.}
+   \item{When \code{type} is \code{"exceed"} the RL is the value
+   \eqn{\rho} for which the number of exeedances over \eqn{\rho}
+   has unit expectation, as proposed by Parey et al. This value is
+   found by computing the expectation and solving a non-linear
+   equation in \eqn{\rho} with \code{uniroot} function.}
 
 }
 }

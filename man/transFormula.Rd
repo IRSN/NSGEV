@@ -21,7 +21,6 @@ attribute.
 Translate a standard formula into a NSGEV formula.
 }
 \examples{
-
 transFormula(~time, parnm = "mu") 
 
 }

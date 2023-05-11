@@ -3,28 +3,33 @@
 ##'
 ##' 
 ##' @title Analysis of Deviance Table for two Nested \code{TVGEV}
-##' Objects
+##'     Objects
 ##' 
-##' @param object A \code{TVGEV} object as fitted by \code{\link{TVGEV}}.
+##' @param object A \code{TVGEV} object as fitted by
+##'     \code{\link{TVGEV}}.
 ##' 
-##' @param object1 A \code{TVGEV} object such that \code{object} is nested in
-##' \code{object1}.
+##' @param object1 A \code{TVGEV} object such that \code{object} is
+##'     nested in \code{object1}.
 ##' 
-##' @param trace Level of verbosity. The value \code{0} prints nothing.
+##' @param trace Level of verbosity. The value \code{0} prints
+##'     nothing.
 ##' 
 ##' @param ... Not used yet.
 ##'
-##' @return
-##' An object of class "anova" inheriting from class "data.frame".
+##' @return An object of class \code{"anova"} inheriting from class
+##'     \code{"data.frame"}.
 ##'
-##' @note
-##' The deviance of the models can not be interpreted: only the
-##' difference of the deviance is used.
+##' @note The deviance of the models can not be interpreted: only the
+##'     difference of the deviance is used.
 ##'
 ##' @section Caution: The distribution of the test statistic
-##' (difference between two deviances) is obtained on the basis of the
-##' \emph{large sample theory} which may not be applicable.
+##'     (difference between two deviances) is obtained on the basis of
+##'     the \emph{large sample theory} which may not be applicable.
 ##'
+##' @importFrom stats anova pchisq
+##' @method anova TVGEV
+##' @export
+##' 
 ##' @examples
 ##'
 ##' df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))

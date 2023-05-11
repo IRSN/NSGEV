@@ -10,14 +10,17 @@
 ##' 
 ##' @return An object with (S3) class \code{"NSGEV"} representing
 ##' a Non-Stationary GEV model.
+##'
+##' @export
 ##' 
 as.NSGEV <- function(x, ...) {
     UseMethod("as.NSGEV")
 }
 
-##' Coerce a 'gev.fit' object into a 'NSGEV' object.
+##' Coerce a \code{gev.fit} object from the \pkg{ismev} package into a
+##' \code{NSGEV} object.
 ##'
-##' @title Coerce a 'gev.fit' Object into a 'NSGEV' Object
+##' @title Coerce a \code{gev.fit} Object into a \code{NSGEV} Object
 ##' 
 ##' @param x The object to be coerced.
 ##'
@@ -34,6 +37,11 @@ as.NSGEV <- function(x, ...) {
 ##' 
 ##' @author Yves Deville
 ##'
+##' @import ismev
+##' @import numDeriv
+##' @method as.NSGEV gev.fit
+##' @export 
+##' 
 ##' @examples
 ##' require(ismev)
 ##' ## number of observations and covariates
@@ -102,9 +110,10 @@ as.NSGEV.gev.fit <- function(x, data, ...) {
 
 }
 
-##' Coerce a 'fevd' object into a 'NSGEV' object.
+##' Coerce a \code{fevd} object from the \pkg{exRemes} package into a
+##' \code{NSGEV} object.
 ##'
-##' @title Coerce a 'fevd' Object into a 'NSGEV' object
+##' @title Coerce a \code{fevd} Object into a \code{NSGEV} object
 ##'
 ##' @param x The object to be coerced. Must have class \code{"fevd"} and
 ##' be of type \code{"GEV"}.
@@ -116,6 +125,10 @@ as.NSGEV.gev.fit <- function(x, data, ...) {
 ##' @author Yves Deville
 ##'
 ##' @section Caution: For now, only simple formulas can be used. 
+##'
+##' @rawNamespace import("extRemes", except = c("qqplot", "qqnorm"))
+##' @method as.NSGEV fevd
+##' @export 
 ##' 
 ##' @examples
 ##' require(extRemes)

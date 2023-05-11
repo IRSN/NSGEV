@@ -55,6 +55,9 @@
 ##' duration. So if \code{newdata} has \code{100} rows the maximal
 ##' Return Period that can be used without resampling is \code{100}.
 ##'
+##' @method predict NSGEV
+##' @export
+##' 
 ##' @examples
 ##' example(as.NSGEV.fevd)
 ##' L.delta <- predict(ns, period = seq(from = 10,  to = 68, by = 10),

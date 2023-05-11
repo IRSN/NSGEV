@@ -26,6 +26,9 @@
 ##' @author Yves Deville
 ##'
 ##' @method plot NSGEV
+##'
+##' @importFrom graphics abline lines matlines matplot mtext
+##' @importFrom methods is
 ##' @export
 ##' 
 ##' @examples

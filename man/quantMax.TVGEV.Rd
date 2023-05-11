@@ -11,9 +11,9 @@
   level = 0.95,
   psi = NULL,
   confintMethod = "delta",
-  deriv = FALSE,
   out = c("data.frame", "array"),
-  trace = 1L
+  trace = 1L,
+  ...
 )
 }
 \arguments{
@@ -28,6 +28,9 @@ of interest.}
 
 \item{level}{The confidence level.}
 
+\item{psi}{Optional vector of coefficients. \bold{Caution} not
+tested yet.}
+
 \item{confintMethod}{Character indicating the method to be used
 for the confidence intervals on the quantiles.}
 
@@ -37,6 +40,8 @@ actually has the (S3) class \code{"quantMax.TVGEV"} inheriting
 from \code{"data.frame"}. A few methods exist for this class.}
 
 \item{trace}{Integer level of verbosity.}
+
+\item{...}{Not used.}
 }
 \value{
 An object with its class depending on the value of
@@ -65,10 +70,10 @@ the blocks \eqn{b} of interest. Since the blocks are
 assumed to be independent the distribution function of \eqn{M^\star}
 is
 \deqn{
-   F_{M^\star}(m^\star) = \prod_{b} F_{\texttt{GEV}}(m^\star; \,
+   F_{M^\star}(m^\star; \, \boldsymbol{\psi}) = \prod_{b} F_{\texttt{GEV}}(m^\star; \,
    \boldsymbol{\theta}_b)
-}{F_M(m) = prod_b F_GEV(m; \theta_b)}
-and this distribution function depnds on the vector
+}{F_M(m; psi) = prod_b F_GEV(m; \theta_b)}
+and this distribution function depends on the vector
 \eqn{\boldsymbol{\psi}}{\psi} of the model parameters via
 \eqn{\boldsymbol{\theta}_b(\boldsymbol{\psi})}{\theta_b(\psi)}.
 For a given probability \eqn{p}, the corresponding quantile
@@ -80,9 +85,14 @@ can be obtained by the implicit function theorem and then be used for
 the inference e.g., using the "delta method".
 }
 \examples{
-example(TVGEV)
-qM1 <- quantMax(res2, level = c(0.95, 0.70))
-qM2 <- quantMax(res2,
+df <- within(TXMax_Dijon, Date <- as.Date(sprintf("\%4d-01-01", Year)))
+## fit a TVGEV model. Only the location parameter is TV.
+res <- TVGEV(data = df, response = "TXMax", date = "Date",
+             design = breaksX(date = Date, breaks = "1970-01-01", degree = 1),
+             loc = ~ t1 + t1_1970)
+qM1 <- quantMax(res, level = c(0.95, 0.70))
+qM2 <- quantMax(res,
                 date = as.Date(sprintf("\%4d-01-01", 2025:2055)),
                 level = c(0.95, 0.70))
+qM2
 }

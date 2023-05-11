@@ -3,22 +3,25 @@
 \name{anova.TVGEV}
 \alias{anova.TVGEV}
 \title{Analysis of Deviance Table for two Nested \code{TVGEV}
-Objects}
+    Objects}
 \usage{
 \method{anova}{TVGEV}(object, object1, trace = 1L, ...)
 }
 \arguments{
-\item{object}{A \code{TVGEV} object as fitted by \code{\link{TVGEV}}.}
+\item{object}{A \code{TVGEV} object as fitted by
+\code{\link{TVGEV}}.}
 
-\item{object1}{A \code{TVGEV} object such that \code{object} is nested in
-\code{object1}.}
+\item{object1}{A \code{TVGEV} object such that \code{object} is
+nested in \code{object1}.}
 
-\item{trace}{Level of verbosity. The value \code{0} prints nothing.}
+\item{trace}{Level of verbosity. The value \code{0} prints
+nothing.}
 
 \item{...}{Not used yet.}
 }
 \value{
-An object of class "anova" inheriting from class "data.frame".
+An object of class \code{"anova"} inheriting from class
+    \code{"data.frame"}.
 }
 \description{
 Compute an analysis of deviance table for two nested \code{TVGEV}
@@ -26,12 +29,12 @@ objects.
 }
 \note{
 The deviance of the models can not be interpreted: only the
-difference of the deviance is used.
+    difference of the deviance is used.
 }
 \section{Caution}{
  The distribution of the test statistic
-(difference between two deviances) is obtained on the basis of the
-\emph{large sample theory} which may not be applicable.
+    (difference between two deviances) is obtained on the basis of
+    the \emph{large sample theory} which may not be applicable.
 }
 
 \examples{

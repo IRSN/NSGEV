@@ -2,13 +2,34 @@
 **NSGEV** Package News
 ===========================
 
+# New in version 0.1.8
+
+## Enhancements
+
+- For a `TVGEV` object, the `negLogLikFun` function now optionally
+  returns the hessian.
+  
+- New method `quantileMax` for the `"TVGEV"` class.
+
+- New methods `quantileMaxFun` and `cdfMaxFun` for the `"TVGEV"`
+  class.
+  
+- The vignettes of the **NSGEVVal** package are now included in
+  **NSGEV**.  The require technical functions from **NSGEVVal** are
+  now included in **NSGEV** as "internal" functions
+
+## Technical changes (non user-visible)
+ 
+- The NAMESPACE is now generated with **roxygen2**
+
+
 # News in version 0.1.7
 
 ## Bug fixes
 
-- The `TVGEV` function did not work when a constant location 
-  was specified along with a non-constant scale and/or shape. 
-  Thanks to Jesper Rydén.
+- The `TVGEV` function did not work when a constant location was
+  specified along with a non-constant scale and/or shape.  Thanks to
+  Jesper Rydén.
 
 # News in version 0.1.6
 

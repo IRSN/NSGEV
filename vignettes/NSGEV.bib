@@ -1,47 +1,42 @@
-%==================================================================================
+%===============================================================================
 @book{Coles_ExtremeValues,
-   author  = "S. Coles",
-   title   = "{An Introduction to Statistical Modelling of Extreme Values}",
+   author  = {Coles, Suart},
+   title   = {{An Introduction to Statistical Modelling of Extreme Values}},
    publisher = {Springer},
+   doi = {10.1007/978-1-4471-3675-0},
    year    = {2001}
 } 
-%==================================================================================
+%===============================================================================
 @book{EmbrechtsEtAl_Extremal,
-   author  = "P. Embrechts and C. Klüppelberg and T. Mikosch",
-   title   = "{Modelling Extremal Events for Insurance and Finance}",
+   author  = {Embrechts, Paul and Klüppelberg, Claudia and Mikosch, Thomas},
+   title   = {{Modelling Extremal Events for Insurance and Finance}},
    publisher = {Springer-Verlag},
-   year    = {1996}
+   year    = {1996},
+   doi = {10.1007/978-3-642-33483-2}
 } 
-%==================================================================================
-@article{StephesonGillerand_Software,
-   title   = "{Software for the Analysis of Extreme Events: the Current State 
-                and Future Directions}",
-   author  = "A.G. Stephenson and É. Gillerand",
-   journal = "Extremes",
-   volume  = "8",
-   year    = "2006", 
-   pages   = "87-109"}
-%==================================================================================
-@article{LangEtAl_Renouvellement,
-   title   = "{Échantillonnage par Valeurs Supérieures à un Seuil: 
-               Modélisation des Occurrences par la Méthode du Renouvellement}",
-   author  = "M. Lang  and P. Rasmussen  and G. Oberlin and B. Bobee",
-   journal = "Revue des Sciences de l'Eau",
-   volume  = "10",
-   number  = "3",
-   year    = "1997", 
-   pages   = "279-320"}
-%==================================================================================
-@book{BeirlangEtAl_StatOfExtreme,
-    title  = "{Statistics of Extremes. Theory and Applications}",
-    author = "J. Beirlant and Y. Goegebeur and J. Segers and J. Teugels", 
-    year   = "2004",
-    series = "Wiley series in Probability and Statistics",
-    publisher = "John Wiley"}
-%%=================================================================================
+%===============================================================================
+@article{StephesonGilleland_Software,
+   title   = {{Software for the Analysis of Extreme Events: the Current State 
+                and Future Directions}},
+   author  = {Stephenson Alec G. and Gilleland, Eric},
+   journal = {Extremes},
+   volume  = {8},
+   year    = {2006}, 
+   pages   = {87-109}
+   }
+%===============================================================================
+@book{BeirlantEtAl_StatOfExtremes,
+    title  = {{Statistics of Extremes. Theory and Applications}},
+    author = {{Beirlant, Jan and Goegebeur, Yuri and Segers, Johan and
+                  Teugels, Jozef}}, 
+    year   = {2004},
+    series = {Wiley series in Probability and Statistics},
+    publisher = {John Wiley}
+}
+%%==============================================================================
 @Article{RPack_evd,
-    title = "{evd: Extreme Value Distributions}",
-    author = "Stephenson, A.G.",
+    title = {{evd: Extreme Value Distributions}},
+    author = {Stephenson, Alec G.},
     journal = {R News},
     year = {2002},
     volume = {2},
@@ -49,75 +44,76 @@
     pages = {0},
     month = {June},
     url = {http://CRAN.R-project.org/doc/Rnews/}
-  }
-%%==============================================================
+ }
+%%==============================================================================
 @Manual{RPack_ismev,
-    title = "{ismev: An Introduction to Statistical Modeling of Extreme Values}",
-    author = "Heffernan, J.E., and Stephenson, A.G.",
+    title = {{ismev: An Introduction to Statistical Modeling of
+                  Extreme Values}},
+    author = {Heffernan, Janet E. and Stephenson, Alec G.},
     year = {2012},
     note = {R package version 1.39. Original S functions by
                   J.E. Heffernan and R port and R documentation files
                   by A. Stephenson.},
-    url = {http://www.ral.ucar.edu/~ericg/softextreme.php}
-  }
-%%===============================================================
-  @Manual{RPack_evdbayes,
-    title = {evdbayes: Bayesian Analysis in Extreme Value Theory},
-    author = "A.G. Stephenson and Ribatet, M.",
-    year = {2008},
-    note = "{R package version 1.0-7}",
-  }
-%%===============================================================
-  @Manual{RPack_POT,
-    title = "{POT: Generalized Pareto Distribution and Peaks Over Threshold}",
-    author = "Ribatet, M.",
-    year = {2009},
-    note = "{R package version 1.1-0}",
-    url = {http://CRAN.R-project.org/package=POT}
-  }
-%%================================================================
- @Manual{RPack_nsRFA,
-    title = {nsRFA: Non-supervised Regional Frequency Analysis},
-    author = "A. Viglione",
-    year = {2009},
-    note = {R package version 0.6-9},
-    url = {http://CRAN.R-project.org/package=nsRFA}
-  }
+    url = {https://CRAN.R-project.org/package=ismev}
+}
 %%==============================================================================
-  @Manual{RManual_RLanguage,
+@Manual{RPack_evdbayes,
+    title = {evdbayes: Bayesian Analysis in Extreme Value Theory},
+    author = {Stephenson, Alec G. and Ribatet, Mathieu},
+    year = {2023},
+    note = {{R package version 1.1-3}},
+}  
+%%==============================================================================
+@Manual{RPack_POT,
+    title = {{POT: Generalized Pareto Distribution and Peaks Over Threshold}},
+    author = {Ribatet, Mathieu and Dutang, Christophe},
+    year = {2022},
+    note = {{R package version 1.1-10}},
+    url = {http://CRAN.R-project.org/package=POT}
+}
+%%==============================================================================
+@Manual{RPack_nsRFA,
+    title = {nsRFA: Non-supervised Regional Frequency Analysis},
+    author = {{Viglione, Alberto}},
+    year = {2020},
+    note = {R package version 0.7-15},
+    url = {http://CRAN.R-project.org/package=nsRFA}
+}
+%%==============================================================================
+@Manual{RManual_RLanguage,
     title = {R: A Language and Environment for Statistical Computing},
     author = {{R Development Core Team}},
-    organization = "{R Foundation for Statistical Computing}",
+    organization = {{R Foundation for Statistical Computing}},
     address = {Vienna, Austria},
-    year = {2010},
-    note = {{ISBN} 3-900051-07-0},
+    year = {2022},
     url = {http://www.R-project.org}
-  }
+}
 %===============================================================================
 @article{DavisonSmith_ExceedHighThresholds,
-   title   = "{Models for Exceedances over High Thresholds}",
-   author  = "A.C. Davison and R.L. Smith",
-   journal = "J.R. Statist. Soc. B",
-   volume  = "52",
-   number  = "3",
-   year    = "1990", 
-   pages   = "393-442"}
-%==================================================================================
+   title   = {{Models for Exceedances over High Thresholds}},
+   author  = {Davison, Anthony C. and Richard L. Smith},
+   journal = {J.R. Statist. Soc. B},
+   volume  = {52},
+   number  = {3},
+   year    = {1990}, 
+   pages   = {393-442}}
+%===============================================================================
 @book{MillardNeerchal_EnvStat,
    author  = "S.P. Millard and N.K. Neerchal ",
    title   = {Environmental Statistics with S-Plus},
    publisher = {CRC Press},
    year    = {2001}
 } 
-%==================================================================================
+%===============================================================================
 @book{Davison_StatModels,
-   title   = "{Statistical Models}",
-   author  = "A.C. Davison",
-   year    = "2003", 
-   series  = "Cambridge Series in Statistical and Probabilistic Mathematics",
-   publisher = "Cambridge University Press"
+   title   = {{Statistical Models}},
+   author  = {Davison, Anthony C.},
+   year    = {2003}, 
+   series  = {Cambridge Series in Statistical and Probabilistic Mathematics},
+   publisher = {Cambridge University Press},
+   doi = {10.1017/CBO9780511815850}
 }
-%==================================================================================
+%===============================================================================
 @article{FawcettWalshaw_Wind,
    author = "L. Fawcett and D. Walshaw", 
    year = "2006", 
@@ -128,70 +124,72 @@
    pages = "631--64",
    doi = "10.1111/j.1467-9876.2006.00557.x"
 }
-%==========================================================================
+%==============================================================================
 @article{NogajEtAl_NSEV,
-   author = "M. Nogaj and S. Parey and D. Dacuhna-Castelle",
-   journal = "Nonlinear Processes in Geophysics",
-   pages = "305--316",
-   title = "Non-stationary Extreme Models and a Climatic Application",
-   volume = "14",
-   year = "2007"
+    author = {Nogaj, Marta and Parey, Sylvie and Dacuhna-Castelle, Didier},
+    journal = {{Nonlinear Processes in Geophysics}},
+    pages = {305--316},
+    title = {{Non-stationary Extreme Models and a Climatic Application}},
+    volume = {14},
+    year = {2007}
 }
-%==========================================================================
+%==============================================================================
 @phdthesis{Kallache_TrendEV,
-   author = "M. Kallache",
-   school = "Univer. Bayreuth",
-   title = "Trends an Extreme Values of River Discharge Time Series", 
-   year = "2007"
+    author = {{Kallache, Malaak}},
+    school = {Univer. Bayreuth},
+    title = {{Trends and Extreme Values of River Discharge Time Series}}, 
+    year = {2007}
 }
-%%=========================================================================
-@Article{RPack_extRemes,
-    title = {New Software to Analyze how Extremes Change over Time},
-    author = "Gilleland, E., and Katz, R.W.",
+%%=============================================================================
+@Article{RPack_extRemes0,
+    title = {{New Software to Analyze how Extremes Change over Time}},
+    author = {Gilleland, Eric and Katz, Richard W.},
     journal = {Eos},
     year = {2011},
     volume = {92},
     number = {2},
     pages = {13--14},
-  }
-%%==========================================================================
-@book{DaleyVereJones_PointProcess,
-  author = {D.J. Daley and D. Vere-Jones},
-  title = "{An Introduction to the Theory of Point Processes}",
-  publisher = {Springer},
-  series = {Springer Series in Statistics},
-  year = {1988}
+    doi = {10.1029/2011EO020001}
 }
-%%================================================================
+%%=============================================================================
+@book{DaleyVereJones_PointProcess,
+    author = {D.J. Daley and D. Vere-Jones},
+    title = {{An Introduction to the Theory of Point Processes}},
+    publisher = {Springer},
+    series = {Springer Series in Statistics},
+    year = {1988},
+    doi = {10.1007/b97277}
+}
+%%=============================================================================
  @misc{Smith_Regional,
-    title = "{Regional Estimation from Spatially Dependent Data}",
-    author = "R.L. Smith",
+    title = {{Regional Estimation from Spatially Dependent Data}},
+    author = {Richard L. Smith},
     year = {1990},
-    howpublished = "{University of North Carolina}",
+    howpublished = {{University of North Carolina}},
     url = "{http://www.stat.unc.edu/postscript/rs/regest.pdf}"
   }
-%%==========================================================================
+%%============================================================================
 @article{LeadbetterRootzen_EVStochProcess,
-  author = {M.R. Leadbetter and R. Rootzén},
-  pages = {431-478},
-  title = "{Extremal Theory for Stochastic Processes}",
-  journal = {The Annals of Probability},
-  year = {1988},
-  volume = {16},
-  number = {2}
+    author = {M.R. Leadbetter and R. Rootzén},
+    pages = {431-478},
+    title = "{Extremal Theory for Stochastic Processes}",
+    journal = {The Annals of Probability},
+    year = {1988},
+    volume = {16},
+    number = {2}
 }
-%%==================================================================================
+%%============================================================================
 @article{ChavezDavison_TS,
-   author = {V. Chavez-Demoulin and A.C. Davison},
-   journal = {REVSTAT-Statistical Journal},
-   number = 1,
-   pages = {109--133},
-   timestamp = {2014-07-07T16:44:52.000+0200},
-   title = "{Modelling Time-Series Extremes}",
-   volume = 10,
-   year = 2012
+    author = {V. Chavez-Demoulin and A.C. Davison},
+    journal = {REVSTAT-Statistical Journal},
+    number = 1,
+    pages = {109--133},
+    timestamp = {2014-07-07T16:44:52.000+0200},
+    title = "{Modelling Time-Series Extremes}",
+    volume = 10,
+    year = 2012
 }
-%%====================================================================================
+%%============================================================================
 @article{EfronHinkley_FisherInfo,
     author = {B. Efron and D.V. Hinkley},
     journal = {Biometrika},
@@ -201,22 +199,22 @@
     pages = {457--483},
     posted-at = {2009-02-24 02:02:21},
     priority = {2},
-    title = "{Assessing the Accuracy of the Maximum Likelihood Estimator: 
-        Observed Versus Expected Fisher Information}",
+    title = {{Assessing the Accuracy of the Maximum Likelihood Estimator: 
+        Observed Versus Expected Fisher Information}},
     url = {http://dx.doi.org/10.1093/biomet/65.3.457},
     volume = {65},
     year = {1978}
 }
-%%====================================================================================
+%%===========================================================================
 @phdthesis{Cao_FisherInfo,
-   author = "X. Cao",
-   school = "Univer. John Hopkins",
-   title = "{Relative Performance of Expected and Observed Fisher
-             Information in Covariance Estimation for Maximum
-             Likelihood Estimates}", 
-   year = "2013"
+    author = "X. Cao",
+    school = "Univer. John Hopkins",
+    title = "{Relative Performance of Expected and Observed Fisher
+              Information in Covariance Estimation for Maximum
+              Likelihood Estimates}", 
+    year = "2013"
 }
-%%====================================================================================
+%%===========================================================================
 @Manual{RPack_fExtremes,
     title = {fExtremes: Rmetrics - Extreme Financial Market Data},
     author = "Wuertz, D., and many others",
@@ -224,7 +222,7 @@
     note = {R package version 3010.81},
     url = {http://CRAN.R-project.org/package=fExtremes}
   }  
-%%=====================================================================================
+%%===========================================================================
 @Manual{RPack_evir,
     title = "{evir: Extreme Values in R}",
     author = "Pfaff, B., and McNeil, A.",
@@ -232,17 +230,17 @@
     note = {R package version 1.7-3},
     url = {http://CRAN.R-project.org/package=evir}
   } 
-%%======================================================================================
+%%===========================================================================
 @Book{RPack_EnvStats,
-    title = "{EnvStats:  An R Package for Environmental Statistics}",
-    author = "Millard, S.P.",
+    title = {{EnvStats:  An R Package for Environmental Statistics}},
+    author = {Millard, Steven P.},
     year = {2013},
     publisher = {Springer},
     address = {New York},
     isbn = {978-1-4614-8455-4},
     url = {http://www.springer.com},
-  }
-%%======================================================================================
+}
+%%===========================================================================
 @article{GillelandEtAl_EVSoftReview,
     year = {2013},
     issn = {1386-1999},
@@ -250,16 +248,15 @@
     volume = {16},
     number = {1},
     doi = {10.1007/s10687-012-0155-0},
-    title = "{A Software Review for Extreme Value Analysis}",
-    url = {http://dx.doi.org/10.1007/s10687-012-0155-0},
+    title = {{A Software Review for Extreme Value Analysis}},
     publisher = {Springer US},
     keywords = {Extreme value theory; Software development; Spatial
                   extremes; Statistical computing},
-    author = {É. Gilleland and M. Ribatet and A.G. Stephenson},
+    author = {{Gilleland, Eric and Ribatet, Mathieu and Stephenson, Alec G.}},
     pages = {103-119},
     language = {English}
 }
-%%========================================================================================
+%%===========================================================================
 @Misc{RPack_evmix,
     title = "{evmix: Extreme Value Mixture Modelling, Threshold
                   Estimation and Boundary Corrected Kernel Density
@@ -270,7 +267,7 @@
     url = {http://www.math.canterbury.ac.nz/~c.scarrott/evmix},
     institution = {University of Canterbury, New Zealand},
   }
-%%========================================================================================
+%%==========================================================================
 @article{ScarrottMacDonald_ThresholdChoice,
     title = "{A Review of Extreme Value Threshold Estimation
              and Uncertainty Quantification}", 
@@ -281,7 +278,7 @@
     year = {2012},
     pages = {33--60}
   }  
-%%========================================================================================
+%%==========================================================================
 @Manual{RPack_condmixt,
     title = "{condmixt: Conditional Density Estimation with Neural
                   Network Conditional Mixtures}",
@@ -306,106 +303,115 @@
     note = {R package version 2.0-2},
     url = {http://CRAN.R-project.org/package=SpatialExtremes},
   }
-%%====================================================================================
+%%==============================================================================
 @article{Kysely_Bootstrap,
-   author = "{Kysèly J.}",
-   title = "{A Cautionary Note on the Use of Nonparametric Bootstrap for Estimating 
-           Uncertainties in Extreme Value Models}",
-   journal = "Journal of Applied Meteorology and Climatology",
-   volume = "47", 
-   year = "2008", 
-   pages = "3236--3251"
+    author = {{Kysèly Jan}},
+    title = {{A Cautionary Note on the Use of Nonparametric Bootstrap
+                  for Estimating Uncertainties in Extreme Value
+                  Models}},
+    journal = {Journal of Applied Meteorology and Climatology},
+    volume = {47}, 
+    year = {2008}, 
+    pages = {3236--3251},
+    doi = {10.1175/2008JAMC1763.1}
 }  
-%%====================================================================================
+%%=============================================================================
 @article{Tajvidi_ConfIntGPD,
-   author = "{Tajvidi, N.}",
-   title = "{Confidence Intervals and Accuracy Estimation for
-                  Heavy-tailed Generalized Pareto Distribution}",
-   journal = "Extremes",
-   volume = "6", 
-   year = "2003", 
-   pages = "111--123"
+    author = {Tajvidi, Nader},
+    title = {{Confidence Intervals and Accuracy Estimation for
+                  Heavy-tailed Generalized Pareto Distribution}},
+    journal = {Extremes},
+    volume = {6}, 
+    year = {2003}, 
+    pages = {111--123},
+    doi = {10.1023/B:EXTR.0000025662.09067.3b}
 }  
-%%====================================================================================
+%%=============================================================================
 @article{ColesSimiu_UncertaintyEV,
-   author = "{Coles, S. and Simiu E.}",
-   title = "{Estimating Uncertainty in the Extreme Value
-       Analysis of Data Generated by a Hurricane Simulation Model}",
-   journal = "Journal of Engineering Mechanics",
-   volume = "", 
-   year = "2003", 
-   pages = "1288--1294"
+    author = {{Coles, Stuart and Simiu, Emil}},
+    title = {{Estimating Uncertainty in the Extreme Value
+        Analysis of Data Generated by a Hurricane Simulation Model}},
+    journal = {Journal of Engineering Mechanics},
+    volume = {}, 
+    year = {2003},
+    doi = {10.1061/(ASCE)0733-9399(2003)129:11(1288)},
+    pages = {1288--1294}
 }  
-%%====================================================================================
+%%===============================================================================
 @article{ChavezDemoulin_Davison,
-   affiliation = {EPFL},
-   author      = "{Chavez-Demoulin, V. and Davison, A. C.}",
-   journal     = "{Applied Statistics}",
-   pages       = "207--222",
-   title       = "{Generalized Additive Models for Sample Extremes}",
-   unit        = {STAT},
-   volume      = {54},
-   year        = 2005
+    affiliation = {EPFL},
+    author = {{Chavez-Demoulin, Valerie and Davison, Anthony C.}},
+    journal = {{Applied Statistics}},
+    pages = {207--222},
+    title = {{Generalized Additive Models for Sample Extremes}},
+    volume = {54},
+    year= 2005
 }
-%==================================================================================
+%===============================================================================
 @book{DeyYan_EVMRA2016,
-   author  = "{Dey D.K. and Yan J. (ed.)}",
-   title   = "{Extreme Value Modeling and Risk Analysis}",
-   publisher = {Chapman \& HAll},
-   year    = {2016}
+    author  = {{Dey, Dipak K. and Yan, Jun (ed.)}},
+    title   = {{Extreme Value Modeling and Risk Analysis}},
+    publisher = {Chapman \& HAll},
+    year    = {2016}
 } 
-%==================================================================================
+%===============================================================================
 @book{AghaKouchakEtAl_ExtChangeClim,
-   author  = "{AghaKouchak A. and Easterling D. and Hsu K. and Schubert S.
-              and Sorooshian S. (ed.)}",
-   title   = "{Extremes in a Changing Climate: Detection, Analysis and Uncertainty}",
-   publisher = {Springer},
-   year    = {2012}
+    author  = {{AghaKouchak, Amir and Easterling, David and Hsu, Kuolin
+                   and Schubert, Sigfried and Sorooshian, Soroosh (ed.)}},
+    title   = {{Extremes in a Changing Climate: Detection, Analysis and
+                 Uncertainty}},
+    publisher = {Springer},
+    doi = {10.1007/978-94-007-4479-0},
+    year    = {2012}
 } 
 %===================================================================================
 @article{EastoeTawn_NSEV2009,
-   author = "{Eastoe E.F. and Tawn J.A.}",
-   journal = "{Applied Statistics}",
-   pages = "25-45",
-   title = "{Modelling Non-Stationary Extremes with Application to
-                  Surface Level Ozone}",
-   volume = {58},
-   year = 2009
+    author = "{Eastoe E.F. and Tawn J.A.}",
+    journal = "{Applied Statistics}",
+    pages = "25-45",
+    title = "{Modelling Non-Stationary Extremes with Application to
+                   Surface Level Ozone}",
+    volume = {58},
+    year = 2009
 }
 %%================================================================
 @misc{Katz_RetLev2008,
-    title = "{Extending the Concepts of Return Period and Return Level
-              to a Changing Climate}",
-    author = "{Katz, R.}",
+    title = {{Extending the Concepts of Return Period and Return Level
+              to a Changing Climate}},
+    author = {{Katz, Richard}},
     year = {2008},
-    howpublished = "{Workshop on Precipitation Intensity Estimates in a 
-                     Changing Climate, National Climatic Data. Available 
-                     as \url{www.isse.ucar.edu/staff/katz/docs/pdf/ncdckatz.pdf}}",
-    url = "{www.isse.ucar.edu/staff/katz/docs/pdf/ncdckatz.pdf}"
+    howpublished = {{Workshop on Precipitation Intensity Estimates in
+                  a Changing Climate, National Climatic
+                  Data. Available as
+                  \url{www.isse.ucar.edu/staff/katz/docs/pdf/ncdckatz.pdf}}},
+    url = {www.isse.ucar.edu/staff/katz/docs/pdf/ncdckatz.pdf}
 }
-%===================================================================================
+%===============================================================================
 @article{ChenEtAl_NSEVAExtChange2014,
-   author      = "{Cheng L. and AghaKouchak A. and Gilleland E. and Katz R.W.}",
-   journal     = "{Climatic Change}",
-   pages       = "353--369",
-   title       = "{Non-Stationary Extreme Value Analysis in a Changing Climate}",
-   volume      = {127},
-   number      = {2},
-   year        = 2014
+    author = {{Cheng, Linyin and AghaKouchak, Amir and Gilleland, Eric
+                  and Katz, Richard W.}},
+    journal = {{Climatic Change}},
+    pages = {353--369},
+    title = {{Non-Stationary Extreme Value Analysis in a Changing Climate}},
+    volume = {127},
+    number = {2},
+    year = 2014,
+    doi = {10.1007/s10584-014-1254-5}
 }
-%%==============================================================
+%%==============================================================================
 @Article{RPack_nloptr,
-    title = "{nloptr: R interface to NLopt}",
+    title = {{nloptr: R interface to NLopt}},
     author = "{Ypma J.}",
     year = {2012},
     note = {R package version 1.04.},
     url = {http://CRAN.R-project.org/package=nloptr}
   }
-%%==============================================================
+%%==============================================================================
 @article{PareyEtAl_DifRetLev,
-    author = "{Parey S. and Hoang T.T.H. and Dacunha-Castelle D.}",
-    title = "{Different Ways to Compute Temperature Return Levels in the 
-              Climate Change Context}",
+    author = {{Parey, Sylvie and Hoang, Thi Thu Huong and
+                  Dacunha-Castelle, Didier}},
+    title = {{Different Ways to Compute Temperature Return Levels in the 
+              Climate Change Context}},
     journal = {Environmetrics}, 
     volume = {21},
     number = {7-8},
@@ -413,47 +419,40 @@
     issn = {1099-095X},
     doi = {10.1002/env.1060},
     pages = {698--718},
-    keywords = {climate change, extreme value theory, trends, extrapolation, return level},
     year = {2010},
 }  
-%%==============================================================
+%%==============================================================================
 @article{DacunhaEtAl_AirTemp,
-    author = "{Dacunha-Castelle D. and Hoang T.T.H. and Parey S.}",
-    title = "{Modeling of Air Temperatures: Preprocessing and Trends, 
-             Reduced Stationary Process, Extremes, Simulation}",
-    journal = "J. SFdS", 
-    volume = "156",
-    number = "1",
-    year = "2013"
+    author = {{Dacunha-Castelle, Didier and Hoang, Thi Thu Huong and
+                  Parey, Sylvie}},
+    title = {{Modeling of Air Temperatures: Preprocessing and Trends, 
+             Reduced Stationary Process, Extremes, Simulation}},
+    journal = {Journal de la Société Française de Statistique}, 
+    volume = {156},
+    number = {1},
+    year = {2013}
 }
-%%==============================================================
+%%==============================================================================
 @Book{RPack_ggplot2,
     author = {Wickham, Hadley},
-    title = "{{ggplot2}: Elegant Graphics for Data Analysis}",
+    title = {{{ggplot2}: Elegant Graphics for Data Analysis}},
     publisher = {Springer-Verlag New York},
     year = {2016},
     isbn = {978-3-319-24277-4},
-    url = {https://ggplot2.tidyverse.org},
+    doi = {10.1007/978-0-387-98141-3},
+    url = {https://ggplot2.tidyverse.org}
 }
-%%==============================================================
+%%==============================================================================
 @Article{RPack_reshape,
-    author = "Wickham, H.",
-    journal = "{Journal of Statistical Software}",
+    author = {Wickham, Hadley},
+    journal = {{Journal of Statistical Software}},
     number = {12},
-    title = "Reshaping data with the reshape package",
-    url = {http://www.jstatsoft.org/v21/i12/paper},
+    title = {{Reshaping Data with the {reshape} Package}},
+    doi = {10.18637/jss.v021.i12},
     volume = {21},
     year = {2007},
 } 
-%%==============================================================
-@Manual{RPack_XML,
-    title = "{XML: Tools for Parsing and Generating XML Within R and S-Plus}",
-    author = "Temple Lang, D., and the CRAN Team",
-    year = {2016},
-    note = {R package version 3.98-1.4},
-    url = {https://CRAN.R-project.org/package=XML},
- }
-%%==============================================================
+%%==============================================================================
  @Manual{RPack_RColorBrewer,
     title = "{RColorBrewer: ColorBrewer Palettes}",
     author = "Neuwirth, E.",
@@ -461,24 +460,26 @@
     note = {R package version 1.1-2},
     url = {https://CRAN.R-project.org/package=RColorBrewer},
   }
-%%===============================================================
+%%==============================================================================
 @Manual{RPack_knitr,
-    author = "Xie, Y.",
-    year = {2016},
-    title = "{knitr: A General-Purpose Package for Dynamic Report Generation in R}",
-    note = "{R package version 1.13}"
+    author = {Xie, Yhui},
+    year = {2023},
+    title = {{knitr: A General-Purpose Package for Dynamic Report
+              Generation in R}},
+    note = {{R package version 1.42}}
 }   
-%%================================================================
+%%==============================================================================
 @Manual{RPack_rmarkdown,
-    title = "{rmarkdown: Dynamic Documents for R}",
-    author = "Allaire, J.J., and Cheng, J., and Xie, Y. and McPherson, J.,
-        and Chang, W.  and Allen, J. and Wickham, H., and Atkins, A., 
-        and Hyndman, R.",
-    year = {2016},
-    note = "{R package version 0.9.6}",
-    url = {https://CRAN.R-project.org/package=rmarkdown}
+    title = {{rmarkdown: Dynamic Documents for R}},
+    author = {{Allaire, Joseph J. and Xie, Yhui and McPherson, Jonathan and
+                  Luraschi, Javier and Ushey, Kevin and Atkins, Aron
+                  and Wickham, Hadley and Cheng, Joe and Chang, Winston
+                  and Iannone, Richard}},
+    year = {2023},
+    note = {{R package version 2.20}},
+    url = {https://rmarkdown.rstudio.com}
 }
-%%=================================================================== 
+%%============================================================================= 
 @Manual{RPack_xtable,
     title = "{xtable: Export Tables to LaTeX or HTML}",
     author = "Dahl, D.B.",
@@ -488,54 +489,58 @@
   }
 %%=================================================================== 
 @article{PanagouliaEtAl_NonStationaryGEV,
-   author = "Panagoulia, D. and Economou, P. and Caroni, C.",
-   title = "{Stationary and Nonstationary Generalized Extreme Value 
-             Modelling of Extreme Precipitation over a Mountainous 
-             Area under Climate Change}",
-   journal = {Environmetrics},
-   volume = {25},
-   number = {1},
-   pages = {29-43},
-   doi = {10.1002/env.2252},
-   year = {2014}
+    author = {Panagoulia, Dionysia and Economou, Polychronis and
+                  Caroni, Chrysseis},
+    title = {{Stationary and Nonstationary Generalized Extreme Value 
+              Modelling of Extreme Precipitation over a Mountainous 
+              Area under Climate Change}},
+    journal = {Environmetrics},
+    volume = {25},
+    number = {1},
+    pages = {29-43},
+    doi = {10.1002/env.2252},
+    year = {2014}
 }
 %%=============================================================================
 @article{pack_evd,
-   title = "{evd: Extreme Value Distributions}",
-   author = "Stephenson, A.G.",
-   journal = {R News},
-   year = {2002},
-   volume = {2},
-   number = {2},
-   pages = {0},
-   month = {June},
-   url = {https://CRAN.R-project.org/doc/Rnews/}
+    title = "{evd: Extreme Value Distributions}",
+    author = "Stephenson, A.G.",
+    journal = {R News},
+    year = {2002},
+    volume = {2},
+    number = {2},
+    pages = {0},
+    month = {June},
+    url = {https://CRAN.R-project.org/doc/Rnews/}
 }
 %%=============================================================================  
 @article{pack_extRemes,
-   title = "{extRemes 2.0: An Extreme Value Analysis Package in R}",
-   author = "Gilleland, E. and Katz, R.W.",
-   journal = {Journal of Statistical Software},
-   year = {2016},
-   volume = {72},
-   number = {8},
-   pages = {1--39}
+    title = {{extRemes 2.0: An Extreme Value Analysis Package in R}},
+    author = {Gilleland, Eric and Katz, Richard W.},
+    journal = {Journal of Statistical Software},
+    year = {2016},
+    volume = {72},
+    number = {8},
+    pages = {1--39},
+    doi = {10.18637/jss.v072.i08}
 }  
 %%=============================================================================
 @Manual{pack_ismev,
-   title = "{ismev: An Introduction to Statistical Modeling of Extreme Values}",
-   author = "{Heffernan, J.E. and Stephenson A.G.}",
-   year = {2018},
-   note = {R package version 1.42},
-   url = {https://CRAN.R-project.org/package=ismev}
+    title = {{ismev: An Introduction to Statistical Modeling of
+                  Extreme Values}},
+    author = {Heffernan, Janet E. and Stephenson, Alec G.},
+    year = {2018},
+    note = {R package version 1.42},
+    url = {https://CRAN.R-project.org/package=ismev}
 }
 %%=============================================================================
-@article{pack_lubridate,
-    title = "{Dates and Times Made Easy with lubridate}",
-    author = "{Grolemund, G. and Wickham, H.}",
+@Article{pack_lubridate,
+    title = {Dates and Times Made Easy with {lubridate}},
+    author = {Grolemund, Garett and Wickham, Hadley},
     journal = {Journal of Statistical Software},
     year = {2011},
     volume = {40},
     number = {3},
-    pages = {1--25}
+    pages = {1--25},
+    doi = {10.18637/jss.v040.i03}
   }

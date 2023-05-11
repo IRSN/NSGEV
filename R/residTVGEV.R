@@ -22,7 +22,16 @@
 ##' @references Cox, D.R. and Snell E.J. (1968) "A General Definition
 ##' of Residuals".  \emph{JRSS Ser. B}, \bold{30}(2), pp. 248-275.
 ##'
+##' Panagoulia, D. and Economou, P. and Caroni, C. (2014)
+##' "Stationary and Nonstationary Generalized Extreme Value Modelling of
+##'  Extreme Precipitation over a Mountainous Area under Climate Change".
+##' \emph{Environmetrics} \bold{25}(1), pp. 29-43.
+##' 
+##'
 ##' @importFrom nieve pGEV
+##' @importFrom stats residuals resid
+##' @method residuals TVGEV
+##' @export
 ##' 
 ##' @examples
 ##' df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))
@@ -73,6 +82,9 @@ residuals.TVGEV <- function(object,
 ##' @return Nothing.
 ##'
 ##' @seealso \code{\link{residuals.TVGEV}}.
+##'
+##' @method plot resid.TVGEV
+##' @export
 ##' 
 plot.resid.TVGEV <- function(x, y = NULL, ...) {
 

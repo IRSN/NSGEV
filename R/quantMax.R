@@ -3,7 +3,8 @@
 ##' 
 ##' @title Quantile of a Random Maximum
 ##' 
-##' @param object An fitted model such as crated by \code{\link{TVGEV}}.
+##' @param object An fitted model such as created by using
+##'     \code{\link{TVGEV}}.
 ##' 
 ##' @param ... Arguments for methods.
 ##' 
@@ -24,10 +25,10 @@ quantMax <- function(object, ...) {
 ##' assumed to be independent the distribution function of \eqn{M^\star}
 ##' is
 ##' \deqn{
-##'    F_{M^\star}(m^\star) = \prod_{b} F_{\texttt{GEV}}(m^\star; \,
+##'    F_{M^\star}(m^\star; \, \boldsymbol{\psi}) = \prod_{b} F_{\texttt{GEV}}(m^\star; \,
 ##'    \boldsymbol{\theta}_b)
-##' }{F_M(m) = prod_b F_GEV(m; \theta_b)}
-##' and this distribution function depnds on the vector
+##' }{F_M(m; psi) = prod_b F_GEV(m; \theta_b)}
+##' and this distribution function depends on the vector
 ##' \eqn{\boldsymbol{\psi}}{\psi} of the model parameters via
 ##' \eqn{\boldsymbol{\theta}_b(\boldsymbol{\psi})}{\theta_b(\psi)}.
 ##' For a given probability \eqn{p}, the corresponding quantile
@@ -52,9 +53,12 @@ quantMax <- function(object, ...) {
 ##' 
 ##' @param level The confidence level.
 ##' 
+##' @param psi Optional vector of coefficients. \bold{Caution} not
+##'     tested yet.
+##' 
 ##' @param confintMethod Character indicating the method to be used
 ##'     for the confidence intervals on the quantiles.
-##'
+##' 
 ##' @param out Character indicating what type of object will be
 ##'     returned. When \code{out} is \code{"data.frame"} the output
 ##'     actually has the (S3) class \code{"quantMax.TVGEV"} inheriting
@@ -62,6 +66,8 @@ quantMax <- function(object, ...) {
 ##' 
 ##' @param trace Integer level of verbosity.
 ##' 
+##' @param ... Not used.
+##'
 ##' @return An object with its class depending on the value of
 ##'    \code{out}.
 ##' 
@@ -79,24 +85,29 @@ quantMax <- function(object, ...) {
 ##'   } 
 ##'
 ##' @method quantMax TVGEV
-##' 
+##'
 ##' @export 
 ##'
 ##' @examples
-##' example(TVGEV)
-##' qM1 <- quantMax(res2, level = c(0.95, 0.70))
-##' qM2 <- quantMax(res2,
+##' df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))
+##' ## fit a TVGEV model. Only the location parameter is TV.
+##' res <- TVGEV(data = df, response = "TXMax", date = "Date",
+##'              design = breaksX(date = Date, breaks = "1970-01-01", degree = 1),
+##'              loc = ~ t1 + t1_1970)
+##' qM1 <- quantMax(res, level = c(0.95, 0.70))
+##' qM2 <- quantMax(res,
 ##'                 date = as.Date(sprintf("%4d-01-01", 2025:2055)),
 ##'                 level = c(0.95, 0.70))
+##' qM2
 quantMax.TVGEV <- function(object,
                            prob,
                            date = NULL,
                            level = 0.95,
                            psi = NULL,
                            confintMethod = "delta",
-                           deriv = FALSE,
                            out = c("data.frame", "array"),
-                           trace = 1L) {
+                           trace = 1L,
+                           ...) {
     
     DEBUG <- FALSE
     
@@ -121,7 +132,7 @@ quantMax.TVGEV <- function(object,
     ## take into account the order. 
     indLevel <- order(level)
     level <- level[indLevel]
-    fLevel <- NSGEV:::formatLevel(level)
+    fLevel <- formatLevel(level)
     nLevel <- length(level)
    
     if (!is(object, "TVGEV")) {
@@ -137,16 +148,13 @@ quantMax.TVGEV <- function(object,
     ## rows of a matrix with 3 columns.
     ## =========================================================================
     
-    theta <- psi2theta(model = object, psi = psi, date = date, deriv = deriv,
+    theta <- psi2theta(model = object, psi = psi, date = date, deriv = FALSE,
                        checkNames = FALSE)
     
     nd <- nrow(theta)
-    
-    ## SOG: Save Our Gradient
-    if (deriv) dtheta_dpsi <- attr(theta, "gradient")
 
     if (!all(object$isCst)) {
-        L <- NSGEV:::modelMatrices.TVGEV(object, date = date)
+        L <- modelMatrices.TVGEV(object, date = date)
         X <- L$X
     } else X <- NULL
     
@@ -284,4 +292,246 @@ quantMax.TVGEV <- function(object,
     
     Quant
         
+}
+
+
+
+# *****************************************************************************
+##' Find a lower bound for the quantile of the random maximum. The
+##' distribution function of the maximum is the product of the
+##' marginal (GEV) distributions functions for the blocks over which
+##' the maximum is defined. By selecting the smallest GEV shape, the
+##' smallest scale and the smallest location, we get a GEV
+##' distribution which is smaller in stochastic order than all the
+##' marginal GEV distributions. We can take the bound as the quantile
+##' of this GEV distribution corresponding to the probability
+##' \eqn{p^{1/n^\star}}{p^(1/ nStar)}, where \eqn{n^\star}{nStar} is
+##' the number of blocks.
+##' 
+##' @title Upper Bound for the Quantile of the Random Maximum using a
+##'     \code{"TVGEV"} object.
+##' 
+##' @param theta a numeric matrix containing the GEV "theta"
+##'     parameters. It must have 3 columns corresponding for
+##'     \emph{location} \eqn{\mu}, \emph{scale} \eqn{\sigma} and
+##'     \emph{shape} \eqn{\xi} is that order.
+##' 
+##' @param p A probability.
+##' 
+##' @keyword internal
+##' @export
+##' 
+.qMin.TVGEV <- function(theta, p) {
+    if (ncol(theta) != 3) {
+        stop("'theta' must be a numeric matrix with three columns")
+    }
+    n <- nrow(theta)
+    shapeMin <- min(theta[ , "shape"])
+    scaleMin <- min(theta[ , "scale"])
+    locMin <- min(theta[ , "loc"])
+    nieve::qGEV(p = p^(1 / n), loc = locMin, scale = scaleMin, shape = shapeMin)
+}
+
+## *****************************************************************************
+##' Find an upper bound for the quantile of the random maximum. The
+##' distribution function of the maximum is the product of the
+##' marginal (GEV) distributions functions for the blocks over which
+##' the maximum is defined. By selecting the largest GEV shape, the
+##' largest scale and the largest location, we get a GEV distribution
+##' which is larger in stochastic order than all the marginal GEV
+##' distributions. We can take the bound as the quantile of this GEV
+##' distribution corresponding to the probability
+##' \eqn{p^{1/n^\star}}{p^(1/ nStar)}, where \eqn{n^\star}{nStar} is
+##' the number of blocks.
+##' 
+##' @title Upper Bound for the Quantile of the Random Maximum using a
+##'     \code{"TVGEV"} object.
+##' 
+##' @param theta a numeric matrix containing the GEV "theta"
+##'     parameters. It must have 3 columns corresponding for
+##'     \emph{location} \eqn{\mu}, \emph{scale} \eqn{\sigma} and
+##'     \emph{shape} \eqn{\xi} is that order.
+##' 
+##' @param p A probability.
+##'
+##' @keyword internal
+##' @export
+##' 
+.qMax.TVGEV <- function(theta, p) {
+    if (ncol(theta) != 3) {
+        stop("'theta' must be a numeric matrix with three columns")
+    }
+    n <- nrow(theta)
+    shapeMax <- max(theta[ , "shape"])
+    scaleMax <- max(theta[ , "scale"])
+    locMax <- max(theta[ , "loc"])
+    nieve::qGEV(p = p^(1 / n),
+                loc = locMax, scale = scaleMax, shape = shapeMax)
+}
+
+## *****************************************************************************
+##' Given an object with class \code{"TVGEV"} and a collection of time
+##' blocks (or period) defined by \code{date}, the distribution of the
+##' random maximum over the period \eqn{M^\star := \max_b Y_b}{MStar =
+##' max_b Y_b} is known. The corresponding distribution function can
+##' be obtained.
+##' 
+##' @title Distribution Function for the Random Maximum on a given
+##'     Period
+##' 
+##' @param object An object with class \code{"TVGEV"}.
+##' 
+##' @param date An object that can be coerced to the class
+##'     \code{"Date"}. If not provided this will be taken as the date
+##'     attached to \code{object}.
+##'
+##' @param psi An optional vector of coefficients for
+##'     \code{object}. By default the ML estimate as returned by
+##'     \code{coef(object)} is used.
+##'
+##' @return A function (more precisely, a closure). This function has
+##'     a single formal argument \code{q} representing a quantile, and
+##'     it returns the corresponding probability
+##'     \eqn{\text{Pr}\{M^\star \leq q \}}{Pr[MStar <= q]}.
+##'
+##' @export
+##'
+##' @seealso \code{\link{quantileMaxFun.TVGEV}} for the corresponding
+##'     quantile function (or closure).
+##'
+##' @section Caution: When \code{theta} is given \code{model} is not
+##'     used. The distribution function is simply that of the maximum
+##'     of independent r.vs following GEV distributions with their
+##'     parameters given by (the rows of) \code{theta}.
+##'
+##' @examples
+##' df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))
+##' ## fit a TVGEV model. Only the location parameter is TV.
+##' res1 <- TVGEV(data = df, response = "TXMax", date = "Date",
+##'               design = breaksX(date = Date, breaks = "1970-01-01", degree = 1),
+##'               loc = ~ t1 + t1_1970)
+##' cdf <- cdfMaxFun.TVGEV(res1)
+##' cdf(c(39.0, 41.0))
+##' 
+##' ## a 'new period'
+##' date <- as.Date(sprintf("%4d-01-01", 2025:2055))
+##' cdfNew <- cdfMaxFun.TVGEV(res1, date = date)
+##' cdfNew(c(39.0, 41.0))
+##' 
+cdfMaxFun.TVGEV <- function(object, date = NULL, psi = NULL,
+                            theta = NULL) {
+    
+    if (is.null(theta)) {
+        if (is.null(psi)) psi <- object$estimate
+        if (is.null(date)) date <- object$fDate
+        date <- as.Date(date)
+        theta <- psi2theta(model = object, psi = psi, date = date)
+    } else if (!is.null(date) || !is.null(psi)) {
+        stop("when 'theta' is given, neither 'date' nor 'psi' can ",
+             "be given")
+    }
+    
+    outFun <- function(q) {
+        res <- rep(0.0, length(q))
+        for (i in seq_along(q)) {
+            res[i] <- prod(nieve::pGEV(q[i],
+                                       loc = theta[ , 1],
+                                       scale = theta[ , 2],
+                                       shape = theta[ , 3]))
+        }
+        res
+    }
+
+    outFun
+
+}
+
+## *****************************************************************************
+##' 
+##' Given an object with class \code{"TVGEV"} and a collection of time
+##' blocks (or period) defined by \code{date}, the distribution of the
+##' random maximum over the period \eqn{M^\star := \max_b Y_b}{MStar =
+##' max_b Y_b} is known. The corresponding quantile function
+##' \eqn{q_{M^\star(m^\star)}{q_MStar(mStar)} can be obtained.
+##' 
+##' @title Quantile Function for the Random Maximum on a given
+##'     Period
+##' 
+##' @param object An object with class \code{"TVGEV"}.
+##' 
+##' @param date An object that can be coerced to the class
+##'     \code{"Date"}. If not provided this will be taken as the date
+##'     attached to \code{object}.
+##'
+##' @param psi An optional vector of coefficients for
+##'     \code{object}. By default the ML estimate as returned by
+##'     \code{coef(object)} is used.
+##'
+##' @param theta An optional matrix with three columns containing GEV
+##'     parameters. The colums are in the order \emph{location},
+##'     \emph{scale} and \emph{shape}. When this argument is used
+##'     neither \code{date} not \code{psi} can be used.
+##' 
+##' @return A function (more precisely, a closure). This function has
+##'     a single formal argument \code{p} representing a probability
+##'     \eqn{p}, and it returns the corresponding quantile \eqn{q}
+##'     such that
+##'     \eqn{\text{Pr}\{M^\star \leq q \} = p}{Pr[MStar <= q] = p} where
+##'     \eqn{M^\star}{MStar} is the random maximum.
+##'
+##' @export
+##'
+##' @section Caution: When \code{theta} is given \code{model} is not
+##'     used. The quantile function is simply that of the maximum of
+##'     independent r.vs following GEV distributions with their
+##'     parameters given by (the rows of) \code{theta}.
+##' 
+##' @seealso \code{\link{cdfMaxFun}} for the corresponding
+##'     quantile function (or closure).
+##'
+##' @examples
+##' df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))
+##' ## fit a TVGEV model. Only the location parameter is TV.
+##' res1 <- TVGEV(data = df, response = "TXMax", date = "Date",
+##'               design = breaksX(date = Date, breaks = "1970-01-01", degree = 1),
+##'               loc = ~ t1 + t1_1970)
+##' qf <- quantMaxFun.TVGEV(res1)
+##' qf(c(0.90, 0.99, 0.999))
+##' 
+##' ## a 'new period'
+##' date <- as.Date(sprintf("%4d-01-01", 2025:2055))
+##' qfNew <- quantMaxFun.TVGEV(res1, date = date)
+##' qfNew(c(0.90, 0.99, 0.999))
+##' 
+quantMaxFun.TVGEV <- function(object, date = NULL, psi = NULL, theta = NULL) {
+
+    if (is.null(theta)) {
+        if (is.null(psi)) psi <- object$estimate
+        if (is.null(date)) date <- object$fDate
+        date <- as.Date(date)
+        theta <- psi2theta(model = object, psi = psi, date = date)
+    } else if (!is.null(date) || !is.null(psi)) {
+        stop("when 'theta' is given, neither 'date' nor 'psi' can ",
+             "be given")
+    }
+    
+    FMax <- cdfMaxFun.TVGEV(object = object, theta = theta)
+
+    FMaxZero <- function(q, prob) FMax(q) - prob
+    
+    outFun <- function(probs) {
+        res <- rep(0.0, length(probs))
+        for (i in seq_along(probs)) {
+            interv <- c(.qMin.TVGEV(theta = theta, p = probs[i]),
+                        .qMax.TVGEV(theta = theta, p = probs[i]))
+            resTry <- try(uniroot(f = FMaxZero,  interval = interv,
+                                  prob = probs[i]))
+            if (!inherits(resTry, "try-error")) {
+                res[i] <- resTry$root
+            }
+        }
+        res
+    }
+    outFun
+
 }

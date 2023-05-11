@@ -14,8 +14,9 @@
 ##'
 ##' @author Yves Deville
 ##'
-##' @examples
+##' @export
 ##' 
+##' @examples
 ##' transFormula(~time, parnm = "mu") 
 ##' 
 transFormula <- function(formula, parnm) {
@@ -49,6 +50,8 @@ transFormula <- function(formula, parnm) {
 ##' 
 ##' @return A character vector of valid names.
 ##'
+##' @export
+##'  
 ##' @examples
 ##' set.seed(31415)
 ##' rNames(4)
@@ -101,6 +104,8 @@ formatPerc <- function (x,
 ##' sometimes needed to form blocks with longer duration (e.g. two
 ##' years, five years).
 ##'
+##' @export
+##' 
 ##' @examples
 ##'
 ##' date <- as.Date(sprintf("%4d-01-01", TXMax_Dijon$Year))
@@ -159,6 +164,8 @@ formatPerc <- function(x,
 ##'
 ##' @return A vector of 'round' dates having nearly length \code{n}
 ##' and covering approximately the range of \code{date}.
+##'
+##' @export
 ##' 
 selectDate <- function(date, n = 3L) {
 
@@ -190,6 +197,8 @@ selectDate <- function(date, n = 3L) {
 ##' 
 ##' @return Vector of values for the opacity "alpha". Value 0 is for a
 ##' fully transparent colour, value 1 is for a fully opaque colour.
+##'
+##' @export
 ##' 
 opacity <- function(n) {
     exp(- log(n)^2 / 16)
@@ -220,6 +229,8 @@ opacity <- function(n) {
 ##' determination of the lower or upper bound of the interval, we have
 ##' to check that the gradient of the objective and that of the
 ##' constraint are colinear, which is performed with this function.
+##'
+##' @export
 ##' 
 distLines <- function(x1, x2) {
     if (length(x1) != length(x2)) {

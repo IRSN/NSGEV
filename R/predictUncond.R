@@ -74,7 +74,7 @@
 ##' 
 ##' \item \code{PsiStar}. When \code{confInt} is equal to
 ##' \code{"proflik"}, this element is a matrix with its row \eqn{i}
-##' giving the value \eqn{\boldsymbol{psi}^\star}{\psi*} of the vector
+##' giving the value \eqn{\boldsymbol{\psi}^\star}{\psi*} of the vector
 ##' of parameters that maximizes the Return Level \eqn{\rho(T)} with
 ##' period \eqn{T = T_i} under the constraint on the log-likelihood.
 ##'
@@ -117,6 +117,8 @@
 ##'
 ##' }
 ##'
+##' @export
+##' 
 ##' @examples
 ##' example(TVGEV)
 ##' pu <- predictUncond(res2, newdateFrom = "2020-01-01")

@@ -24,6 +24,8 @@
 ##' @note Some matrix operations do not make sense for \code{bts}
 ##' objects. A \code{"bts"} is transformed in an ordinary numeric
 ##' matrix by simply using \code{unclass}, see examples.
+##'
+##' @export
 ##' 
 ##' @examples
 ##' x <- matrix(1:300, ncol = 10)
@@ -85,6 +87,9 @@ bts <- function(x, dateFrom, date) {
 ##' @param ... Not used yet.
 ##'
 ##' @return Nothing.
+##'
+##' @method print bts
+##' @export
 ##' 
 print.bts <- function(x, ...) {
     
@@ -168,6 +173,9 @@ print.bts <- function(x, ...) {
 ##' @return A dataframe with a \code{Date} column containing the value
 ##' of the \code{"date"} attribute of \code{x}.
 ##'
+##' @method as.data.frame bts
+##' @export
+##' 
 ##' @examples
 ##' myDate <- seq(from = as.Date("1996-01-01"),
 ##'             to = as.Date("2016-12-31"), by = "years")
@@ -206,6 +214,8 @@ as.data.frame.bts <- function(x, row.names = NULL,
 ##' @param ... Extra arguments for methods.
 ##'
 ##' @return An object with class \code{"bts"}.
+##'
+##' @export
 ##' 
 as.bts <- function(object, ...) {
     UseMethod("as.bts")
@@ -230,6 +240,9 @@ as.bts <- function(object, ...) {
 ##' @return An object with class \code{"bts"} inheriting from
 ##' \code{"matrix"}.
 ##'
+##' @method as.bts data.frame
+##' @export
+##' 
 ##' @examples
 ##' ## does not work
 ##' bts0 <- try(as.bts(TXMax_Dijon))
@@ -322,6 +335,9 @@ as.bts.data.frame <- function(object, dateName, yearName, ...) {
 ##' @seealso \code{\link{quantile.TVGEV}}, \code{\link{mean.TVGEV}} for
 ##' some examples of \code{"bts"} objects and their use in plots.
 ##'
+##' @method plot bts
+##' @export
+##' 
 ##' @examples
 ##' example(TVGEV)
 ##' plot(coef(res1, type = "theta"))
@@ -437,7 +453,9 @@ lines.bts <- function(x, y, col1 = "gray", alpha = NULL, ...) {
 ##' @note This function is mainly intended to be used for density
 ##' functions or cdf. In the former case, \code{fill = TRUE} may be
 ##' preferred.
-##' 
+##'
+##' @method plot bfts
+##' @export
 ##' 
 plot.bfts <- function(x, y, gg = TRUE,
                       col = "orangered",
@@ -479,7 +497,10 @@ plot.bfts <- function(x, y, gg = TRUE,
 ##' @param ... Elements to extract or replace. 
 ##'
 ##' @param drop \code{Logical}. If \code{TRUE} the result is coerced to the
-##' lowest possible dimension. 
+##' lowest possible dimension.
+##'
+##' @method [ bts
+##' @export
 ##' 
 `[.bts` <- function(x, ..., drop = FALSE) {
     L <- list()
@@ -514,6 +535,10 @@ plot.bfts <- function(x, y, gg = TRUE,
 ##' @param ... Not used
 ##'
 ##' @return A \code{bts} object.
+##'
+##' @importFrom stats window
+##' @method window bts
+##' @export
 ##' 
 window.bts <- function(x, start, end, extend = FALSE, ... ) {
 
@@ -585,6 +610,10 @@ window.bts <- function(x, start, end, extend = FALSE, ... ) {
 ##' @param ... Not used.
 ##' 
 ##' @return An object inheriting from the \code{"ts"} S3 class.
+##'
+##' @importFrom stats as.ts
+##' @method as.ts bts
+##' @export
 ##' 
 as.ts.bts <- function(x, ...) {
     nc <- ncol(x)

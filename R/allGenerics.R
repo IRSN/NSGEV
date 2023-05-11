@@ -69,7 +69,7 @@ cdf <- function(x, ...) {
 ##'
 ##' @return A vector of moments.
 ##'
-##' @moment
+##' @export
 ##' 
 moment <- function(x, which, ...) {
     UseMethod("moment")

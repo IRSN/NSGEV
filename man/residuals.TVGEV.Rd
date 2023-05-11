@@ -41,4 +41,9 @@ plot(mu, e, type = "p", pch = 16, col = "darkcyan",
 \references{
 Cox, D.R. and Snell E.J. (1968) "A General Definition
 of Residuals".  \emph{JRSS Ser. B}, \bold{30}(2), pp. 248-275.
+
+Panagoulia, D. and Economou, P. and Caroni, C. (2014)
+"Stationary and Nonstationary Generalized Extreme Value Modelling of
+ Extreme Precipitation over a Mountainous Area under Climate Change".
+\emph{Environmetrics} \bold{25}(1), pp. 29-43.
 }

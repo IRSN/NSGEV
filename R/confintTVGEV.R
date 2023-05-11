@@ -41,6 +41,10 @@
 ##' \code{\dots} and intended to be used by \code{bs} will then be
 ##' ignored with a warning.
 ##'
+##' @importFrom stats confint
+##' @method confint TVGEV
+##' @export
+##' 
 ##' @examples
 ##'
 ##' ## use the example of TVGEV which defines a TVGEV object named

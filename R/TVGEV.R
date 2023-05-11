@@ -36,7 +36,9 @@
 ##' a compatibility with the \code{NSGEV} method. However, the
 ##' derivatives w.r.t. the parameter vector \code{psi} are obtained
 ##' simply by using the \code{X} elements of the object \code{model}.
-##' 
+##'
+##' @method psi2theta TVGEV
+##' @export
 ##' 
 psi2theta.TVGEV <- function(model, psi = NULL, date = NULL,
                             deriv = FALSE, checkNames = TRUE,
@@ -264,11 +266,15 @@ MLE.TVGEV <- function(object,
         trackEnv$psi <- numeric(0)
     }
     
-    negLogLikFun <- function(psi, deriv = FALSE, object) {
+    negLogLikFun <- function(psi, deriv = FALSE, hessian = FALSE, object) {
         
         ## redefine 'parNames.GEV' because this closure is returned by
         ## the estimation function.  It could be faster NOT to use
         ## names but rather integer indices.
+
+        if (hessian && !deriv) {
+            stop("'hessian' can only be TRUE when 'deriv' is TRUE")
+        }
         
         parNames.GEV <- c("loc", "scale", "shape")
         theta <- array(NA, dim = c(object$n, 3L),
@@ -287,7 +293,7 @@ MLE.TVGEV <- function(object,
                         loc = theta[object$indVal, "loc"],
                         scale = theta[object$indVal, "scale"],
                         shape = theta[object$indVal, "shape"], log = TRUE,
-                        deriv = deriv)
+                        deriv = deriv, hessian = hessian)
         
         nL <- -sum(logL)
       
@@ -308,9 +314,42 @@ MLE.TVGEV <- function(object,
                      gradnL[object$ind[[nm]]] <- sum(grad1[ , nm, drop = FALSE])
                 }
             }
-         
-            return(list("objective" = nL , "gradient" = gradnL))
+            
+            if (hessian) {
 
+                hess1 <- -attr(logL, "hessian")
+                hessnL <- array(0.0, dim = rep(object$p, 2),
+                                dimnames = list(object$parNames, object$parNames))
+
+                ## =============================================================
+                ## for each couple of 'theta' parameters, say 'theta_i'
+                ## and 'theta_j' we use a weighted cross product of the
+                ## design matrices as in 'car::wcrossprod'. The vector
+                ## of weights is given by the slice hess1[ , i , j]
+                ## which length is the number of valid blocks
+                ## =============================================================
+                
+                for (i in 1:3) {
+                    for (j in i:3) {
+                        
+                        hessnL[object$ind[[i]], object$ind[[j]]]  <-
+                            crossprod(object$X[[i]][object$indVal, , drop = FALSE] *
+                                      hess1[ , i, j],
+                                      object$X[[j]][object$indVal, , drop = FALSE])
+                        if (j > i) {  
+                            hessnL[object$ind[[j]], object$ind[[i]]] <-
+                                t(hessnL[object$ind[[i]], object$ind[[j]],
+                                         drop = FALSE])
+                        }
+                    }
+                }
+                
+                return(list("objective" = nL , "gradient" = gradnL,
+                            "hessian" = hessnL))
+
+            } else {
+                return(list("objective" = nL , "gradient" = gradnL))
+            }
         }
        
         nL
@@ -322,9 +361,9 @@ MLE.TVGEV <- function(object,
     psi0 <- res$psi0 <- parIni.TVGEV(object = object, y = yBak)
     
     if (parTrack) {
-        negLogLikFun1 <- function(psi, deriv = FALSE, object)  {
+        negLogLikFun1 <- function(psi, deriv = FALSE, hessian = FALSE, object)  {
             trackEnv$psi  <- c(trackEnv$psi, psi)
-            negLogLikFun(psi = psi, deriv = deriv, object = object)
+            negLogLikFun(psi = psi, deriv = deriv, hessian = hessian, object = object)
         }
     } else {
         negLogLikFun1 <- negLogLikFun
@@ -337,6 +376,7 @@ MLE.TVGEV <- function(object,
         res$fit <- try(optim(par = psi0,
                              fn = negLogLikFun1,
                              deriv = FALSE,
+                             hessian = FALSE,
                              control = list(maxit = 1000),
                              ## hessian = TRUE,
                              object = object))
@@ -399,6 +439,7 @@ MLE.TVGEV <- function(object,
                               lb = lb,
                               ub = ub,
                               deriv = TRUE,
+                              hessian = FALSE,
                               opts = opts,
                               object = object))
         
@@ -512,6 +553,7 @@ MLE.TVGEV <- function(object,
 ##' target number as given in \code{R}.
 ##'
 ##' @importFrom nieve rGEV
+##' @import nloptr
 ##' 
 ##' @examples
 ##' example(TVGEV)
@@ -539,6 +581,9 @@ MLE.TVGEV <- function(object,
 ##' 
 ##' res2$boot <- bsb
 ##' predict(res2, confintMethod = "boot")
+##'
+##' @method bs TVGEV
+##' @export
 ##' 
 bs.TVGEV <- function(object,
                      R = 100,
@@ -807,6 +852,12 @@ modelMatrices.TVGEV  <- function(object, date = NULL) {
 ##' 
 ##' @author Yves Deville
 ##'
+##' @importFrom stats approx optim optimHess qchisq sd terms ts uniroot
+##' @importFrom stats lm as.formula update.formula model.matrix weighted.mean
+##' @importFrom stats coef deriv df 
+##' 
+##' @export
+##' 
 ##' @seealso \code{\link{MLE.TVGEV}} for some details on the
 ##' maximum-likelihood estimation.
 ##' 
@@ -1032,8 +1083,11 @@ TVGEV <- function(data,
 ##' This matrix is given a special S3 class \code{"simulate.TVGEV"},
 ##' mainly in order to facilitate plotting.
 ##'
+##' @importFrom stats simulate
+##' @method simulate TVGEV
+##' @export
+##'  
 ##' @examples
-##'
 ##' example(TVGEV)
 ##' sim <- simulate(res2, nsim = 200)
 ##' plot(sim)
@@ -1085,6 +1139,8 @@ simulate.TVGEV <- function (object, nsim = 1, seed = NULL,
 ##' with class \code{"bts"} instead of an object with a specific
 ##' class \code{"simulate.TVGEV"}. This is intended to avoid
 ##' an unnecessary proliferation of classes.
+##'
+##' @method plot simulate.TVGEV
 ##' 
 plot.simulate.TVGEV <- function(x, y, col = "gray",
                                 alpha = NULL, ...) {
@@ -1132,6 +1188,9 @@ plot.simulate.TVGEV <- function(x, y, col = "gray",
 ##' @return Vector \eqn{\mathbf{\psi}}{\psi} of coefficients, or
 ##' matrix with the GEV parameters \eqn{\mathbf{\theta}_i}{\theta_i}
 ##' as its rows.
+##'
+##' @method coef TVGEV
+##' @export
 ##' 
 coef.TVGEV <- function(object, type = c("psi", "theta"),  ...) {
     type <- match.arg(type)
@@ -1157,6 +1216,10 @@ coef.TVGEV <- function(object, type = c("psi", "theta"),  ...) {
 ##' @param ... Not used.
 ##'
 ##' @return The variance-covariance matrix.
+##'
+##' @importFrom stats vcov
+##' @method vcov TVGEV
+##' @export
 ##' 
 vcov.TVGEV <- function(object, ...) {
     object$vcov
@@ -1173,6 +1236,10 @@ vcov.TVGEV <- function(object, ...) {
 ##' @param ... Not used.
 ##'
 ##' @return The maximized log-Likelihood.
+##' 
+##' @importFrom stats logLik
+##' @method logLik TVGEV
+##' @export
 ##' 
 logLik.TVGEV <- function(object, ...) {
     res <- object$logLik
@@ -1191,6 +1258,9 @@ logLik.TVGEV <- function(object, ...) {
 ##' @param ... Not used.
 ##'
 ##' @return A list of summary statistics.
+##'
+##' @method summary TVGEV
+##' @export
 ##' 
 summary.TVGEV <- function(object, ...) {
     res <- object
@@ -1199,7 +1269,10 @@ summary.TVGEV <- function(object, ...) {
 }
 
 ## ****************************************************************************
+## DO NOT PRODUCE Rd
 ## @rdname summary.TVGEV
+## @method print summary.TVGEV
+##  
 print.summary.TVGEV <- function(x, ...) {
     
     cat("Call:\n")
@@ -1215,7 +1288,9 @@ print.summary.TVGEV <- function(x, ...) {
     cat(sprintf("Negative log-likelihood:\n%7.3f\n\n", x$negLogLik))
 
 }
-   
+
+##' @method print TVGEV
+##' 
 print.TVGEV <- function(x, ...) {
     print(summary(x))
 }

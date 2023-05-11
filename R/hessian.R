@@ -7,7 +7,7 @@
 ##' derivatives of the GEV density w.r.t the vector
 ##' \eqn{\boldsymbol{\theta}}{\theta} of GEV parameters, see
 ##' \code{\link[nieve]{dGEV}}. The derivatives w.r.t. the vector of model
-##' parameters \eqn{\boldsymbol{psi}}{\psi} are computed by chain rule
+##' parameters \eqn{\boldsymbol{\psi}}{\psi} are computed by chain rule
 ##' using the linear inverse link.
 ##' 
 ##' @title Hessian of the Negative Log-Likelihood of a \code{TVGEV} Object
@@ -26,7 +26,13 @@
 ##' (creator of \code{TVGEV} objects) and providing the covariance
 ##' matrix \code{vcov} by inversion is a \emph{numeric} one for now.
 ##'
+##' @section News: From version 0.1.8, the \code{negLogLikFun} function
+##'     (closure) shipped with a \code{TVGEV} optionally comptes the
+##'     Hessian.
+##' 
 ##' @importFrom nieve dGEV
+##'
+##' @export
 ##' 
 ##' @examples
 ##' \dontrun{

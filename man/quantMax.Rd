@@ -7,7 +7,8 @@
 quantMax(object, ...)
 }
 \arguments{
-\item{object}{An fitted model such as crated by \code{\link{TVGEV}}.}
+\item{object}{An fitted model such as created by using
+\code{\link{TVGEV}}.}
 
 \item{...}{Arguments for methods.}
 }

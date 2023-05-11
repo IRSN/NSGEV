@@ -54,9 +54,12 @@
 ##' @note When the argument \code{breaks} has length zero, the
 ##' function returns a polynomial basis with the constant possibly
 ##' removed.
-##' 
+##'
 ##' @author Yves Deville
 ##'
+##' @import splines
+##' @export
+##' 
 ##' @examples
 ##' 
 ##' date <- as.Date(sprintf("%4d-01-01", 1921:2020)) 
@@ -138,6 +141,8 @@ breaksX <- function(date,
 ##' choose \code{origin} close to the centre of the time period. This
 ##' is especially important when a polynomial of degree \eqn{>= 2} is
 ##' used since problems of convergence are likely to occur otherwise.
+##'
+##' @export
 ##' 
 ##' @examples
 ##'
@@ -214,6 +219,8 @@ polynomX <- function(date, degree = 2, origin = NULL) {
 ##' the basis, and \code{\link{breaksX}}, \code{\link{polynomX}} for
 ##' alternative bases.
 ##'
+##' @export
+##' 
 ##' @examples
 ##' date <- as.Date(sprintf("%4d-01-01", 1921:2020))
 ##' X1 <- natSplineX(date = date, knots = "1950-01-01",

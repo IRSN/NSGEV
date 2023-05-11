@@ -15,6 +15,10 @@
 ##'
 ##' @return An object of class \code{"ggplot"}.
 ##'
+##' @import ggplot2
+##' @importFrom forecast autoplot autolayer
+##' @method autoplot bts
+##' @export
 ##' 
 autoplot.bts <- function(object, col1 = "darkgray", facets = FALSE, ...) {
     

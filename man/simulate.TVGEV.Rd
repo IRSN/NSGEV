@@ -31,7 +31,6 @@ mainly in order to facilitate plotting.
 Random simulation from a \code{TVGEV} object.
 }
 \examples{
-
 example(TVGEV)
 sim <- simulate(res2, nsim = 200)
 plot(sim)

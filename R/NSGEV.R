@@ -24,6 +24,9 @@
 ##' @return A vector of parameters for the \code{NSGEV} model.
 ##' 
 ##' @author Yves Deville
+##'
+##' @method psi2theta NSGEV
+##' @export
 ##' 
 ##' @examples
 ##' df <- data.frame(t = 1:10)
@@ -136,6 +139,8 @@ psi2theta.NSGEV <- function(model, psi, data = NULL, deriv = TRUE,
 ##' 
 ##' @author Yves Deville
 ##'
+##' @export
+##' 
 ##' @examples
 ##' df <- data.frame(t = 1:10)
 ##' fit <- NSGEV(formulas = list("loc" = ~ alpha + beta * t,  "scale" = ~ delta, "shape" = ~ xi),
@@ -314,6 +319,8 @@ negLogLik <- function(psi, model, data = NULL, y = NULL,
 ##'
 ##' @seealso \code{\link{simulate.NSGEV}}
 ##'
+##' @export
+##' 
 ##' @examples
 ##' df <- data.frame(t = 1:10)
 ##'
@@ -510,6 +517,9 @@ NSGEV <- function(formulas,
 ##'
 ##' @author Yves Deville
 ##'
+##' @method quantile NSGEV
+##' @export
+##' 
 ##' @examples
 ##' df <- data.frame(t = 1:10)
 ##' ## model structure
@@ -580,6 +590,9 @@ quantile.NSGEV <- function(x, probs = c(0.90, 0.95, 0.99),
 ##'
 ##' @author Yves Deville
 ##'
+##' @method density NSGEV
+##' @export
+##' 
 ##' @examples
 ##' df <- data.frame(t = 1:10)
 ##' ## model structure
@@ -654,6 +667,9 @@ density.NSGEV <- function(x,
 ##'
 ##' @seealso \code{\link[nieve]{rGEV}} to simulate from varying GEV
 ##' parameters.
+##'
+##' @method simulate NSGEV
+##' @export
 ##' 
 ##' @examples
 ##' df <- data.frame(t = 1:10)
