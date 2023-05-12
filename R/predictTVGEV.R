@@ -741,6 +741,143 @@ predict.TVGEV <- function(object,
 plot.predict.TVGEV <- function(x, y, gg = TRUE, bw = TRUE, ... ) {
 
 
+    if (!gg) {
+        stop("only the ggplot option is implemented for now")
+    }
+
+    warning("Inasmuch the plot is actually a 'ggplot', it is better to ",
+            "use the 'autoplot' method for consistency")
+
+    g1 <- autoplot(object = x, bw = bw, ...)
+    
+    ## dots <- match.call(expand.dots = FALSE)$...
+
+    ## if (length(dots)) {
+    ##     dotsText <- paste(sprintf("'%s'", names(dots)), collapse = ", ")
+    ##     warning("dots '...' not used yet in this method: ",
+    ##             "the formals ", dotsText, " will be ignored. ",
+    ##             "Use the ggplot fonctions to change the appearance ",
+    ##             "of the graph.")
+    ## }
+    
+    ## ## avoid "NOTE: no visible binding..." in checks
+    ## Period <- L <- U <- Level <- Quant <- NULL    
+    
+    ## if (!gg) stop("Sorry, for now only the 'gg = TRUE' is possible!")
+    
+    ## if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    ##     stop("package 'ggplot2' needed here")
+    ## } 
+
+    ## confLev <- attr(x, "confLevel")
+    
+    ## if (nd <- length(unique(x$Date)) > 6L) {
+    ##     stop(nd, "dates found in 'x'. The maximum allowed is 6")
+    ## } 
+    
+    ## fill <- "darkgray"
+    ## ## Find out if the confidence levels
+    ## g1 <- ggplot(data = x)
+    
+    ## if (!is.null(x$L) && !is.null(x$U)) {
+    ##     g1 <- g1  + geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U,
+    ##                                           group = Level,
+    ##                                 ## colour = Level,
+    ##                                 fill = Level),
+    ##                             ## group = type,
+    ##                             alpha = 0.2)
+    ##      if (bw) {
+    ##          g1 <- g1 +
+    ##              geom_line(mapping = aes(x = Period, y = L, group = Level,
+    ##                                      linetype = Level),
+    ##                        colour = "gray20",
+    ##                        alpha = 0.8)
+    ##          g1 <- g1 +
+    ##              geom_line(mapping = aes(x = Period, y = U, group = Level,
+    ##                                      linetype = Level),
+    ##                        colour = "gray20",
+    ##                        alpha = 0.8)
+    ##      } else {
+    ##          g1 <- g1 + geom_line(mapping = aes(x = Period, y = L, group = Level),
+    ##                               alpha = 0.2)
+    ##          g1 <- g1 + geom_line(mapping = aes(x = Period, y = U, group = Level),
+    ##                               alpha = 0.2)
+    ##      }
+        
+    ## }
+    
+    ## g1 <- g1 + geom_line(data = x,
+    ##                      mapping = aes(x = Period, y = Quant, colour = "orangered"),
+    ##                      size = 1)
+    ## g1 <- g1 + theme_bw()
+    ## ## g1 <- g1 + scale_x_log10(breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000))
+    ## g1 <- g1 + scale_x_log10(breaks = c(1, 10, 100, 1000),
+    ##           minor_breaks = c(1, 20, 50, 100, 200, 500, 1000))
+    
+    ## g1 <- g1 + theme(plot.title = element_text(face = "bold", size = 12),
+    ##                  axis.text.x = element_text(angle = 0),
+    ##                  axis.title = element_text(face = 'bold', size = 12),
+    ##                  panel.spacing = unit(0.5, "lines"),
+    ##                  legend.position = 'right',
+    ##                  legend.title = element_blank(),
+    ##                  legend.text = element_text(size = 12))
+
+    ## g1 <- g1 + scale_colour_manual(name = "", values = "orangered",
+    ##                                labels = "Quantile")
+
+    ## if (!is.null(x$L) && !is.null(x$U)) {
+    ##      g1 <- g1 + scale_fill_manual(name = "Level",
+    ##                                   values = c("gray75", "gray60", "gray50"))
+    ## }
+    
+    ## g1 <- g1 + xlab("Period") + ylab("Quantile") 
+
+    ## if (attr(x, "type") == "conditional") {       
+    ##     g1 <- g1 + facet_wrap( ~ Date)
+    ## }
+    
+    ## g1 <- g1  + ggtitle(attr(x, "title"))
+    
+    ## g1
+   
+}
+
+## ***********************************************************************
+
+##' Produce a \pkg{ggplot2} plot of the results of \code{predict}
+##' for a \code{TVGEV} object.
+##' 
+##' @title Autplot Predict Results for \code{TVGEV}
+##'
+##' @param object An object with class \code{"predict.TVGEV"} as returned
+##' by the \code{predict} method. This must be a data frame so the
+##' \code{predict} method must be called without using \code{out} or
+##' setting it to the default value \code{"data.frame"}.
+##'
+##' @param bw Logical. Should the plot render in black and white for
+##' printing?
+##' 
+##' @param ... Not used yet.
+##'
+##' @return An object with class \code{"gg"}. Can be used with the method
+##' \code{plot}, or equivalently with \code{print}.
+##'
+##' @note This function is intended to work with predictions computed
+##' for a possibly large number of periods (to get smooth curves) but
+##' with only a small number of dates, each appearing in a facet. So
+##' the number of dates is limited to \code{6}. Similarily, the number
+##' of confidence levels can not be \code{> 3}.
+##'
+##' @method autoplot predict.TVGEV
+##' @export
+##' 
+##' @examples
+##' example(TVGEV)
+##' pred <- predict(res2, newdate = c("1960-01-01", "2000-01-01", "2020-01-01"),
+##'                 level = c(0.70, 0.95), confintMethod = "delta")
+##' g <- autoplot(pred)
+autoplot.predict.TVGEV <- function(object, bw = TRUE, ... ) {
+    
     dots <- match.call(expand.dots = FALSE)$...
 
     if (length(dots)) {
@@ -754,23 +891,21 @@ plot.predict.TVGEV <- function(x, y, gg = TRUE, bw = TRUE, ... ) {
     ## avoid "NOTE: no visible binding..." in checks
     Period <- L <- U <- Level <- Quant <- NULL    
     
-    if (!gg) stop("Sorry, for now only the 'gg = TRUE' is possible!")
-    
     if (!requireNamespace("ggplot2", quietly = TRUE)) {
         stop("package 'ggplot2' needed here")
     } 
 
-    confLev <- attr(x, "confLevel")
+    confLev <- attr(object, "confLevel")
     
-    if (nd <- length(unique(x$Date)) > 6L) {
-        stop(nd, "dates found in 'x'. The maximum allowed is 6")
+    if (nd <- length(unique(object$Date)) > 6L) {
+        stop(nd, "dates found in 'object'. The maximum allowed is 6")
     } 
     
     fill <- "darkgray"
     ## Find out if the confidence levels
-    g1 <- ggplot(data = x)
+    g1 <- ggplot(data = object)
     
-    if (!is.null(x$L) && !is.null(x$U)) {
+    if (!is.null(object$L) && !is.null(object$U)) {
         g1 <- g1  + geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U,
                                               group = Level,
                                     ## colour = Level,
@@ -797,7 +932,7 @@ plot.predict.TVGEV <- function(x, y, gg = TRUE, bw = TRUE, ... ) {
         
     }
     
-    g1 <- g1 + geom_line(data = x,
+    g1 <- g1 + geom_line(data = object,
                          mapping = aes(x = Period, y = Quant, colour = "orangered"),
                          size = 1)
     g1 <- g1 + theme_bw()
@@ -816,18 +951,18 @@ plot.predict.TVGEV <- function(x, y, gg = TRUE, bw = TRUE, ... ) {
     g1 <- g1 + scale_colour_manual(name = "", values = "orangered",
                                    labels = "Quantile")
 
-    if (!is.null(x$L) && !is.null(x$U)) {
+    if (!is.null(object$L) && !is.null(object$U)) {
          g1 <- g1 + scale_fill_manual(name = "Level",
                                       values = c("gray75", "gray60", "gray50"))
     }
     
     g1 <- g1 + xlab("Period") + ylab("Quantile") 
 
-    if (attr(x, "type") == "conditional") {       
+    if (attr(object, "type") == "conditional") {       
         g1 <- g1 + facet_wrap( ~ Date)
     }
     
-    g1 <- g1  + ggtitle(attr(x, "title"))
+    g1 <- g1  + ggtitle(attr(object, "title"))
     
     g1
    

@@ -411,7 +411,8 @@ plot.bts <- function(x, y, gg = TRUE, col1 = "darkgray", facets = FALSE, ...) {
 ##' 
 ##' @param alpha Level of opacity. By default, the opacity is lowered
 ##' when the number of time series is increased.
-##' 
+##'
+##' @export
 lines.bts <- function(x, y, col1 = "gray", alpha = NULL, ...) {
     nc <- ncol(x)
     if (missing(alpha)) {

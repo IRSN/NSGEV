@@ -14,8 +14,8 @@ Maintainer: Yves Deville <deville.yves@alpestat.com>
 Description: Utility functions for Non-Stationary time series with GEV margins.
 License: GPL-3
 LazyData: yes
-Imports: methods, splines, numDeriv, nloptr, data.table, reshape2, tidyr, forecast
-Depends: Renext, ismev, extRemes, nieve, ggplot2
+Imports: methods, splines, numDeriv, nloptr, data.table, reshape2, tidyr, forecast, scales, grDevices
+Depends: ismev, extRemes, nieve, ggplot2
 Suggests: parallel, doParallel, foreach, testthat, rmarkdown, knitr, png
 Encoding: UTF-8
 URL: https://github.com/IRSN/NSGEV/

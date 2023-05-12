@@ -8,22 +8,31 @@
 .qMin.TVGEV(theta, p)
 }
 \arguments{
-\item{theta}{a numeric matrix containing the GEV "theta"
-parameters. It must have 3 columns corresponding for
-\emph{location} \eqn{\mu}, \emph{scale} \eqn{\sigma} and
-\emph{shape} \eqn{\xi} is that order.}
+\item{theta}{A numeric matrix containing the GEV "theta"
+parameters with one line for each block \eqn{b} . It must have 3
+columns corresponding to the GEV parameters \emph{location}
+\eqn{\mu_b}, \emph{scale} \eqn{\sigma_b} and \emph{shape}
+\eqn{\xi_b} is that order.}
 
 \item{p}{A probability.}
 }
 \description{
-Find a lower bound for the quantile of the random maximum. The
-distribution function of the maximum is the product of the
-marginal (GEV) distributions functions for the blocks over which
-the maximum is defined. By selecting the smallest GEV shape, the
-smallest scale and the smallest location, we get a GEV
-distribution which is smaller in stochastic order than all the
-marginal GEV distributions. We can take the bound as the quantile
-of this GEV distribution corresponding to the probability
-\eqn{p^{1/n^\star}}{p^(1/ nStar)}, where \eqn{n^\star}{nStar} is
-the number of blocks.
+Find a lower bound for the quantile of the random maximum over a
+collection of blocks. The distribution function of the maximum is
+the product of the marginal (GEV) distributions functions for the
+blocks over which the maximum is defined. By selecting the
+smallest GEV shape, the smallest scale and the smallest location,
+we get a GEV distribution which is smaller in stochastic order
+than all the marginal GEV distributions. We can take the bound as
+the quantile of this GEV distribution corresponding to the
+probability \eqn{p^{1/n^\star}}{p^(1/ nStar)}, where
+\eqn{n^\star}{nStar} is the number of blocks.
 }
+\details{
+This function is used by \code{\link{quantMaxFun.TVGEV}} and
+\code{\link{quantMax.TVGEV}}.
+}
+\seealso{
+\code{\link{.qMax.TVGEV}}
+}
+\keyword{internal}

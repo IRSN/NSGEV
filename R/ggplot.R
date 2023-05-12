@@ -78,7 +78,7 @@ autoplot.bts <- function(object, col1 = "darkgray", facets = FALSE, ...) {
 
 ## ************************************************************************************
 ##' @rdname autoplot.bts
-##' 
+##' @export
 autolayer.bts <- function(object, col1 = "darkgray", ...) {
     
     value <- variable <- type <- Date <- NULL
@@ -140,7 +140,8 @@ autolayer.bts <- function(object, col1 = "darkgray", ...) {
 ##' @note This function is mainly intended to be used for density
 ##' functions or cdf. In the former case, \code{fill = TRUE} may be
 ##' preferred.
-##' 
+##'
+##' @export
 ##' 
 autoplot.bfts <- function(object,
                           col = "orangered",
@@ -170,5 +171,9 @@ autoplot.bfts <- function(object,
     
 }
 
+##' @method autolayer bfts
+##' @export
 autolayer.bfts <- function(object, col = "orangered", fill = NA, ...) {
+    stop("The 'autolayer' method is not yet implemtented for the class ",
+         "\"bfts\"")
 }

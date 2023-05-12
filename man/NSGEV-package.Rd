@@ -48,7 +48,6 @@
 
   Most efforts have been put on the \code{"TVGEV"} class. In the future,
   the \code{"NSGEV"} class could be discarded.
- 
   
 }
 \author{

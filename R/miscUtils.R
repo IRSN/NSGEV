@@ -254,5 +254,16 @@ distLines <- function(x1, x2) {
     acos(s)
 }
 
-
-    
+## 
+## Copied from Renext
+##
+##' @importFrom grDevices col2rgb
+##' 
+translude <- function (colors, alpha = 0.6) {
+    L <- pmax(length(colors), length(alpha))
+    colors <- rep(colors, length.out = L)
+    alpha <- rep(alpha, length.out = L)
+    rgb <- as.matrix(col2rgb(colors) / 255)
+    colors2 <- rgb(red = rgb["red", ], green = rgb["green", ], 
+                   blue = rgb["blue", ], alpha = alpha)
+}

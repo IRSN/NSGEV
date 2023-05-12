@@ -5,7 +5,7 @@
 \title{Distribution Function for the Random Maximum on a given
     Period}
 \usage{
-cdfMaxFun.TVGEV(object, date = NULL, psi = NULL, theta = NULL)
+\method{cdfMaxFun}{TVGEV}(object, date = NULL, psi = NULL, theta = NULL, ...)
 }
 \arguments{
 \item{object}{An object with class \code{"TVGEV"}.}
@@ -17,6 +17,13 @@ attached to \code{object}.}
 \item{psi}{An optional vector of coefficients for
 \code{object}. By default the ML estimate as returned by
 \code{coef(object)} is used.}
+
+\item{theta}{An optional matrix with three columns containing GEV
+parameters. The colums are in the order \emph{location},
+\emph{scale} and \emph{shape}. When this argument is used
+neither \code{date} not \code{psi} can be used.}
+
+\item{...}{Not used.}
 }
 \value{
 A function (more precisely, a closure). This function has
@@ -44,16 +51,16 @@ df <- within(TXMax_Dijon, Date <- as.Date(sprintf("\%4d-01-01", Year)))
 res1 <- TVGEV(data = df, response = "TXMax", date = "Date",
               design = breaksX(date = Date, breaks = "1970-01-01", degree = 1),
               loc = ~ t1 + t1_1970)
-cdf <- cdfMaxFun.TVGEV(res1)
+cdf <- cdfMaxFun(res1)
 cdf(c(39.0, 41.0))
 
 ## a 'new period'
 date <- as.Date(sprintf("\%4d-01-01", 2025:2055))
-cdfNew <- cdfMaxFun.TVGEV(res1, date = date)
+cdfNew <- cdfMaxFun(res1, date = date)
 cdfNew(c(39.0, 41.0))
 
 }
 \seealso{
-\code{\link{quantileMaxFun.TVGEV}} for the corresponding
+\code{\link{quantMaxFun.TVGEV}} for the corresponding
     quantile function (or closure).
 }

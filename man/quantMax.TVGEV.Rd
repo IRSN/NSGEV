@@ -68,13 +68,14 @@ collection of blocks of interest.
 Let \eqn{M^\star := \max_{b} Y_b}{M = max_b Y_b} be the maximum over
 the blocks \eqn{b} of interest. Since the blocks are
 assumed to be independent the distribution function of \eqn{M^\star}
-is
+is given by
 \deqn{
    F_{M^\star}(m^\star; \, \boldsymbol{\psi}) = \prod_{b} F_{\texttt{GEV}}(m^\star; \,
    \boldsymbol{\theta}_b)
 }{F_M(m; psi) = prod_b F_GEV(m; \theta_b)}
-and this distribution function depends on the vector
-\eqn{\boldsymbol{\psi}}{\psi} of the model parameters via
+and it depends on the vector
+\eqn{\boldsymbol{\psi}}{\psi} of the model parameters
+through
 \eqn{\boldsymbol{\theta}_b(\boldsymbol{\psi})}{\theta_b(\psi)}.
 For a given probability \eqn{p}, the corresponding quantile
 \eqn{q_{M^\star}(p;\,\boldsymbol{\psi})}{q_M(p; \psi)} is the
@@ -95,4 +96,8 @@ qM2 <- quantMax(res,
                 date = as.Date(sprintf("\%4d-01-01", 2025:2055)),
                 level = c(0.95, 0.70))
 qM2
+gg <- autoplot(qM2, fillConf = TRUE)
+gg <- gg + ggtitle("Quantile of the maximum over years 2025-2055")
+gg
+
 }

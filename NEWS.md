@@ -9,9 +9,9 @@
 - For a `TVGEV` object, the `negLogLikFun` function now optionally
   returns the hessian.
   
-- New method `quantileMax` for the `"TVGEV"` class.
+- New method `quantMax` for the `"TVGEV"` class.
 
-- New methods `quantileMaxFun` and `cdfMaxFun` for the `"TVGEV"`
+- New methods `quantMaxFun` and `cdfMaxFun` for the `"TVGEV"`
   class.
   
 - The vignettes of the **NSGEVVal** package are now included in

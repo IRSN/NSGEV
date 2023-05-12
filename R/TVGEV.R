@@ -1141,6 +1141,7 @@ simulate.TVGEV <- function (object, nsim = 1, seed = NULL,
 ##' an unnecessary proliferation of classes.
 ##'
 ##' @method plot simulate.TVGEV
+##' @export
 ##' 
 plot.simulate.TVGEV <- function(x, y, col = "gray",
                                 alpha = NULL, ...) {
@@ -1269,10 +1270,12 @@ summary.TVGEV <- function(object, ...) {
 }
 
 ## ****************************************************************************
-## DO NOT PRODUCE Rd
-## @rdname summary.TVGEV
-## @method print summary.TVGEV
-##  
+##  DO NOT PRODUCE Rd
+
+##' @noRd 
+##' @rdname summary.TVGEV
+##' @method print summary.TVGEV
+##' @export  
 print.summary.TVGEV <- function(x, ...) {
     
     cat("Call:\n")
@@ -1290,7 +1293,7 @@ print.summary.TVGEV <- function(x, ...) {
 }
 
 ##' @method print TVGEV
-##' 
+##' @export
 print.TVGEV <- function(x, ...) {
     print(summary(x))
 }
