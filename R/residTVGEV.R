@@ -7,7 +7,10 @@
 ##' 
 ##' @param object A \code{TVGEV} object.
 ##'
-##' @param type The approximate distribution wanted.
+##' @param type The approximate distribution wanted. The choices
+##'     \code{c("unif", "exp", "gumbel")} correspond to the standard
+##'     uniform, the standard exponential and the standard Gumbel
+##'     distributions. Partial matching is allowed.
 ##'
 ##' @param ... Not used yet.
 ##' 
@@ -27,7 +30,6 @@
 ##'  Extreme Precipitation over a Mountainous Area under Climate Change".
 ##' \emph{Environmetrics} \bold{25}(1), pp. 29-43.
 ##' 
-##'
 ##' @importFrom nieve pGEV
 ##' @importFrom stats residuals resid
 ##' @method residuals TVGEV
@@ -40,28 +42,38 @@
 ##'             loc = ~ t1 + t1_1970)
 ##' e <- resid(tv)
 ##' plot(e)
+##' ## ggplot alternative
+##' autoplot(e)
+##' ## plot the residual against the fitted location. Use 'as.numeric'
+##' ## on the residuals to build a similar ggplot
 ##' mu <- tv$theta[ , "loc"]
 ##' plot(mu, e, type = "p", pch = 16, col = "darkcyan",
 ##'      main = "generalised residuals against 'loc'")
 residuals.TVGEV <- function(object,
-                            type = c("exp", "unif"),
+                            type = c("exp", "unif", "gumbel"),
                             ...) {
 
     type <- match.arg(type)
     Y <- object$data[ , object$response]
     theta <- psi2theta(model = object, psi = NULL)
-  
+    
+    e <- nieve::pGEV(Y, loc = theta[, 1L], scale = theta[, 2L], 
+                     shape = theta[, 3L], lower.tail = FALSE)
+
+    lims95 <- c(0.025, 0.975)
+    
     if (type == "exp") {
-        e <- nieve::pGEV(Y, loc = theta[, 1L], scale = theta[, 2L], 
-                         shape = theta[, 3L], lower.tail = FALSE)
         e <- -log(e)
-    } else {
-        e <- nieve::pGEV(Y, loc = theta[, 1L], scale = theta[, 2L],
-                         shape = theta[, 3L], lower.tail = TRUE)
+        lims95 <- -log(1 - lims95)
+    } else if (type == "gumbel") {
+        e <- log(-log(e))
+        lims95 <- log(-log(1 - lims95))
     }
+        
     names(e) <- rownames(theta)
     attr(e, "date") <- object$data[ , object$date]
     attr(e, "type") <- type
+    attr(e, "lims95") <- lims95
     class(e) <- "resid.TVGEV"
     e
     
@@ -97,10 +109,59 @@ plot.resid.TVGEV <- function(x, y = NULL, ...) {
          xlab = "date",
          ylab = sprintf("residual, type = \"%s\"", type),
          ...)
+    abline(h = attr(x, "lims95"), col = "SpringGreen3")
+    
+}
 
-    lims <- c(0.025, 0.975)
+##*****************************************************************************
+##' Plot the residuals of a \code{TVGEV} model object against the
+##' date.
+##' 
+##' @title Plot Residuals of a \code{TGVEV} Model
+##'
+##' @param object A \code{TVGEV} object.
+##'
+##' @param geom The "geometry" used to show the series of block
+##'     maxima. The default \code{"line"} correspond to a polyline and
+##'     \code{"segment"} correspond to a series of vertical segments
+##'     a.k.a. "needles".
+##' 
+##' @param ... Not used yet.
+##'
+##' @return Nothing.
+##'
+##' @seealso \code{\link{residuals.TVGEV}}.
+##'
+##' @method autoplot resid.TVGEV
+##' @export
+##' 
+autoplot.resid.TVGEV <- function(object,
+                                 geom = c("line", "segment"),
+                                 ...) {
+    
+    Date <- Resid <- NULL
+    type <- match.arg(type)
+    typeResid <- attr(object, "type")
+    
+    df <- data.frame(Date = attr(object, "date"), Resid = as.numeric(object))
+    gg <- ggplot(data = df)
+    
+    if (type == "line") {
+        gg <- gg + geom_line(mapping = aes(x = Date, y = Resid),
+                             colour = "orangered")
+    } else {
+        gg <- gg + geom_segment(mapping = aes(x = Date, xend = Date,
+                                              y = 0, yend = Resid),
+                                colour = "orangered")
+    }
+    gg <- gg + geom_point(mapping = aes(x = Date, y = Resid),
+                          colour = "orangered", shape = 16)
 
-    if (type == "exp") lims <- -log(1 - lims)
-    abline(h = lims, col = "SpringGreen3")
+    gg <- gg + geom_hline(data = data.frame(lims = attr(object, "lims95")),
+                          mapping = aes(yintercept = lims),
+                          col = "SpringGreen3", alpha = 0.7)
+    gg <- gg + xlab("date") + ylab(sprintf("residual type = \"%s\"", typeResid)) +
+        ggtitle("Generalized residuals with 95% limits")
+    gg
     
 }

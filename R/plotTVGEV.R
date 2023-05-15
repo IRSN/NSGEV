@@ -37,22 +37,40 @@ plot.TVGEV <- function(x, y, which = "c", ...) {
 ##' @note Mind that several methods of the class \code{"TVGEV"} such
 ##'     as \code{predict} \code{quantMax}, \code{coef} produce results
 ##'     that can be autoplotted.
+##'
+##' @method autoplot TVGEV
+##' @export
 ##' 
-autoplot.TVGEV <- function(object, type = c("quant"), ...) {
-
-    Date <- Response <- value <- variable <- NULL
+autoplot.TVGEV <- function(object, geom = c("line", "segment"),
+                           type = c("quant"), ...) {
     
+    Date <- Response <- value <- variable <- NULL
+    dots <- match.call(expand.dots = FALSE)$...
+    geom <- match.arg(geom)
     type <- match.arg(type)
-
+    colour <- "orangered"
+    
+    if (!is.na(m <- match("colour", names(dots)))) colour <- dots$colour
+        
     df <- data.frame(Date = object$data[ , object$date],
                      Response = object$data[ , object$response])
     
-    ymin <- min(df$Response, na.rm = TRUE)
+    ymin <- min(df$Response, na.rm = TRUE) -
+        diff(range(df$Response, na.rm = TRUE)) / 10
     g <- ggplot(data = df)
-    g <- g + geom_segment(mapping = aes(x = Date, xend = Date,
-                                        y = Response, yend = ymin),
-                          col = "black")
-
+    
+    if (geom == "segment") {
+        g <- g + geom_segment(mapping = aes(x = Date, xend = Date,
+                                            y = ymin, yend = Response),
+                              col = colour)
+    } else {
+        g <- g + geom_line(mapping = aes(x = Date, y = Response),
+                           col = colour)
+    }
+    
+    g <- g + geom_point(mapping = aes(x = Date, y = Response),
+                        shape = 16, col = colour)
+    
     if (type == "quant") {
         dfq <- as.data.frame(quantile(object))
         dfq <- tidyr::gather(dfq, key = type, value = value, -Date)

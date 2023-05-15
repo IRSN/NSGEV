@@ -41,6 +41,17 @@ Y_b}{MStar = max_b Y_b} is known. The corresponding quantile
 function \eqn{q_{M^\star}(m^\star)}{q_MStar(mStar)} can be
 obtained.
 }
+\details{
+This function computes the quantile by using the distribution
+function \eqn{F_{M^\star}}{F_M} returned by
+\code{\link{cdfMaxFun.TVGEV}} and the \code{\link[stats]{uniroot}}
+function to solve the equation \eqn{F_{M^\star}(q) = p}{F_M(q) =
+p}. By contrast \code{quantMax.TVGEV} computes the values of the
+distribution values \eqn{p_i} corresponding to a grid of quantiles
+\eqn{q_i} and interpolates to find the quantiles corresponding to
+the probability values provided by the user. So small differences
+will exist in the results.
+}
 \section{Caution}{
  When \code{theta} is given \code{model} is not
     used. The quantile function is simply that of the maximum of
@@ -64,6 +75,6 @@ qfNew(c(0.90, 0.99, 0.999))
 
 }
 \seealso{
-\code{\link{cdfMaxFun}} for the corresponding
+\code{\link{cdfMaxFun.TVGEV}} for the corresponding
     quantile function (or closure).
 }

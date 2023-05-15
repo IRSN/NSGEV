@@ -100,4 +100,11 @@ gg <- autoplot(qM2, fillConf = TRUE)
 gg <- gg + ggtitle("Quantile of the maximum over years 2025-2055")
 gg
 
+## Use the 'autolayer' method for a comparison 
+qM3 <-  quantMax(res,
+                date = as.Date(sprintf("\%4d-01-01", 2025:2035)),
+                level = c(0.95, 0.70))
+
+gg + autolayer(qM3, colour = "SpringGreen3", linetype = "dashed")
+
 }

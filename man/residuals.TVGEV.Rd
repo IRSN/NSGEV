@@ -5,12 +5,15 @@
 \alias{resid.TVGEV}
 \title{Generalised Residuals for a \code{TVGEV} Model}
 \usage{
-\method{residuals}{TVGEV}(object, type = c("exp", "unif"), ...)
+\method{residuals}{TVGEV}(object, type = c("exp", "unif", "gumbel"), ...)
 }
 \arguments{
 \item{object}{A \code{TVGEV} object.}
 
-\item{type}{The approximate distribution wanted.}
+\item{type}{The approximate distribution wanted. The choices
+\code{c("unif", "exp", "gumbel")} correspond to the standard
+uniform, the standard exponential and the standard Gumbel
+distributions. Partial matching is allowed.}
 
 \item{...}{Not used yet.}
 }
@@ -34,6 +37,10 @@ tv <- TVGEV(data = df, response = "TXMax", date = "Date",
             loc = ~ t1 + t1_1970)
 e <- resid(tv)
 plot(e)
+## ggplot alternative
+autoplot(e)
+## plot the residual against the fitted location. Use 'as.numeric'
+## on the residuals to build a similar ggplot
 mu <- tv$theta[ , "loc"]
 plot(mu, e, type = "p", pch = 16, col = "darkcyan",
      main = "generalised residuals against 'loc'")

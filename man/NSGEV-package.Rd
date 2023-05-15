@@ -64,4 +64,8 @@
 }
 \keyword{package}
 %% \seealso{}
-% \examples{}
+\examples{
+library(NSGEV)
+methods(class = "TVGEV")
+
+}

@@ -1,6 +1,5 @@
 
 ##'
-##' 
 ##' @title Quantile of a Random Maximum
 ##' 
 ##' @param object An fitted model such as created by using
@@ -15,7 +14,6 @@
 quantMax <- function(object, ...) {
     UseMethod("quantMax")
 }
-
 
 ##' Compute the quantiles for the random maximum on a given period or
 ##' collection of blocks of interest.
@@ -103,6 +101,13 @@ quantMax <- function(object, ...) {
 ##' gg <- autoplot(qM2, fillConf = TRUE)
 ##' gg <- gg + ggtitle("Quantile of the maximum over years 2025-2055")
 ##' gg
+##'
+##' ## Use the 'autolayer' method for a comparison 
+##' qM3 <-  quantMax(res,
+##'                 date = as.Date(sprintf("%4d-01-01", 2025:2035)),
+##'                 level = c(0.95, 0.70))
+##'
+##' gg + autolayer(qM3, colour = "SpringGreen3", linetype = "dashed")
 ##' 
 quantMax.TVGEV <- function(object,
                            prob,
@@ -180,16 +185,7 @@ quantMax.TVGEV <- function(object,
         ## Find a grid of quantiles which should cover the probability
         ## range.
         ## =====================================================================
-    
-        ## qMin <- min(nieve::qGEV(prob[1],
-        ##                         loc = theta[ , 1],
-        ##                         scale = theta[ , 2],
-        ##                         shape = theta[ , 3]))
-        ## qMax <- max(nieve::qGEV(prob[length(prob)],
-        ##                         loc = theta[ , 1],
-        ##                         scale = theta[ , 2],
-        ##                         shape = theta[ , 3]))
-
+   
         qMin <- .qMin.TVGEV(p = prob[1], theta)
         qMax <- .qMax.TVGEV(p = prob[length(prob)], theta)
         
@@ -515,6 +511,16 @@ quantMaxFun <- function(object, ...) {
 ##' Y_b}{MStar = max_b Y_b} is known. The corresponding quantile
 ##' function \eqn{q_{M^\star}(m^\star)}{q_MStar(mStar)} can be
 ##' obtained.
+##'
+##' This function computes the quantile by using the distribution
+##' function \eqn{F_{M^\star}}{F_M} returned by
+##' \code{\link{cdfMaxFun.TVGEV}} and the \code{\link[stats]{uniroot}}
+##' function to solve the equation \eqn{F_{M^\star}(q) = p}{F_M(q) =
+##' p}. By contrast \code{quantMax.TVGEV} computes the values of the
+##' distribution values \eqn{p_i} corresponding to a grid of quantiles
+##' \eqn{q_i} and interpolates to find the quantiles corresponding to
+##' the probability values provided by the user. So small differences
+##' will exist in the results.
 ##' 
 ##' @title Quantile Function for the Random Maximum on a given
 ##'     Period
@@ -552,7 +558,7 @@ quantMaxFun <- function(object, ...) {
 ##'     independent r.vs following GEV distributions with their
 ##'     parameters given by (the rows of) \code{theta}.
 ##' 
-##' @seealso \code{\link{cdfMaxFun}} for the corresponding
+##' @seealso \code{\link{cdfMaxFun.TVGEV}} for the corresponding
 ##'     quantile function (or closure).
 ##'
 ##' @examples

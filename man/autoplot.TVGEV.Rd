@@ -4,7 +4,7 @@
 \alias{autoplot.TVGEV}
 \title{Create a \code{ggplot} for a \code{TVGEV} Object}
 \usage{
-\method{autoplot}{TVGEV}(object, type = c("quant"), ...)
+\method{autoplot}{TVGEV}(object, geom = c("line", "segment"), type = c("quant"), ...)
 }
 \arguments{
 \item{object}{An object with class \code{"TVGEV"}.}

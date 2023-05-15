@@ -1287,7 +1287,6 @@ print.summary.TVGEV <- function(x, ...) {
     print(cbind("Estimate" = x$estimate,
                 "Std. Error" = x$sd))
     cat("\n")
-    
     cat(sprintf("Negative log-likelihood:\n%7.3f\n\n", x$negLogLik))
 
 }
