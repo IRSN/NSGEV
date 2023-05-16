@@ -12,8 +12,8 @@ the daily maximal temperatures.
 
 # NEWS
 
-See the file [NEWS.md](https://github.com/IRSN/NSGEV/blob/main/NEWS.md).
-This file will now on be used in place of the `ChangeLog` file.
+See the file [NEWS.md](NEWS.md). This file will now on be used in place
+of the `ChangeLog` file.
 
 The **nieve** package used to provide the GEV distribution functions
 also has its own NEWS file.
