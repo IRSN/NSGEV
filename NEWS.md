@@ -9,19 +9,25 @@
 - For a `TVGEV` object, the `negLogLikFun` function now optionally
   returns the hessian.
   
-- New method `quantMax` for the `"TVGEV"` class.
+- New method `quantMax` for the `"TVGEV"` class and subsequent method
+  `autoplot` for the related `quantMax.TVGEV` objects. Using these
+  methods is illustrated in the main vignette.
 
 - New methods `quantMaxFun` and `cdfMaxFun` for the `"TVGEV"`
   class.
   
+- An `autoplot` method has been added for some classes:`"TVGEV"` and
+  more.
+
 - The vignettes of the **NSGEVVal** package are now included in
-  **NSGEV**.  The require technical functions from **NSGEVVal** are
-  now included in **NSGEV** as "internal" functions
+  **NSGEV**.  The required technical functions from **NSGEVVal** are
+  now included in **NSGEV** as "internal" functions. The bibliography
+  has been somewhat cleaned.
 
 ## Technical changes (non user-visible)
  
-- The NAMESPACE is now generated with **roxygen2**
-
+- The `NAMESPACE` file is now generated with **roxygen2** making the
+  package easier to maintain.
 
 # News in version 0.1.7
 

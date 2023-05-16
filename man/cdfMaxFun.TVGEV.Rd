@@ -55,7 +55,7 @@ cdf <- cdfMaxFun(res1)
 cdf(c(39.0, 41.0))
 
 ## a 'new period'
-date <- as.Date(sprintf("\%4d-01-01", 2025:2055))
+date <- as.Date(sprintf("\%4d-01-01", 2025:2054))
 cdfNew <- cdfMaxFun(res1, date = date)
 cdfNew(c(39.0, 41.0))
 

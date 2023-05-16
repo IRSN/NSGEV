@@ -28,7 +28,10 @@ Generalised Residuals for a \code{TVGEV} model.
 }
 \note{
 The upper 95\% quantile of the standard exponential is close
-to \eqn{3} which can be used to gauge "large residuals".
+    to \eqn{3} which can be used to gauge "large residuals". Using
+    \code{type = "gumbel"} seems better to diagnose abnormally
+    small residuals as may result from abnormally small block
+    maxima.
 }
 \examples{
 df <- within(TXMax_Dijon, Date <- as.Date(sprintf("\%4d-01-01", Year)))

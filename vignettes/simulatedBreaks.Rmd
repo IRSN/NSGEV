@@ -1,0 +1,254 @@
+---
+title: "TVGEV: Check Simulated Trend"
+output:
+  html_vignette:
+    toc: true
+    fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{TVGEV: Check Simulated Trend}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r global_options, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+    cache = FALSE,
+    fig.width = 6, fig.height = 4, fig.path = "Rgraphics/")
+KABLE <- TRUE
+ip <- installed.packages()
+library(NSGEV)
+library(ismev)
+```
+
+## The broken line trend
+   
+In this report we simulate a trend for the location parameter. We
+chose the model $Y_b \sim \text{GEV}(\mu_b, \, \sigma, \,\xi)$ with
+constant scale and shape $\xi$, while the location is given by
+
+$$
+    \mu_b = \psi_{\mu, 0} + \psi_{\mu, 1} + \psi_{\mu, 2} (b - b_0)_+	 
+$$
+	
+where the annual block $b_0$ is chosen to be $1980$, and the data will
+from 1921 to 2020.  Using the `breaksX` design function we get a
+matrix `X` with a linear trend `t1` and a broken line `t1_1980` with
+slope: $0$ before 1980 and slope $1$ from $1980$ on.
+  
+    
+```{r sim0, results = "asis"}
+library(NSGEV)
+date <- as.Date(sprintf("%4d-01-01", 1921:2020)) 
+X <- breaksX(date = date, breaks = "1980-01-01")
+rownames(X) <- format(date, "%Y")
+n <- nrow(X)
+plot(date, X[ , 1], ylim = range(X), type = "n", xlab = "", ylab = "")
+matlines(date, X, type = "l", lwd = 2) 
+```
+	
+## Simulation of the data and GEV estimation
+   	
+We simulate a sample of size `ns` for the vector
+$\boldsymbol{\psi}$ of $p=4$ coefficients $\psi_{\mu, 0}$, $\psi_{\mu, 1}$, $\sigma$
+and $\xi$. The results are stored in a matrix `psi` with `ns` rows.
+
+```{r sim1, results = "asis"}
+set.seed(1234)    
+GEVnms <- c("loc", "scale", "shape")  
+ns <- 400
+pLoc <- 3
+psiLoc <- matrix(rnorm(ns * pLoc, sd = 0.15), nrow = ns)
+sigma <- rgamma(ns, shape = 4, rate = 2)
+xi <- rnorm(ns, sd = 0.1)
+psi <- cbind(psiLoc, sigma, xi)
+colnames(psi) <- c(paste("mu", c("0", colnames(X)), sep = "_"), "sigma_0", "xi_0")
+p <- ncol(psi)
+kable(head(psi, n = 4), digits = 3)
+```
+	
+Then we create a three-dimensional array `theta` with dimension `c(ns, n ,
+3)`. A slice `theta[is, , ]` will contain the GEV parameters for the
+simulation number `is` i.e., a matrix with dimension `c(n , 3)` of the GEV
+parameters $\boldsymbol{\theta}_b$ for the blocks $b=1$ to $b =n$.
+	   
+	   
+```{r sim2, results = "hide", message=FALSE}
+theta <- array(NA, dim = c(ns, n, 3), dimnames = list(NULL, rownames(X), GEVnms))
+Y <- mu <- array(NA, dim = c(ns, n), dimnames = list(NULL, rownames(X)))
+fitTVGEV <- fitextRemes <- fitismev <- list()
+co <- array(NA, dim = c(ns, 3, p),
+            dimnames = list(NULL, c("NSGEV", "extR", "ismev"), colnames(psi)))
+ML <- array(NA, dim = c(ns, 3),
+            dimnames = list(NULL, c("NSGEV", "extR", "ismev")))
+CVG <- array(NA, dim = c(ns, 3),
+             dimnames = list(NULL, c("NSGEV", "extR", "ismev")))
+estim <- "optim"
+```
+
+```{r sim3, results = "asis", warning=FALSE}
+for (is in 1:ns) {
+    mu <- cbind(1, X) %*% psiLoc[is, ]
+    theta[is, , ] <- cbind(mu, sigma[is], xi[is])
+    Y[is, ] <- rGEV(1,
+                    loc = theta[is, , 1],
+                    scale = theta[is, , 2],
+                    shape = theta[is, , 3])
+    
+    df <- data.frame(date = date, Y = Y[is, ])
+    fitTVGEV[[is]] <- try(NSGEV::TVGEV(data = df, response = "Y", date = "date",
+                                       design = breaksX(date = date,
+                                           breaks = "1980-01-01",
+                                           degree = 1),
+                                       estim = estim,
+                                       loc = ~ t1 + t1_1980))
+    if (!inherits(fitTVGEV[[is]], "try-error")) {
+        if (estim == "optim") {
+            CVG[is, "NSGEV"] <- (fitTVGEV[[is]]$fit$convergence == 0)
+        } else {
+            CVG[is, "NSGEV"] <- (fitTVGEV[[is]]$fit$status > 0)
+        }
+        if (CVG[is, "NSGEV"]) {
+            co[is, "NSGEV", ] <- coef(fitTVGEV[[is]])
+            ML[is, "NSGEV"]  <- logLik(fitTVGEV[[is]])
+        }
+    } else CVG[is, "NSGEV"] <- FALSE
+     
+    df.extRemes <- cbind(df, breaksX(date = df$date, breaks = "1980-01-01",
+                                     degree = 1));
+    fitextRemes[[is]] <- try(extRemes::fevd(x = df.extRemes$Y, data = df.extRemes,
+                                            loc = ~ t1 + t1_1980))
+    if (!inherits(fitextRemes[[is]], "try-error")) {
+        CVG[is, "extR"] <-  (fitextRemes[[is]]$results$convergence == 0)
+        if (CVG[is, "extR"]) {
+            co[is, "extR", ] <- fitextRemes[[is]]$results$par
+            ML[is, "extR"] <-  -fitextRemes[[is]]$results$value
+        }
+    } else CVG[is, "extR"] <- FALSE
+    fitismev[[is]] <- try(ismev::gev.fit(x = df.extRemes$Y,
+                                         y = as.matrix(df.extRemes[ , c("t1", "t1_1980")]),
+                                         mul = 1:2, show = FALSE))
+    if (!inherits(fitismev[[is]], "try-error")) {
+        CVG[is, "ismev"] <- (fitismev[[is]]$conv == 0)
+        if (CVG[is, "ismev"]) {
+            co[is, "ismev", ] <- fitismev[[is]]$mle
+            ML[is, "ismev"] <-  -fitismev[[is]]$nllh
+        }
+    } else CVG[is, "ismev"] <- FALSE
+    
+}
+```
+	
+```{r simPlot, fig.cap="Ten simulated paths"}
+matplot(t(Y[1:10, ]), type = "l", xlab = "", ylab = "")
+```
+	
+## Results
+
+We can assess the convergence for the three estimation methods.
+   
+```{r sim4a, results = "asis", warning=FALSE }
+kable(t(apply(CVG, 2, sum)))
+```
+
+
+   
+We can inspect the content of the array `co` containing the estimated
+coefficients $\widehat{\boldsymbol{\psi}}$.
+    
+```{r sim4, results = "asis", warning=FALSE }
+kable(aperm(co[1:3, , ], perm = c(3, 2, 1)), digits = 3)
+```
+	
+There are cases where the estimation fails, and also cases where
+estimations seem successful but lead to very different estimated
+coefficients. In such case, we can compare the maximised
+log-likelihood stored in the array `ML`. For example this happens here
+for the first simulation; we selected the random seed so that the
+results for first estimation differ, but the conclusion are the same
+when another seed is used. The log-likelihoods for the four first
+simulated samples are as follows.
+		
+```{r sim5, results = "asis", warning=FALSE }
+MLcomp <- t(ML[1:3, ])
+colnames(MLcomp) <- paste("sim", 1:3)
+kable(MLcomp, digits = 3)
+```
+
+so the estimation produced by **NSGEV** seems better for simulation
+$\#1$, since it leads to a greater log-likelihood. Note the
+estimated shape parameter $\widehat{\xi} < - 1$ both with **extRemes**
+and **ismev** which can be considered as an alert. Indeed, as far as
+$\xi < -1$ is allowed we could find an infinite log-likelihood and an
+estimated shape $< - 1$ can be considered as a non-convergence or as
+an error.
+ 	
+	
+We notice that both `extRemes::fevd` and `ismev::gev.fit` tend to find
+not infrequently very low values for the estimated shape, 
+$\widehat{\xi} < -1$.
+
+```{r sim6, results = "asis", warning=FALSE }
+xiRange <- apply(co[ , , "xi_0"], 2, range, na.rm = TRUE)
+rownames(xiRange) <- c("shape min", "shape max")
+kable(xiRange, digits = 3)
+```
+	
+In order to compare the maximised log-likelihoods for the two
+packages, we will consider that these are nearly equal when their
+absolute difference is $<0.05$ and set any `NA` value to `-Inf`
+	 
+		
+```{r sim7, results = "asis", warning=FALSE, fig.cap="Comparison of the maximised log-likelihoods."}
+ML[is.na(ML)] <- -Inf  
+compML <- table(cut(ML[ , "NSGEV"] - ML[ , "extR"],
+                    breaks = c(-Inf, -0.05, 0.05, Inf),
+                    labels = c("NSGEV < extR",
+                        "NSGEV ~ extR",
+                        "NSGEV > extR")))
+kable(t(compML))
+plot(ML[ , c("NSGEV", "extR")], asp = 1, pch = 16, col = "orangered", cex = 0.8)
+abline(a = 0, b = 1)
+```
+	
+```{r sim7b, results = "asis", warning=FALSE, fig.cap="Comparison of the maximised log-likelihoods."}
+compML <- table(cut(ML[ , "NSGEV"] - ML[ , "ismev"],
+                    breaks = c(-Inf, -0.05, 0.05, Inf),
+                    labels = c("NSGEV < ismev",
+                        "NSGEV ~ ismev",
+                        "NSGEV > ismev")))
+kable(t(compML))
+plot(ML[ , c("NSGEV", "ismev")], asp = 1, pch = 16, col = "SeaGreen", cex = 0.8)
+abline(a = 0, b = 1)
+```
+	
+We find that for this kind of model, the maximised log-likelihood
+found by `NSGEV::TVGEV` is comparable to that found by
+`extRemes::fevd` and is even greater for a quite large proportion of
+cases. More problems of convergence were found when using the function
+`ismev::gev.fit` than when using the two other functions.
+
+As a possible explanation for the fact that `NSGEV::TVGEV` performs
+better than the two other functions is that is uses better initial
+values, based on linear regression. However this way of getting
+initial values is straightforward only for models with constant scale
+and shape as is the case here.
+	
+## Findings
+
+In this example, we find that *for the kind of model studied here*.
+
+- All of the three functions `NSGEV::TVGEV`, `extRemes::fevd` and
+  `ismev::gev.fit` can experiment problems of convergence. These
+  problems are much more frequent with `ismev::gev.fit` than with the
+  two other functions, and also seem to be pretty less frequent with
+  `NSGEV::TVGEV` than with `extRemes::fevd`.
+
+- A problem with the functions `extRemes::fevd` and `ismev::gev.fit`
+  is that they quite often find estimates with a shape $< -1$ which
+  can be considered as absurd. For the simulated data used here, the
+  risk of finding $\widehat{\xi} < -1$ is higher when the linear trend
+  is stronger, i.e. when the slope takes a larger absolute value.
+  Since real data usually show a weaker dependence on the covariates
+  than the data used here, the problems of convergence shown
+  here have been overstated.

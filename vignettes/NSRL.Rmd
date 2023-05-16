@@ -1,0 +1,86 @@
+---
+title: "TVGEV: Check Return Levels"
+output:
+  html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{TVGEV: Check Return Levels}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r global_options, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+    cache = FALSE,
+    fig.width = 6, fig.height = 4, fig.path = "Rgraphics/")
+KABLE <- TRUE
+ip <- installed.packages()
+library(NSGEV)
+library(ismev)
+```
+
+## The check function
+
+The Non-Stationary Return Level (NSRL) of Parey et al is implemented
+for Time-Varying GEV models in the `predictUncond` function of the
+**NSGEV** package. The package has a function named
+`check_predictUncond` that can be used to check the results of
+`NSGEV::predictUncond`. For now, the check does not check the
+computation of the confidence limits, but only the value of the RL as
+given by the `Quant` column in the data frame returned by
+`predictUncond`. Since the NSRL is given by an equation with no
+explicit solution, it is worth checking that the returned value is
+consistent with the definition of the NSRL.
+
+The check relies on the `simulate` method for the `"TVGEV"` class.
+Firstly, an unconditional prediction is obtained for each period in
+a set of periods of interest. All these periods share the same
+beginning date, say $t_0$. The period with number $j$ contains $B_j$
+blocks where $B_j$ is the maximal horizon chosen via `period` (or set
+by default if `period` is not given). Remind that `predictUncond`
+generally computes the results for *several* periods with the same
+origin $t_0$ as required here. Secondly, a large number, say $m$, of
+paths $Y^{[i]}(t)$ is generated from the model. For each predicted
+period $j$ and each path $i$, we compute the number $N^{[i]}(u_j)$ of
+exceedances over the quantile $u_j$ corresponding to the period. We
+eventually take the average of the $m$ values $N^{[i]}(u_j)$ for $i=
+1$ to $m$ and compare it to the expectation. If $m$ is large, then the
+average should be close to the expectation.
+
+
+## Example: annual maxima of TX in Dijon 
+    
+The *example* run with `example(TVGEV)` defines a `TVGEV` model for
+the annual maxima of daily maximum temperature (TX) at Dijon (Fr) in
+an object named `res2`.
+
+```{r predictUncond, results = "hide", echo=FALSE}
+example(TVGEV)
+```
+Consider as period of interest the period starting at year 2020. The
+following code computes the NSRL for several periods of time.
+	 
+```{r predictUncond1, results = "asis", fig.cap="Unconditional Return Levels with 95% confidence intervals (profile-likelihood)."}
+pu <- predictUncond(res2, newdateFrom = "2020-01-01", confintMethod = "proflik")
+kable(pu, digits = 2)
+plot(pu)
+```
+	
+For instance, for the period of $B_j = 40$ years beginning at the date `"2020-01-01"`,
+the level  $u_j =`r round(subset(pu, Period == 40)$Quant, dig = 2)`$ Celsius
+is expected to be exceeded once (in average) across a large number of paths.
+   
+```{r predictUncond2}
+set.seed(12345)
+check_predictUncond(res2, newdateFrom = "2020-01-01")
+```	
+We use the default number of paths $m = `r formals(NSGEV::check_predictUncond)$nsim`$, but
+only the `100` first paths are displayed on the plot. The results are in good
+accordance with the definition.
+
+## Findings
+
+This test shows that the NSRL computed by `predictUncond` is in good
+accordance with the definition.
+	  

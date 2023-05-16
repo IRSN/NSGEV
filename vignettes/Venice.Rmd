@@ -1,0 +1,229 @@
+---
+title: "TVGEV: Check Venice Example"
+output:
+  html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{TVGEV: Check Venice Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r global_options, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+    cache = FALSE,
+    fig.width = 6, fig.height = 4, fig.path = "Rgraphics/")
+KABLE <- TRUE
+ip <- installed.packages()
+library(NSGEV)
+library(ismev)
+```
+	
+### Venice example and data
+
+This example was studied by Coles and
+[Fawcett](http://www.mas.ncl.ac.uk/~nlf8/teaching/mas8391/background/chapter5.pdf)
+who both fitted time varying GEV models with linear and quadratic
+trend by using the **ismev** package. We reproduce here their results
+by using **NSGEV** and also **extRemes**.
+
+Although the data contains the $r$-largest observations, we use only
+the annual maxima here; These are found in column 2 of the matrix
+object.
+      
+     
+``` {r venice1}    
+data(venice, package = "ismev")
+df <- data.frame(Year = venice[ , 1],
+                 date = as.Date(sprintf( "%4d-01-01", venice[ , 1])),
+                 SeaLevel = venice[ , 2])
+df <- within(df, date <- as.Date(sprintf("%4d-01-01", Year)))
+plot(SeaLevel ~ date, data = df, type = "o", pch = 16, xlab = "")
+
+```
+	
+### Fitting stationary GEV models    
+
+We begin by fitting a stationary GEV model.
+    
+``` {r veniceNoTrend, results="hide"} 
+estim <- "optim"
+fitTVGEV0 <- TVGEV(data = df,
+                   response = "SeaLevel", date = "date",
+                   estim = estim,
+                   loc = ~ 1)
+fitismev0 <- gev.fit(xdat = df$SeaLev)
+fitextRemes0 <- extRemes::fevd(x = df$SeaLev, type = "GEV")
+```	
+
+The estimated coefficients and maximised log-likelihoods are as follows.
+	
+``` {r veniceNoTrend1} 
+rbind("NSGEV" = coef(fitTVGEV0),
+      "ismev" = fitismev0$mle,
+      "extRemes" = fitextRemes0$results$par)
+c("NSGEV" = logLik(fitTVGEV0),
+  "ismev" = -fitismev0$nllh,
+  "extRemes" = -fitextRemes0$results$value)
+
+
+```
+
+### Linear trend
+
+We now introduce a linear trend. We first create a dataframe to be
+used with the functions from **extRemes** and **ismev**, with a linear
+and variable a quadratic trend variable as well.
+	
+``` {r veniceLinTrend, results="hide"} 
+dfismev <- within(df, {t1num <- Year - 1930; t2num <- (Year - 1930)^2 })
+fitTVGEV1 <- TVGEV(data = df,
+                   response = "SeaLevel", date = "date",
+                   design = polynomX(date = date,
+                       degree = 2, origin = "1930-01-01"),
+                   estim = estim,
+                   trace = 2,
+                   loc = ~ 1 + t1)
+fitismev1 <- gev.fit(xdat = df$SeaLev,
+                     ydat = as.matrix(dfismev[ , "t1num"]),
+                     mul = 1)
+fitextRemes1 <- extRemes::fevd(x = dfismev$SeaLev,
+                               data = dfismev,
+                               type = "GEV",
+                               location.fun = ~t1num)
+```	
+
+``` {r veniceLinTrend1} 
+rbind("NSGEV" = coef(fitTVGEV1),
+      "ismev" = fitismev1$mle,
+      "extRemes" = fitextRemes1$results$par)
+c("NSGEV" = logLik(fitTVGEV1),
+  "ismev" = -fitismev1$nllh,
+  "extRemes" = -fitextRemes1$results$value)
+
+```
+We can perform a likelihood-ratio test as in the references.
+   	
+``` {r veniceLinTrend2} 
+anova(fitTVGEV0, fitTVGEV1)
+
+```
+
+### Quadratic trend
+
+We now add a quadratic term in the trend.    
+    
+``` {r veniceQuadTrend, results="hide"} 
+fitTVGEV2 <- TVGEV(data = df,
+                   response = "SeaLevel", date = "date",
+                   design = polynomX(date = date,
+                       degree = 2, origin = "1930-01-01"),
+                   estim = estim,
+                   trace = 2,
+                   loc = ~ 1 + t1 + t2)
+fitismev2 <- gev.fit(xdat = dfismev$SeaLev,
+                     ydat = as.matrix(dfismev[ , c("t1num", "t2num")]),
+                     mul = c(1, 2))
+fitextRemes2 <- extRemes::fevd(x = dfismev$SeaLev,
+                               data = dfismev,
+                               type = "GEV",
+                               location.fun = ~t1num + t2num) 
+```	
+The estimated coefficients and maximised log-likelihoods are as follows.
+
+``` {r veniceQuadTrend1} 
+rbind("NSGEV" = coef(fitTVGEV2),
+      "ismev" = fitismev2$mle,
+      "extRemes" = fitextRemes2$results$par)
+c("NSGEV" = logLik(fitTVGEV2),
+  "ismev" = -fitismev2$nllh,
+   "extRemes" = -fitextRemes2$results$value)
+
+```
+So, compared to the two other packages, `NSGEV::TVGEV` returns different estimated coefficients
+and a smaller maximised log-likelihood, indicating a problem in the maximisation. Since
+the scaling of the trend variable is often a concern, we try a change in the time origin.
+	
+``` {r veniceQuadTrend2} 	
+fitTVGEV2b <- TVGEV(data = df,
+                    response = "SeaLevel", date = "date",
+                    design = polynomX(date = date,
+                        degree = 2, origin = "1950-01-01"),
+                    estim = estim,
+                    trace = 2,
+                    loc = ~ 1 + t1 + t2)
+rbind("NSGEV" = coef(fitTVGEV2b),
+      "ismev" = fitismev2$mle,
+      "extRemes" = fitextRemes2$results$par)
+c("NSGEV" = logLik(fitTVGEV2b),
+  "ismev" = -fitismev2$nllh,
+  "extRemes" = -fitextRemes2$results$value)
+```
+The log-likelihood maximised with `NSGEV::TVGEV` is now identical to that
+of the other two packages so a simple change of origin solved the
+problem. The resulting model in the `TVGEV` object is simply a
+re-parameterisation of the former, and the comparison with the other
+packages needs some care because the trends for the location parameter
+are no longer identical. The new parameterisation facilitates the
+maximisation. To complete the comparison we can use 1950 as an origin
+for all models.
+    
+``` {r veniceQuadTrend3, results="hide"} 
+dfismevb <- within(df, {t1num <- Year - 1950; t2num <- (Year - 1950)^2 })
+fitismev2b <- gev.fit(xdat = dfismevb$SeaLev,
+                      ydat = as.matrix(dfismevb[ , c("t1num", "t2num")]),
+                      mul = c(1, 2))
+fitextRemes2b <- extRemes::fevd(x = dfismevb$SeaLev,
+                                data = dfismevb,
+                                type = "GEV",
+                                location.fun = ~t1num + t2num)
+```
+``` {r veniceQuadTrend4} 
+rbind("NSGEV" = coef(fitTVGEV2b),
+      "ismev" = fitismev2b$mle,
+      "extRemes" = fitextRemes2b$results$par)
+c("NSGEV" = logLik(fitTVGEV2b),
+  "ismev" = -fitismev2b$nllh,
+  "extRemes" = -fitextRemes2b$results$value)
+
+```
+We now can proceed to the likelihood ratio test.
+``` {r veniceLinTrend4} 
+anova(fitTVGEV1, fitTVGEV2b)
+
+```
+	
+The test tells that adding a quadratic trend term does not improve the
+model.
+
+	
+### Findings
+	
+With this example it appears that in `NSGEV::TVGEV` the maximisation of
+log-likelihood can fail to find the best value, still giving an
+indication of convergence. Here the problem is due to the order of
+magnitude of one covariate, namely the quadratic term in the
+polynomial basis. It was fixed by simply changing the origin of time.
+
+With the current implementation of **NSGEV** when formulas involving
+several basis covariates are used, we recommend to fit models with
+increasing complexity, and check that the log-likelihood increases
+when adding a new covariate.
+
+Several solutions can be to improve the code of `NSGEV::TVGEV` in
+future versions.
+
+- Allow the user to give initial values for the parameters.
+
+- Try a "multistart" optimisation with randomly selected initial
+  values.
+		
+- Scale the design matrix $\mathbf{X}$ by subtracting its mean to
+  each column, and by dividing each column by its standard
+  deviation. Although this is a quite simple application of the
+  `scale` method for the `"matrix"`class,  the estimated coefficients
+  should then be translated back in the original scale, which can be
+  quite tedious to implement.
+
+  

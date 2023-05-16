@@ -9,6 +9,9 @@
 \arguments{
 \item{object}{An object with class \code{"TVGEV"}.}
 
+\item{geom}{Character giving the "geometry" to be used for the
+layer corresponding to the (timeseries) data.}
+
 \item{type}{The type of result shown along with the series used.
 For now, only the timeseries of quantiles as computed by
 \code{\link{quantile.TVGEV}} can be added.}

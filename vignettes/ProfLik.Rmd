@@ -1,0 +1,134 @@
+---
+title: "TVGEV: Check Profile Likelihood"
+output:
+  html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{TVGEV: Check Profile Likelihood}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r global_options, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+    cache = FALSE,
+    fig.width = 6, fig.height = 4, fig.path = "Rgraphics/")
+KABLE <- TRUE
+ip <- installed.packages()
+library(NSGEV)
+library(ismev)
+```
+
+## Goal
+    
+In this report, we compare profile-likelihood inference results given
+by **NSGEV** with those of other packages, mainly **ismev**. We make
+use of classical data.
+
+## Port Pirie data
+
+### ML Estimation
+   
+``` {r proflik-pp1}
+library(ismev)   
+data(portpirie, package = "ismev")
+df <- portpirie
+df <- within(df, date <- as.Date(sprintf("%4d-01-01", Year)))
+fitNSGEV <- try(TVGEV(data = df, response = "SeaLevel", date = "date"))
+fitismev <- gev.fit(xdat = df$SeaLev)
+fitextRemes <- extRemes::fevd(x = df$SeaLev, type = "GEV")
+
+rbind("NVSGEV" = coef(fitNSGEV),
+      "ismev" = fitismev$mle,
+      "extRemes" = fitextRemes$results$par)
+
+```
+	
+### Confidence Intervals on Parameters
+
+The `check_confint` function checks the computation of the
+profile-likelihood intervals on the shape parameter. This is a
+graphical test: on the plot produced by `ismev::prof.xi`, we add two
+green vertical lines showing the confidence limits for the shape
+parameter given by the `confint` method for the class `"TVGEV"`. We
+must check that both lines cut the profile-likelihood curve at a point
+with an ordinate matching the lowest horizontal blue line.
+	    	
+``` {r proflik-pp2a, fig.width=4, fig.height=4, fig.cap="Confidence level 95%."}    
+check_confint(fitNSGEV, ref = fitismev, level = 0.95)
+```
+	    	
+``` {r proflik-ppb, fig.height=4, fig.cap="Confidence level 70%."}    
+check_confint(fitNSGEV, ref = fitismev, level = 0.70)
+```
+	
+### Confidence Intervals on Return levels
+    
+The `check_predict` function checks the computation of the
+profile-likelihood confidence intervals on return levels. As for
+`check_confint`, the check is essentially graphical. On each plot, the
+two vertical lines show the confidence limits given by the `predict`
+method for the class `"TVGEV"`. We must check that both lines cut the
+profile-likelihood curve at a point with an ordinate matching the
+lowest horizontal blue line.
+       
+``` {r proflik-pp3a, results="hide", fig.width=8, fig.height=8, fig.cap="Confidence level 95%."}    
+check_predict(fitNSGEV, ref = fitismev, level = 0.95)
+
+```
+		
+``` {r proflik-pp3b, results="hide", fig.width=8, fig.height=8, fig.cap="Confidence level 70%."}    
+check_predict(fitNSGEV, ref = fitismev, level = 0.70)
+
+```
+
+Note that the function is rather verbose, so the results have been hidden.
+
+## Fremantle data
+
+### ML Estimation
+   
+``` {r proflik-fmt1}
+library(ismev)   
+data(fremantle, package = "ismev")
+df <- fremantle
+df <- within(df, date <- as.Date(sprintf("%4d-01-01", Year)))
+fitNSGEV <- try(TVGEV(data = df, response = "SeaLevel", date = "date"))
+fitismev <- gev.fit(xdat = df$SeaLev)
+fitextRemes <- extRemes::fevd(x = df$SeaLev, type = "GEV")
+
+rbind("NVSGEV" = coef(fitNSGEV),
+      "ismev" = fitismev$mle,
+      "extRemes" = fitextRemes$results$par)
+
+```
+	
+### Confidence Intervals on Parameters
+
+	    	
+``` {r proflik-fmt2a, fig.cap="Confidence level 95%.", fig.height=4, fig.width=4}    
+check_confint(fitNSGEV, ref = fitismev, level = 0.95)
+```
+	
+``` {r proflik-fmt2b, fig.cap="Confidence level 70%.", fig.width=4}    
+check_confint(fitNSGEV, ref = fitismev, level = 0.70)
+```
+	
+### Confidence Intervals on Return levels
+		
+``` {r proflik-fmt3a, results="hide", fig.width=8, fig.height=8, fig.cap="Condidence level 95%."}    
+check_predict(fitNSGEV, ref = fitismev, level = 0.95)
+
+```
+	
+``` {r proflik-fmt3b, results="hide", fig.width=8, fig.height=8, fig.cap="Confidence level 70%."}    
+check_predict(fitNSGEV, ref = fitismev, level = 0.70)
+
+```
+	
+## Findings
+
+It can happen that one of the bound of a confidence interval is not
+found and remains `NA`. This seems to be most often the case for the
+lower bound.	  

@@ -69,7 +69,7 @@ qf <- quantMaxFun(res1)
 qf(c(0.90, 0.99, 0.999))
 
 ## a 'new period'
-date <- as.Date(sprintf("\%4d-01-01", 2025:2055))
+date <- as.Date(sprintf("\%4d-01-01", 2025:2054))
 qfNew <- quantMaxFun(res1, date = date)
 qfNew(c(0.90, 0.99, 0.999))
 

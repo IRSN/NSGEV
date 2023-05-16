@@ -88,23 +88,30 @@ the inference e.g., using the "delta method".
 \examples{
 df <- within(TXMax_Dijon, Date <- as.Date(sprintf("\%4d-01-01", Year)))
 ## fit a TVGEV model. Only the location parameter is TV.
-res <- TVGEV(data = df, response = "TXMax", date = "Date",
-             design = breaksX(date = Date, breaks = "1970-01-01", degree = 1),
-             loc = ~ t1 + t1_1970)
-qM1 <- quantMax(res, level = c(0.95, 0.70))
-qM2 <- quantMax(res,
-                date = as.Date(sprintf("\%4d-01-01", 2025:2055)),
-                level = c(0.95, 0.70))
+tv <- TVGEV(data = df, response = "TXMax", date = "Date",
+            design = breaksX(date = Date, breaks = "1970-01-01", degree = 1),
+            loc = ~ t1 + t1_1970)
+qM1 <- quantMax(tv, level = c(0.95, 0.70))
+date2 <- as.Date(sprintf("\%4d-01-01", 2025:2054))
+qM2 <- quantMax(tv, date = date2, level = c(0.95, 0.70))
 qM2
 gg <- autoplot(qM2, fillConf = TRUE)
-gg <- gg + ggtitle("Quantile of the maximum over years 2025-2055")
+gg <- gg + ggtitle("Quantile of the maximum over years 2025-2054")
 gg
-
-## Use the 'autolayer' method for a comparison 
-qM3 <-  quantMax(res,
-                date = as.Date(sprintf("\%4d-01-01", 2025:2035)),
-                level = c(0.95, 0.70))
+## Use the 'autolayer' method for a quick comparison 
+qM3 <-  quantMax(tv,
+                 date = as.Date(sprintf("\%4d-01-01", 2025:2035)),
+                 level = c(0.95, 0.70))
 
 gg + autolayer(qM3, colour = "SpringGreen3", linetype = "dashed")
+## Compare with a simulation. Note that 'sim' has class "bts"  and
+## is essentially a numeric matrix. Increas 'nsim' to get a more
+## precise estimate of the high quantiles
+sim <- simulate(tv, newdate = date2, nsim = 10000)
+M <- apply(sim, 2, max)
+probs <- c(0.9, 0.95, 0.98, 0.99, 0.995, 0.998)
+qSim <- quantile(M, prob = probs)
+dfSim <- data.frame(Prob = probs, ProbExc = 1 - probs, Quant = qSim)
+gg + geom_point(data = dfSim, mapping = aes(x = ProbExc, y = Quant))
 
 }

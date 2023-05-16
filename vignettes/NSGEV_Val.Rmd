@@ -1,0 +1,360 @@
+---
+title: "TVGEV: Checks"
+author: "Yves Deville, Lise Bardet"
+date: "`r Sys.Date()`"
+output:
+  html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{TVGEV: Checks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: NSGEV.bib
+---
+
+```{r global_options, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+    cache = FALSE,
+    fig.width = 6, fig.height = 4, fig.path = "Rgraphics/")
+KABLE <- TRUE
+ip <- installed.packages()
+library(NSGEV)
+library(ismev)
+```
+# The NSGEV Package
+  
+## Models
+
+### Non-Stationary GEV models
+    
+The **NSGEV** package is dedicated to Non-Stationary models with
+Generalized Extreme Value (GEV) observations which are often called
+*Extreme Value Regression* models.  These concern data with
+observations attached to *blocks* $b = 1$, $2$, $\dots$, $B$,
+typically years. A response variable $Y$ has one observation $Y_b$ for
+each block, which is typically a maximum reached within the block
+$b$. The response relates to a vector $\mathbf{x}$ of covariates with
+observations $\mathbf{x}_b$. The $B$ r.vs $Y_b$ are assumed to be
+independent with GEV margin
+    
+$$
+   Y_b \sim \text{GEV}(\mu_b,\,\sigma_b,\, \xi_b),
+$$
+
+and the three GEV parameters can depend on the covariates in
+$\mathbf{x}_b$ through a link function. For example with one covariate
+$x_b$ we can use
+
+$$
+  \mu_b = \psi_{\mu,0} + \psi_{\mu, 1} x_b, 	  	
+$$
+
+where $\psi_{\mu,0}$ and $\psi_{\mu, 1}$ are parameters to be
+estimated. The pseudo-index $\mu$ of $\psi$ is used to show which GEV
+parameter $\psi$ relates to. We can have similarly a formula and a
+link for the scale $\sigma$ and even for the shape $\xi$, leading to
+parameters $\psi_{\sigma,i}$ and $\psi_{\xi,i}$. 
+	
+An alternative notation for the GEV distribution uses the vector
+$\boldsymbol{\theta}_b := [\mu_b,\,\sigma_b,\,\xi_b]$ and writes $Y_b
+\sim \text{GEV}(\boldsymbol{\theta}_b)$. The GEV parameters
+$\theta_{b,i}$ which depend on the block $b$ should not be confused
+with the parameters $\psi$ of the model, which do not depend on the
+block $b$.
+	   
+	
+   
+### Time-Varying  GEV models
+	    	    
+This report mainly focuses on *Time-Varying* models which are the main
+concern in the package, and are used as objects of a S3 class named
+`"TVGEV"`. In this setting, the blocks are assumed to have the *same
+duration*; Moreover, attached with each block $b$ we have a *date*
+$t_b$ which can conveniently chosen as the beginning of the block. The
+GEV parameters are now linked to covariates which are deterministic
+functions $x(t_b)$ of $t_b$. For instance, a quadratic trend can be
+used for the location parameter $\mu$
+	
+$$ 
+  \mu_b = \psi_{\mu, 0} + \psi_{\mu,1} \, t_b + \psi_{\mu,2} \,t_b^2.
+$$
+	
+An implicit assumption is that *the GEV parameters should vary slowly*,
+with only very small variation from a block to the next one. So the
+choice of a specific reference date $t_b$ within the block $b$ does
+not really matter. We can think of the vector of GEV parameters
+as a time-varying $\boldsymbol{\theta}(t)$ with a slow variation.
+
+For `TVGEV` models, we assume that each GEV parameter is linked to
+a linear combination of the trend functions having the form
+$\mathbf{x}(t_b)^\top \boldsymbol{\psi}$. The standard R formulas
+for linear models can be used to specify the dependence of each GEV parameter
+on the basis covariates via an object with class `"formula"`.
+		      	
+Although Time-Varying models may appear as special cases of more general
+Non-Stationary models, they deserve a special treatment because it is
+often a concern then to make special 'predictions' in relation with
+a period of time or an origin.
+    
+*Remark*. Choosing the begining of a block as reference date $t_b$ is
+convenient because the it is easy to convert a year number and a reference
+date are easily converted into each other.
+			
+### Designs
+
+Within the package are "design functions" which provide bases of
+functions. A basis consist in $r$ linearly independent functions
+$x_k(t)$ of the date $t$ forming a covariate vector $\mathbf{x}(t)$ of
+length $r$ with elements
+   
+$$
+    x_0(t), \, x_1(t), \, \dots, \,x_{r-1}(t).  
+$$
+	  
+By evaluating the basis functions at the reference dates $t_b$ for
+$b=1$, $2$, $\dots$, $B$ we get a "design" matrix $\mathbf{X}$ with
+$B$ rows and $r$ columns as in a linear regression framework. As
+suggested by the use of a zero index, a basis might embed the constant
+function $x_0(t) = 1$. For a polynomial basis, we can take $x_k(t) :=
+t^k$ for $k=0$ to $r-1$.  However it is often necessary to scale the
+basis functions because they can otherwise take large values,
+which can cause problems in likelihood maximisation. A simple and
+widely adopted precaution consists in changing the  origin, i.e. in
+using $x_k(t) := (t - t^\star)^k$ for some chosen origin $t^\star$. By
+taking the origin $t^\star$ as roughly located at the centre of the
+time period used in the fit will neatly facilitate the estimation.
+	   
+For now, the design functions include: *polynomial* basis, *natural
+spline* basis, and (continuous) broken line basis. Using the broken
+line basis, it is possible to specify a *kink regression*, but only
+with a known date for the change of slope.
+
+In **NSGEV**, the definition of the design function used by a TVGEV
+model is attached to the R object representing a fitted model. So for
+a given "new" block given its reference date $t^{\text{new}}$ we can
+straightforwardly obtain the estimated
+$\widehat{\boldsymbol{\theta}}(t^{\text{new}})$ from the covariate
+vector $\mathbf{x}(t^{\text{new}})$ and the vector
+$\widehat{\boldsymbol{\psi}}$ of the estimated parameters.
+	     
+     
+### Ordinary Stationary GEV model
+   
+As a special case of TVGEV model, the ordinary stationary model is
+obtained with all three GEV parameters being constant
+$\boldsymbol{\theta}(t) = \boldsymbol{\theta}$ for all $t$. Because
+the ML estimation and the profile-likelihood inference of this model
+can be taken over by many R packages, it will be used in the tests.
+ 
+	
+## NSGEV package features
+
+### Maximum-likelihood
+
+Although the ML estimates can be obtained by several existing R
+packages it was found convenient to have a log-likelihood maximisation
+inside the package. Two choices are available via the `estim` argument
+of the `NSGEV::TVGEV` function.
+
+- `estim = "optim"` uses the classical optimisation function
+  `stats::optim`, as do most EV packages. The gradient is not used
+  in this case.
+
+- `estim = "nloptr"` uses the `nloptr::nloptr` function. It uses the
+  exact gradient of the log-likelihood, which is computed by chain
+  rule.
+
+The choice `estim = "nloptr"` should lead to a faster optimisation
+because of the use of the gradient. Note that using the gradient in ML
+estimation is not widespread among EV packages; the **extRemes**
+packages seems to be only one to make use of the gradients.
+   
+### Conditional and unconditional 'prediction'
+
+We speak of prediction although this term does not have its usual
+statistical meaning; it is consistent with the use of the `predict`
+method of R which produces some features of the distribution of a
+"new" random variable, for instance moments.
+
+- The *conditional* prediction relates to a specific "target" or "new"
+  block $b^{\text{new}}$ or to the corresponding reference date
+  $t^{\text{new}}$. The unknown vector
+  $\boldsymbol{\theta}^{\text{new}} :=
+  \boldsymbol{\theta}_{b^{\text{new}}}$ of the GEV parameters can be
+  estimated, and along with its estimate we have an estimate
+  $\widehat{\rho}(m)$ of the return level corresponding to a given
+  period of $m$ years
+  $$
+  \rho(m) := q_{\text{GEV}}(p;\, \boldsymbol{\theta}^{\text{new}}),
+  \qquad p := 1 - 1 / m.
+  $$
+
+  
+- The *unconditional* or *integrated* prediction relates to a period
+  of time i.e., a collection of consecutive blocks given by its start
+  date and its end date e.g., the next century. The Non-Stationary
+  Return Level $\rho_{\text{NS}}$ of Parey et
+  al. [@PareyEtAl_DifRetLev] is defined as the level $\rho$ such that
+  the (random) number of exceedances $N$ over $\rho$ has expectation
+  $1$ on the chosen period. 
+
+### Inference: profile-likelihood
+
+The profile-likelihood method uses an original implementation
+differing from the one usually retained. Given a confidence level $1 -
+\alpha$, the usual method to find a confidence interval on the return
+level $\rho(m)$ for a fixed period $m$ consists in the following steps.
+
+- Re-parameterize the model by replacing one of the parameters by
+$\rho$. The constant $\psi_{\mu,0}$ in the inverse link for the
+location $\mu$ is a good candidate when it exists. The model now
+depends on $\rho$ and on the vector say $\boldsymbol{\psi}_{-}$ of the
+$p-1$ remaining parameters.
+   	  
+- Consider the *profile log-likelihood* $\ell_{\text{prof}}(\rho) :=
+  \log L[\rho,\, \widehat{\boldsymbol{\psi}}_{-}(\rho)]$, where
+  $\widehat{\boldsymbol{\psi}}_{-}(\rho)$ is the value of
+  $\boldsymbol{\psi}_{-}$ maximizing $\ell(\rho, \,
+  \boldsymbol{\psi}_{-})$ with $\rho$ fixed. Then, find the values
+  $\rho$ such that $$ \ell_{\text{prof}}(\rho) = \max \ell - \delta $$
+  where $\delta$ relates to the quantile of the chi-square
+  distribution with one degree of freedom according to $\delta :=
+  q_{\chi^2(1)}(1 - \alpha) / 2$. Normally, two solutions
+  $\rho_{\text{L}}$ and $\rho_{\text{U}}$ exist, one on both sides of
+  the ML estimate $\widehat{\rho}$.  These solutions can be found by
+  using a standard numerical method such as that implemented in the
+  `uniroot` function.  Note that the value of
+  $\widehat{\boldsymbol{\psi}}_{-}$ depends on $\rho$, and that each
+  evaluation of the profile log-likelihood requires a
+  $p-1$-dimensional optimization.
+   	
+In **NSGEV**, we do not re-parameterise the model but rather solve
+constrained optimization problems. The upper end-point
+$\rho_{\text{U}}$ of the confidence interval is found by solving
+
+\begin{equation}
+  \label{eq:OptimConstr}
+  \begin{array}{l}	
+   \underset{\boldsymbol{\psi}}{\max} \quad \rho(m; \boldsymbol{\psi})\\
+   \text{s.t.} \quad \ell(\boldsymbol{\psi}) \geq \max \ell - \delta
+   \end{array}
+\end{equation}    
+
+where $\delta$ is as above. A minimisation problem with the same
+constraint is solved to find the lower end-point $\rho_{\text{L}}$. In
+both cases, we solve one constrained $p$-dimensional problem.
+
+A major advantage of this alternative approach is that it does not
+require a re-parameterization. To a certain extend, we can consider
+that the optimisation routine will perform automatically a local
+re-parameterisation of the model in connection with the constraint. A
+drawback is that the convergence of the constrained optimisation is
+more difficult to check than that of the zero finding e.g.,
+graphically. However it can happen in the classical method that the
+$p-1$-dimensional optimisation fails, meaning that the
+profile-likelihood function evaluation is not correctly evaluated,
+with possible consequences on the zero-finding task. It is clear that
+the constraint in our method must be active at both optima, which
+provides a possible convergence diagnostic.   
+	 
+## Other R packages
+
+A number of other packages available on CRAN can be used to estimate
+Time Varying GEV models as special cases of Non-Stationary GEV
+models. Maybe the oldest of these, **evd** can only cope with a TV
+location only, the scale and shape parameters being unknown but fixed.
+Some packages can use more than one observation by block, a
+possibility known under the name of *$r$-largest values* analysis. This
+is not allowed in **NSGEV**.
+     	
+   
+```{r , results = "asis", echo=FALSE}
+df <- data.frame(
+    package = c("**climextRemes**", "**evd**", "**eva**", "**extRemes**",
+        "**ismev**", "**ismev**", "**NSGEV**"),
+    fun = c("`fit_gev`", "`fgev`", "`gevrFit`", "`fevd`",
+        "`gev.fit`", "`rlarg.fit`", "`TVGEV`"),
+    trend = c("loc, scale, shape", "*loc only*", rep("loc, scale, shape", 5)),
+    "r-largest" = c("no", "no", "yes", "no", "no", "yes", "no") 
+    )
+kable(df)
+```
+
+The original features of **NSGEV** that are (to our best knowledge)
+not found in other packages
+
+- Return levels in the TV framework for a given origin.
+
+- Profile-likelihood confidence intervals on parameters and
+  on return levels.
+
+- Estimation and inference on the TV Return Level for a given
+  period of time.   
+
+	
+## Checks and comparisons
+
+### Needs and limitations
+   
+- Check that the ML estimates are correct. It is impossible to get the
+  correct Maximum Likelihood using any TV model and any data. Thus we expect
+  that for data which are in good accordance with TV models having
+  slowly varying trend: Either the ML estimation will be successful,
+  or a non-convergence message will be given.
+
+- Check that the profile-likelihood based  confidence intervals are
+  are correct, with the same limitation on data and models.
+
+In both cases, the results should be compared to those returned by
+other EV packages. We will mainly use **ismev** [@Rpack_ismev] 
+and **extRemes** [@Rpack_extRemes], because
+they are often cited for the analysis of TV models. Note that
+according to CRAN logs, **evd** [@Rpack_evd] remains (by far) the most downloaded EV
+package from the CRAN. 
+  
+  
+### Data 
+   
+A fist possibility is to reproduce examples from the literature: The
+**ismev** package is shipped with several classical datasets:
+`venice`, `portpirie`, ... that have been used in textbooks, articles
+or slideshows. As far as the results obtained by `ismev::gev.fit` are
+in good agreement with the published results, we can use them as
+benchmark. A second possibility is to use simulated data. In this case,
+that the data are necessarily in good accordance with the model, but
+we do not know the 'exact' results of ML estimation of
+profile-likelihood. We can then compare the results provided by
+several packages.
+
+### Reports
+	
+For now, the following reports are available.
+    	
+- [*Simulated trend example*](simulatedBreaks.html) estimates the
+  parameters from data generated by a TVGEV model. The trend to be
+  estimated is the same as the 'true' trend used to generate the data.
+
+- [*Venice example*](venice.html) was studied by Coles
+  [@Coles_ExtremeValues] and later (among others) by Fawcett.
+
+- [*Profile-likelihood*](profileLikelihood.html)
+  uses classical data sets from Stuart Coles' book
+  [@Coles_ExtremeValues] and compares the profile-likelihood given by
+  **NSGEV** to that given by **ismev**.
+
+- [*Non-Stationary Return Level*](NSRL.html) uses a
+  `TVGEV` model for the `Orange` data shipped with **NSGEV** and
+  simulations from this model to check that the value of the RL
+  computed by `predictUncond` is correct.
+  
+### Packages used in the reports
+    
+```{r , results = "asis", echo=FALSE}
+packages <- c("eva", "evd", "extRemes", "ismev", "NSGEV")
+v <- sapply(packages, packageDescription, fields = "Version")
+names(v) <- sprintf("**%s**", packages)
+kable(data.frame(Version = v))
+```
+  
+# References

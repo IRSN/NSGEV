@@ -20,7 +20,10 @@
 ##' depending on the value of \code{type}.
 ##' 
 ##' @note The upper 95\% quantile of the standard exponential is close
-##' to \eqn{3} which can be used to gauge "large residuals".
+##'     to \eqn{3} which can be used to gauge "large residuals". Using
+##'     \code{type = "gumbel"} seems better to diagnose abnormally
+##'     small residuals as may result from abnormally small block
+##'     maxima.
 ##'
 ##' @references Cox, D.R. and Snell E.J. (1968) "A General Definition
 ##' of Residuals".  \emph{JRSS Ser. B}, \bold{30}(2), pp. 248-275.
@@ -140,13 +143,13 @@ autoplot.resid.TVGEV <- function(object,
                                  ...) {
     
     Date <- Resid <- NULL
-    type <- match.arg(type)
+    geom <- match.arg(geom)
     typeResid <- attr(object, "type")
     
     df <- data.frame(Date = attr(object, "date"), Resid = as.numeric(object))
     gg <- ggplot(data = df)
     
-    if (type == "line") {
+    if (geom == "line") {
         gg <- gg + geom_line(mapping = aes(x = Date, y = Resid),
                              colour = "orangered")
     } else {

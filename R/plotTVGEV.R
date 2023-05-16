@@ -24,6 +24,9 @@ plot.TVGEV <- function(x, y, which = "c", ...) {
 ##' 
 ##' @param object An object with class \code{"TVGEV"}.
 ##' 
+##' @param geom Character giving the "geometry" to be used for the
+##'     layer corresponding to the (timeseries) data.
+##' 
 ##' @param type The type of result shown along with the series used.
 ##'     For now, only the timeseries of quantiles as computed by
 ##'     \code{\link{quantile.TVGEV}} can be added.
@@ -31,8 +34,6 @@ plot.TVGEV <- function(x, y, which = "c", ...) {
 ##' @param ... Not used yet
 ##'
 ##' @return A graphic object inheriting from \code{"ggplot"}.
-##'
-##' @method autoplot TVGEV
 ##' 
 ##' @note Mind that several methods of the class \code{"TVGEV"} such
 ##'     as \code{predict} \code{quantMax}, \code{coef} produce results
