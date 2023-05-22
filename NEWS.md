@@ -7,21 +7,21 @@
 ## Enhancements
 
 - For a `TVGEV` object, the `negLogLikFun` function now optionally
-  returns the hessian.
+  returns the Hessian.
   
 - New method `quantMax` for the `"TVGEV"` class and subsequent method
   `autoplot` for the related `quantMax.TVGEV` objects. Using these
   methods is illustrated in the main vignette.
 
 - New methods `quantMaxFun` and `cdfMaxFun` for the `"TVGEV"`
-  class.
+  class. The return functions (closures).
   
 - An `autoplot` method has been added for some classes:`"TVGEV"` and
   more.
 
 - The vignettes of the **NSGEVVal** package are now included in
   **NSGEV**.  The required technical functions from **NSGEVVal** are
-  now included in **NSGEV** as "internal" functions. The bibliography
+  now included in **NSGEV** as "check" functions. The bibliography
   has been somewhat cleaned.
 
 ## Technical changes (non user-visible)
@@ -34,7 +34,7 @@
 ## Bug fixes
 
 - The `TVGEV` function did not work when a constant location was
-  specified along with a non-constant scale and/or shape.  Thanks to
+  specified along with a non-constant scale and/or shape. Thanks to
   Jesper Rydén.
 
 # News in version 0.1.6
@@ -45,7 +45,7 @@
   been moved (with some changes) to the **nieve** package, available
   both [on CRAN](N.R-project.org/package=nieve)
   and [on GitHub](https://github.com/yvesdeville/nieve/). So **NSGEV** 
-  now imports these functions from ** nieve**. As a consequence the
+  now imports these functions from **nieve**. As a consequence the
   compiled code used by this functions has been discarded, making the
   package easier to install at least for Windows users.
   
