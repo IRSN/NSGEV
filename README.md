@@ -15,8 +15,8 @@ the daily maximal temperatures.
 See the file [NEWS.md](NEWS.md). This file will now on be used in place
 of the `ChangeLog` file.
 
-The **nieve** package used to provide the GEV distribution functions
-also has its own NEWS file.
+Mind that the **nieve** package which is used to provide the GEV
+distribution functions also has its own NEWS file.
 
 # INSTALLATION
 
@@ -66,7 +66,7 @@ git clone https://github.com/IRSN/NSGEV
 
 This will create a `NSGEV` sub-directory of the current directory,
 i.e. the directory from which the git command was issued. Of course this
-can work only if you have the authorisation to clone.
+can work only if you have the permission to clone.
 
 ### Installation
 
