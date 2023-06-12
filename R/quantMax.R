@@ -400,8 +400,7 @@ quantMax.TVGEV <- function(object,
 ##' @param ... Further arguments for methods.
 ##' 
 ##' @return A function (or closure) that can be used to compute the
-##'     probability of non-exceedance for arbitraty given
-##'     quantiles.
+##'     probability of non-exceedance for arbitrary given quantiles.
 ##'
 ##' @export
 ##' 
