@@ -74,3 +74,24 @@ cdf <- function(x, ...) {
 moment <- function(x, which, ...) {
     UseMethod("moment")
 }
+
+
+# *************************************************************************
+##' Construct or extract the design (or model) matrices.
+##' 
+##' @title Construct or Extract Design Matrices
+##' 
+##' @param object An object representing a model.
+##'
+##' @param ... Further arguments for methods.
+##'
+##' @return A lise of desing matrices, usually one by parameter of the
+##'     distribution.
+##'
+##' @export
+##'
+##' @seealso \code{\link[stats]{model.matrix}}.
+##' 
+modelMatrices <- function(object, ...) {
+    UseMethod("modelMatrices")
+}
