@@ -38,6 +38,7 @@
 ##' simply by using the \code{X} elements of the object \code{model}.
 ##'
 ##' @method psi2theta TVGEV
+##' 
 ##' @export
 ##' 
 psi2theta.TVGEV <- function(model, psi = NULL, date = NULL,
@@ -684,18 +685,25 @@ bs.TVGEV <- function(object,
 }
 
 ## *************************************************************************
-##' Build model matrices.
+
+##' Build or extract model matrices. The three matrices corresponding
+##' to the GEV parameters (loc, scale and shape) are returned into a
+##' named list of matrices. For each matrix the rows correspond to the
+##' observations of the model and the columns relate to the
+##' corresponding formula.
 ##'
 ##' These matrices are needed when the model is build (and usually is
 ##' estimated) or when a prediction is required.
 ##' 
-##' @title Build Model Matrices
+##' @title Build or Extract Model Matrices
 ##'
 ##' @param object An object with S3 class \code{"TVGEV"}.
 ##'
 ##' @param date An object with class \code{"Date"} or an object that
 ##' can be coerced to this class.
 ##'
+##' @param ... Not used yet.
+##' 
 ##' @return A list with the follwing elements
 ##'
 ##' \item{dfAll}{
@@ -715,8 +723,11 @@ bs.TVGEV <- function(object,
 ##'
 ##' @seealso The function \code{\link[stats]{model.matrix}} used by
 ##' \code{\link[stats]{lm}}.
+##'
+##' @method modelMatrices TVGEV
+##' @export
 ##' 
-modelMatrices.TVGEV  <- function(object, date = NULL) {
+modelMatrices.TVGEV  <- function(object, date = NULL, ...) {
     
     
     if (is.null(date)) {

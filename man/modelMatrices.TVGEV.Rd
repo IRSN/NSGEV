@@ -4,13 +4,15 @@
 \alias{modelMatrices.TVGEV}
 \title{Build or Extract Model Matrices}
 \usage{
-\method{modelMatrices}{TVGEV}(object, date = NULL)
+\method{modelMatrices}{TVGEV}(object, date = NULL, ...)
 }
 \arguments{
 \item{object}{An object with S3 class \code{"TVGEV"}.}
 
 \item{date}{An object with class \code{"Date"} or an object that
 can be coerced to this class.}
+
+\item{...}{Not used yet.}
 }
 \value{
 A list with the follwing elements
