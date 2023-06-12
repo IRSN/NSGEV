@@ -2,15 +2,17 @@
 % Please edit documentation in R/TVGEV.R
 \name{modelMatrices.TVGEV}
 \alias{modelMatrices.TVGEV}
-\title{Build Model Matrices}
+\title{Build or Extract Model Matrices}
 \usage{
-modelMatrices.TVGEV(object, date = NULL)
+\method{modelMatrices}{TVGEV}(object, date = NULL, ...)
 }
 \arguments{
 \item{object}{An object with S3 class \code{"TVGEV"}.}
 
 \item{date}{An object with class \code{"Date"} or an object that
 can be coerced to this class.}
+
+\item{...}{Not used yet.}
 }
 \value{
 A list with the follwing elements
@@ -31,7 +33,11 @@ corresponding parameter.
 }
 }
 \description{
-Build model matrices.
+Build or extract model matrices. The three matrices corresponding
+to the GEV parameters (loc, scale and shape) are returned into a
+named list of matrices. For each matrix the rows correspond to the
+observations of the model and the columns relate to the
+corresponding formula.
 }
 \details{
 These matrices are needed when the model is build (and usually is
