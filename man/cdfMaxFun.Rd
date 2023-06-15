@@ -14,8 +14,7 @@ distribution of the random maximum.}
 }
 \value{
 A function (or closure) that can be used to compute the
-    probability of non-exceedance for arbitraty given
-    quantiles.
+    probability of non-exceedance for arbitrary given quantiles.
 }
 \description{
 Distribution Function for a Random Maximum

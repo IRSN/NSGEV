@@ -67,6 +67,7 @@ autoplot.quantMax.TVGEV <- function(object, fillConf = TRUE, ...) {
 
     gg <- gg + xlab("Prob. of exceedance") + ylab("Quantile") 
     
+    gg
 }
 
 ##' Draw a Particular Layer on a \code{ggplot} devoted to a

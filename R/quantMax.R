@@ -593,7 +593,7 @@ quantMaxFun.TVGEV <- function(object, date = NULL, psi = NULL, theta = NULL,
         stop("when 'theta' is given, neither 'date' nor 'psi' can ",
              "be given")
     }
-    
+     
     FMax <- cdfMaxFun.TVGEV(object = object, theta = theta)
 
     FMaxZero <- function(q, prob) FMax(q) - prob

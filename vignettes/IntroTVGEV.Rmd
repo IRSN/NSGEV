@@ -231,7 +231,8 @@ anova(fitNConst, fitNLin)
 
 The $p$-value is `r ifelse(anova(fitNConst, fitNLin)[["Pr(>W)"]][2] >
 0.05, "> 0.05", "< 0.005")`, so if we assume that there could be a
-global linear trend on the location, we would reject the null
+global linear trend on the location, we would  `r ifelse(anova(fitNConst, fitNLin)[["Pr(>W)"]][2] >
+0.05, "accept", "reject")` the null
 hypothesis $H_0: \mu_1 = 0$ at the $5\%$ level.
 
 We can investigate different forms of trend, using different designs.
@@ -542,7 +543,7 @@ $$
     
 where the dependence on the parameter $\boldsymbol{\psi}$ is through
 $\boldsymbol{\theta}_b(\boldsymbol{\psi})$. Note that in general
-\eqn{M^\star} does not follow a GEV distribution.
+$M^\star$ does not follow a GEV distribution.
 
 The corresponding quantile function $q_{M^\star}(p)$ can be computed
 numerically either by solving $F_{M^\star}(q) = p$ or by interpolating
@@ -570,14 +571,14 @@ of exceedance $1 -p$ using a Gumbel scale. So if $M^\star$ happens to
 be Gumbel (as can happen in the stationary case) the quantile line
 will be a straight line. When the period of interest
 $\mathcal{B}^\star$ is increased the maximum becomes stochastically
-larger. For instance with a fixed beginning if the duration $n^\star$
-of the period is increased the maximum becomes stochastically larger: all
-quantiles are increased. 
+larger. For instance, with a fixed beginning if the duration $n^\star$
+of the period is increased the maximum $M^\star$ becomes
+stochastically larger: all quantiles are increased.
 
 It is worth noting that as far as a small probability of exceedance
-$\bar{p} := 1 -p$ is concerned, the expected number of the random
+$\bar{p} := 1 -p$ is concerned, the expected value of the random
 number $N$ of exceedances over the corresponding quantile is
-$\mathbb{E}[N] = \bar{p}$. This approximation is acceptable when
+$\mathbb{E}[N] \approx \bar{p}$. This approximation is acceptable when
 $\bar{p} < 0.05$.
 
 **Note** At the this time, only confidence intervals based on the
