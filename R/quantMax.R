@@ -137,7 +137,7 @@ quantMax.TVGEV <- function(object,
     if (missing(prob)) {
         prob <-  c(seq(from = 0.80, to = 0.99, by = 0.01),
                    0.995, 0.998, 0.999, 1.0 - 1e-4)
-    } else if (any(prob <= 0) || any(prob) >= 1.0) {
+    } else if (any(prob <= 0) || any(prob >= 1.0)) {
         stop("'prob' values must be between 0 and 1")
     }
     prob <- sort(prob)
@@ -199,28 +199,37 @@ quantMax.TVGEV <- function(object,
         ## rq <- qMax - qMin
         ## qMin <- qMin - 0.1 * rq
         ## qMax <- qMax + 0.1 * rq
-        mStarGrid <- seq(from = qMin, to = qMax, length = 100) 
-        FMStarGrid <- rep(0.0, length(mStarGrid))
-        
-        for (i in seq_along(mStarGrid)) {
-            FMStarGrid[i]<- prod(nieve::pGEV(mStarGrid[i],
-                                             loc = theta[ , 1],
-                                             scale = theta[ , 2],
-                                             shape = theta[ , 3]))
-        }
+        mStarGrid <- seq(from = qMin, to = qMax, by = 0.001)
 
-        ## =====================================================================
-        ## An interpolation is required to get the values at
-        ## the 'pretty' probability values.
-        ## =====================================================================
+        ## BUG FIX: for a stationary model, 'qMin' and 'qMax' are
+        ## equal and 'approx' would throw an error'.
         
-        qMStar <- approx(x = FMStarGrid, y = mStarGrid, xout = prob)$y
+        if (length(mStarGrid) > 2) {
+            FMStarGrid <- rep(0.0, length(mStarGrid))
+            
+            for (i in seq_along(mStarGrid)) {
+                FMStarGrid[i]<- prod(nieve::pGEV(mStarGrid[i],
+                                                 loc = theta[ , 1],
+                                                 scale = theta[ , 2],
+                                                 shape = theta[ , 3]))
+            }
+            
+            ## =================================================================
+            ## An interpolation is required to get the values at
+            ## the 'pretty' probability values.
+            ## =================================================================
         
-        if (DEBUG) {
-            plot(prob, qMStar, pch = 16)
-            lines(FMStarGrid, mStarGrid)
+            qMStar <- approx(x = FMStarGrid, y = mStarGrid, xout = prob)$y
+            
+            if (DEBUG) {
+                plot(prob, qMStar, pch = 16)
+                lines(FMStarGrid, mStarGrid)
+            }
+            
+        } else {
+            qMStar <- qMin
         }
-        
+            
         logFStar <- rep(0.0, length(prob))
         
         gradpsi <- rep(NA, p)

@@ -2,6 +2,14 @@
 **NSGEV** Package News
 ===========================
 
+# New in version 0.1.9
+
+- In `quantMax.TVGEV` the check on `prob` was misleading.
+
+- The `quantMax.TVGEV` method did not work for `TVGEV` object
+  describing a stationary model.
+
+
 # New in version 0.1.8
 
 ## Enhancements

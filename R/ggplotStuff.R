@@ -19,6 +19,12 @@
 autoplot.quantMax.TVGEV <- function(object, fillConf = TRUE, ...) {
 
     L <- U <- Quant <- ProbExc <- NULL
+
+    if (nrow(object) <= 4) {
+        warning("'object' has less than five rows and a poor-looking \n",
+                "plot will result. Consider re-creating a 'quantMax.TVGEV' \n",
+                "object with more rows e.g., by choosing the `prob` argument")
+    }
     
     ## Arrange the confidence levels so that the greatest level
     ## will be plotted first
