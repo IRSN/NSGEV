@@ -13,7 +13,7 @@
 library(NSGEV)
 library(numDeriv)
 library(testthat)
-context("TVGEV: Quantile of the maximum")
+context("TVGEV: Quantile of the maximum: check gradient")
 
 df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))
 tv <- TVGEV(data = df, response = "TXMax", date = "Date",
