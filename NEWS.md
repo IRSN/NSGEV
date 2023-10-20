@@ -2,7 +2,14 @@
 **NSGEV** Package News
 ===========================
 
-# New in version 0.1.9
+# New in version 0.1.9 (pending)
+
+## Enhancements
+
+- The `TVGEV` function did not work when some (non temporal)
+  covariates add missing values. 
+
+## Bug fixes
 
 - In `quantMax.TVGEV` the check on `prob` was misleading.
 

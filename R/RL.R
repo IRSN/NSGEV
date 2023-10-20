@@ -267,32 +267,38 @@ RL <- function(model,
 
         ## cat("XXX\n")
         ## print(c(g(rhoMin), g(rhoMax)))
-        
-        res <- try(uniroot(f = g, interval = c(rhoMin, rhoMax)))
-        
-        if (plot) {
-            rhoCand <-
-                exp(seq(from = log(1.1), to = log(rhoMax), length.out = 100))
-            valCand <- sapply(rhoCand, g)
-            
-            plot(rhoCand, valCand, type = "o", pch = 16, cex = 0.5,
-                 lwd = 2, col = "SteelBlue3",
-                 main = "zero-finding", xlab = "rho", ylab = "g")
-            abline(h = 0, col = "orangered")
-            if (!inherits(res, "try-error")) {
-                abline(v = res$root, col = "orangered")
+        if (rhoMin < rhoMax)  {
+            res <- try(uniroot(f = g, interval = c(rhoMin, rhoMax)))
+            if (inherits(res, "try-error")) {
+                print(c(rhoMin, rhoMax))
+                stop("Error in 'uniroot'")
             }
-            mtext(side = 1, at = res$root,
-                  line = 1.2, text = "rho", col = "orangered")
+
+            if (abs(res$f.root) > 1e-3) stop("no solution found")
+            rho <- res$root
+
+            if (plot) {
+                rhoCand <-
+                exp(seq(from = log(1.1), to = log(rhoMax), length.out = 100))
+                valCand <- sapply(rhoCand, g)
+                
+                plot(rhoCand, valCand, type = "o", pch = 16, cex = 0.5,
+                     lwd = 2, col = "SteelBlue3",
+                     main = "zero-finding", xlab = "rho", ylab = "g")
+                abline(h = 0, col = "orangered")
+                if (!inherits(res, "try-error")) {
+                    abline(v = res$root, col = "orangered")
+                }
+                mtext(side = 1, at = res$root,
+                      line = 1.2, text = "rho", col = "orangered")
+            }
+            
+        } else if (rhoMin == rhoMax) {
+            rho <- rhoMin
+        } else {
+            stop("unexpected condition 'rhoMin > rhoMax'")
         }
-        
-        if (inherits(res, "try-error")) {
-            print(c(rhoMin, rhoMax))
-            stop("Error in 'uniroot'")
-        }
-             
-        if (abs(res$f.root) > 1e-3) stop("no solution found")
-        rho <- res$root
+            
             
         ## =====================================================================
         ## It the gradient is needed we use implicit function
