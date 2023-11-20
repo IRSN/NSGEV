@@ -1,0 +1,12 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  IntroTVGEV: IntroTVGEV.html
+  NSGEV_Val: NSGEV_Val.html
+  NSRL: NSRL.html
+  ProfLik: ProfLik.html
+  Venice: Venice.html
+  simulatedBreaks: simulatedBreaks.html
+last_built: 2023-11-20T13:22Z
+
