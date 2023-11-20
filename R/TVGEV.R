@@ -79,7 +79,7 @@ psi2theta.TVGEV <- function(model, psi = NULL, date = NULL,
     
     theta <- array(NA, dim = c(n, 3L),
                        dimnames = list(rownames(X[["loc"]]), parNames.GEV))
-    
+
     for (nm in parNames.GEV) {
         if (!model$isCst[nm]) {
             theta[ , nm] <- X[[nm]] %*% psi[model$ind[[nm]]]
@@ -278,17 +278,21 @@ MLE.TVGEV <- function(object,
         }
         
         parNames.GEV <- c("loc", "scale", "shape")
-        theta <- array(NA, dim = c(object$n, 3L),
+        theta <- array(NA_real_, dim = c(object$n, 3L),
                        dimnames = list(NULL, parNames.GEV))
       
         for (nm in parNames.GEV) {
             if (!object$isCst[nm]) {
-                theta[ , nm] <- object$X[[nm]] %*% psi[object$ind[[nm]]]
+                a <- drop(object$X[[nm]] %*% psi[object$ind[[nm]]])
+                tt <- try(theta[ , nm] <- a)
+                if (inherits(tt, "try-error")) {
+                    cat("error when nm = ", nm, "\n")
+                    print(dim(object$X[[nm]]))
+                }
             } else {
                 theta[ , nm] <- psi[object$ind[[nm]]]
             }
         }
-        
         logL <-
             nieve::dGEV(y,
                         loc = theta[object$indVal, "loc"],
@@ -733,7 +737,7 @@ modelMatrices.TVGEV  <- function(object, date = NULL, ...) {
     if (is.null(date)) {
         return(list(dfAll = object$dfAll, X = object$X))
     }
-
+    trm <- object$terms
     date <- as.Date(date)
     data <- data.frame(date)
     colnames(data) <- object$date
@@ -754,7 +758,11 @@ modelMatrices.TVGEV  <- function(object, date = NULL, ...) {
     X <- list()
     
     for (nm in parNames.GEV) {
-        X[[nm]] <- model.matrix(object$terms[[nm]], data = dfAll)
+        ## Changed on 2023-10-20 to cope with missing values in the
+        ## covariates
+        mf <- model.frame(trm[[nm]], dfAll, na.action = na.pass)
+        X[[nm]] <- model.matrix(trm[[nm]], mf)
+        ## X[[nm]] <- model.matrix(object$terms[[nm]], data = dfAll)
         rownames(X[[nm]]) <- fDate
     }
 
@@ -865,6 +873,7 @@ modelMatrices.TVGEV  <- function(object, date = NULL, ...) {
 ##'
 ##' @importFrom stats approx optim optimHess qchisq sd terms ts uniroot
 ##' @importFrom stats lm as.formula update.formula model.matrix weighted.mean
+##' @importFrom stats model.frame na.pass
 ##' @importFrom stats coef deriv df 
 ##' 
 ##' @export
@@ -1020,7 +1029,18 @@ TVGEV <- function(data,
         
         psi0[[nm]] <- rep(NA, length(pn))
         
-        X[[nm]] <- model.matrix(trm[[nm]], data = dfAll)
+        ## =====================================================================
+        ## Changed on 2023-10-20.
+        ##
+        ## Previously (without any call to `model.frame`), the rows
+        ## with a missing value in one of the predictor were omitted
+        ## which created an error. This problem arises only when non-temporal
+        ## regressors are used.
+        ##
+        ## See https://stackoverflow.com/a/31949950/8836534
+        ## =====================================================================
+        mf <- model.frame(trm[[nm]], dfAll, na.action = na.pass)
+        X[[nm]] <- model.matrix(trm[[nm]], mf)
         ind[[nm]] <- ppPrev + (1L:pp[[nm]])
         ppPrev <- ppPrev + pp[[nm]]
     }
@@ -1042,6 +1062,10 @@ TVGEV <- function(data,
         warning("'coefLower' and 'coefUpper' are only used when ",
                 "'estim' is set to \"nloptr\". They will be ignored.")
     }
+
+   
+    ## print(dl <- dim(tv$X[["loc"]]))
+    ## print(ds <- dim(tv$X[["scale"]]))
     
     if (estim != "none") {
         res <- MLE.TVGEV(object = tv,

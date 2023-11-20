@@ -403,7 +403,7 @@ predict.TVGEV <- function(object,
              
              RL <- nieve::qGEV(prob, theta[ , 1], theta[ , 2],
                                theta[ , 3], deriv = TRUE)
-
+             
              ## 'nloptr' fails on NA and NaN!
              if (is.na(RL)) {
                  if (chgSign) {
@@ -540,7 +540,7 @@ predict.TVGEV <- function(object,
                     ## easier when the periods 'T' are taken in reverse order
                     ## ========================================================
                     for (iPer in rev(seq_along(period))) {
-
+                        
                         if (trace) {
                             cat(sprintf("\n    - Period:  %5d\n", period[iPer]))
                         }
