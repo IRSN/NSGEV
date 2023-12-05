@@ -884,10 +884,10 @@ bootstrapped parameters are in fact stored as the rows of the
 <pre><code><span><span class="co">## [1] "estimate"  "negLogLik" "R"         "optim"     "type"</span></span></code></pre>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">myBoot</span><span class="op">$</span><span class="va">estimate</span>, n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##          mu_0        mu_t1 mu_t1_1970  sigma_0       xi_0</span></span>
-<span><span class="co">## [1,] 31.89402 -0.027274874 0.08798493 1.685288 -0.1862281</span></span>
-<span><span class="co">## [2,] 32.21188 -0.030975053 0.07093170 1.975950 -0.3052552</span></span>
-<span><span class="co">## [3,] 32.57234 -0.002754846 0.03550153 1.675768 -0.1605469</span></span></code></pre>
+<pre><code><span><span class="co">##          mu_0       mu_t1 mu_t1_1970  sigma_0        xi_0</span></span>
+<span><span class="co">## [1,] 32.65493 -0.01137076 0.05752407 1.553860 -0.05359624</span></span>
+<span><span class="co">## [2,] 31.54126 -0.05129885 0.13726116 1.939031 -0.10873876</span></span>
+<span><span class="co">## [3,] 31.58853 -0.02334306 0.08278616 1.586839 -0.11637865</span></span></code></pre>
 <p>Note that the default number of replicates <code>R</code> is very
 small and has been set for a purely illustrative use. A well-accepted
 choice <span class="math inline">\(\geqslant 3000\)</span>.</p>
@@ -1086,7 +1086,7 @@ retrieved if needed by first using <code>estim = "none"</code>.</p>
 <div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fitNBreak2</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        mu_0       mu_t1  mu_t1_1970     sigma_0        xi_0 </span></span>
-<span><span class="co">## 32.02318421 -0.02420595  0.07812270  1.72977933 -0.15000000</span></span></code></pre>
+<span><span class="co">## 32.02318431 -0.02420592  0.07812269  1.72977917 -0.15000000</span></span></code></pre>
 <p>The GEV shape parameter <span class="math inline">\(\xi\)</span> is
 usually taken as constant, not time-varying; inasmuch the log-likelihood
 is <span class="math inline">\(\infty\)</span> when <span class="math inline">\(\xi &lt; -1\)</span>, a lower bound <span class="math inline">\(\psi^{\text{L}}_i &gt; -1\)</span> should normally
