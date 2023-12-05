@@ -97,7 +97,7 @@
                         <h4 data-toc-skip class="author">Yves
 Deville</h4>
             
-            <h4 data-toc-skip class="date">2023-11-20</h4>
+            <h4 data-toc-skip class="date">2023-12-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/HEAD/vignettes/IntroTVGEV.Rmd" class="external-link"><code>vignettes/IntroTVGEV.Rmd</code></a></small>
       <div class="hidden name"><code>IntroTVGEV.Rmd</code></div>
@@ -884,10 +884,10 @@ bootstrapped parameters are in fact stored as the rows of the
 <pre><code><span><span class="co">## [1] "estimate"  "negLogLik" "R"         "optim"     "type"</span></span></code></pre>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">myBoot</span><span class="op">$</span><span class="va">estimate</span>, n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##          mu_0       mu_t1 mu_t1_1970  sigma_0       xi_0</span></span>
-<span><span class="co">## [1,] 32.42753 -0.00291457 0.03492239 1.779170 -0.1768355</span></span>
-<span><span class="co">## [2,] 31.71818 -0.03404366 0.08785720 1.618137 -0.2480754</span></span>
-<span><span class="co">## [3,] 31.78920 -0.03668596 0.10114850 1.627305 -0.2447758</span></span></code></pre>
+<pre><code><span><span class="co">##          mu_0        mu_t1 mu_t1_1970  sigma_0       xi_0</span></span>
+<span><span class="co">## [1,] 31.89402 -0.027274874 0.08798493 1.685288 -0.1862281</span></span>
+<span><span class="co">## [2,] 32.21188 -0.030975053 0.07093170 1.975950 -0.3052552</span></span>
+<span><span class="co">## [3,] 32.57234 -0.002754846 0.03550153 1.675768 -0.1605469</span></span></code></pre>
 <p>Note that the default number of replicates <code>R</code> is very
 small and has been set for a purely illustrative use. A well-accepted
 choice <span class="math inline">\(\geqslant 3000\)</span>.</p>
