@@ -9,6 +9,11 @@
 - The `TVGEV` function did not work when some (non temporal)
   covariates add missing values. 
 
+- The functions `qMax.TVGEV` and `pMax.TVGEV` now compute the gradient
+  and the Hessian w.r.t. the parameters, opening the road to profile
+  likelihood inference on the quantile of the maximum. New function
+  `dMax.TVGEV`.
+
 ## Bug fixes
 
 - In `quantMax.TVGEV` the check on `prob` was misleading.

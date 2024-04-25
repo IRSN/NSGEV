@@ -1,5 +1,5 @@
 ---
-title: "README"
+title: "R package NSGEV"
 author: "Yves Deville"
 date: "05/09/2016"
 output: github_document

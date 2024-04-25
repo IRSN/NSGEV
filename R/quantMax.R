@@ -193,8 +193,8 @@ quantMax.TVGEV <- function(object,
         ## range.
         ## =====================================================================
    
-        qMin <- .qMin.TVGEV(p = prob[1], theta)
-        qMax <- .qMax.TVGEV(p = prob[length(prob)], theta)
+        qMin <- .qMaxL.TVGEV(p = prob[1], theta)
+        qMax <- .qMaxU.TVGEV(p = prob[length(prob)], theta)
         
         ## rq <- qMax - qMin
         ## qMin <- qMin - 0.1 * rq
@@ -315,8 +315,6 @@ quantMax.TVGEV <- function(object,
         
 }
 
-
-
 # *****************************************************************************
 
 ##' Find a lower bound for the quantile of the random maximum over a
@@ -348,7 +346,7 @@ quantMax.TVGEV <- function(object,
 ##' @export
 ##' @seealso
 ##' \code{\link{.qMax.TVGEV}}
-.qMin.TVGEV <- function(theta, p) {
+.qMaxL.TVGEV <- function(theta, p) {
     if (ncol(theta) != 3) {
         stop("'theta' must be a numeric matrix with three columns")
     }
@@ -389,7 +387,7 @@ quantMax.TVGEV <- function(object,
 ##' @export
 ##' @seealso
 ##' \code{\link{.qMin.TVGEV}}
-.qMax.TVGEV <- function(theta, p) {
+.qMaxU.TVGEV <- function(theta, p) {
     if (ncol(theta) != 3) {
         stop("'theta' must be a numeric matrix with three columns")
     }
@@ -473,7 +471,7 @@ cdfMaxFun <- function(object, ...) {
 ##' date <- as.Date(sprintf("%4d-01-01", 2025:2054))
 ##' cdfNew <- cdfMaxFun(res1, date = date)
 ##' cdfNew(c(39.0, 41.0))
-##' 
+##'
 cdfMaxFun.TVGEV <- function(object, date = NULL, psi = NULL,
                             theta = NULL, ...) {
     
@@ -502,6 +500,250 @@ cdfMaxFun.TVGEV <- function(object, date = NULL, psi = NULL,
 
 }
 
+
+##' @export
+##' 
+pMax.TVGEV <- function(object,
+                       q,
+                       date = NULL,
+                       psi = NULL,
+                       deriv = FALSE,
+                       hessian = FALSE,
+                       ...) {
+
+    if (hessian && !deriv) {
+        stop("'hessian' can be TRUE only when 'deriv' is TRUE") 
+    }
+    
+    if (is.null(psi)) psi <- object$estimate
+    if (is.null(date)) date <- object$fDate
+    date <- as.Date(date)
+    theta <- psi2theta(model = object, psi = psi, date = date)
+    
+    if (deriv) {
+        mM <- modelMatrices(object, date = date)$X
+    }
+    
+    res <- rep(0.0, length(q))
+    
+    if (deriv) {
+        grad <- array(0.0, dim = c(length(q), object$p),
+                      dimnames <- list(paste0("q = ", format(q)), parNames(object)))
+        if (hessian) {
+            hess <- array(0.0, dim = c(length(q), object$p, object$p),
+                          dimnames <- list(paste0("q = ", format(q)),
+                                           parNames(object),
+                                           parNames(object)))
+        }
+    }
+    
+    for (i_q in seq_along(q)) {
+        
+        F_q <- nieve::pGEV(q[i_q],
+                           loc = theta[ , 1],
+                           scale = theta[ , 2],
+                           shape = theta[ , 3],
+                           deriv = deriv, hessian = hessian)
+        
+        res[i_q] <- prod(F_q)
+        
+        if (deriv) {
+            
+            ## 'grad_q'    is an array with dim c(length(date), 3)
+            ## 'mM[[k]]'  is a matrix with dim c(length(date), p_k) where
+            ##            'p_k' is the number of "psi" parameters corresponding to
+            ##            'theta_k'
+            grad_q <- attr(F_q, "gradient")
+            grad_q <- sweep(grad_q, MARGIN = 1, STATS = F_q, FUN = "/")
+
+            ## hess_q is an array with dimension (length(date), 3, 3)
+            ## do the same for the Hessian H[b, k, ell] <- H[b, k, ell] / F[b]
+            if (hessian) {
+                hess_q <- attr(F_q, "hessian")
+                hess_q <- sweep(hess_q, MARGIN = 1, STATS = F_q, FUN = "/")
+            }
+
+            ## Fill the gradient matrix
+            for (i in 1:3) {
+                ind_i <- object$ind[[i]]
+                if (!object$isCst[i]) {
+                    grad[i_q, ind_i] <- res[i_q] * (t(grad_q[ , i, drop = FALSE]) %*% mM[[i]])
+                } else {
+                    grad[i_q, ind_i] <- res[i_q] * sum(grad_q[ , i])
+                }
+            }
+            ## Fill the Hessian array
+            if (hessian) {
+                if (FALSE) {
+                } else {
+                    for (i in 1:3) {
+                        ind_i <- object$ind[[i]]
+                        for (j in 1:3) {
+                            ind_j <- object$ind[[j]]
+                            hm_ij <- 0.0
+                            ## to be improved
+                            for (b in 1:length(date)) {
+                                hm_ij <- hm_ij +
+                                    (hess_q[b, i, j] - grad_q[b, i] * grad_q[b, j]) *
+                                    tcrossprod(mM[[i]][b, ], mM[[j]][b, ])
+                            }
+                            
+                            A <- tcrossprod(grad[i_q, ind_i] / res[i_q], grad[i_q, ind_j] / res[i_q])
+                            
+                            A <- A + hm_ij
+                            
+                            hess[i_q, ind_i, ind_j] <- res[i_q] * A
+                            
+                            ## ## XXX
+                            ## hess[i_q, ind_i, ind_j] <- hess[i_q, ind_i, ind_j] +
+                            ##     tcrossprod(grad[i_q, ind_i] / res[i_q], grad[i_q, ind_j] / res[i_q])
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    if (deriv) { 
+        attr(res, "gradient") <- grad
+        if (hessian)  attr(res, "hessian") <- hess
+    }
+    
+    res
+}
+
+##' Compute the probability density of the maximum over a period of
+##' time.
+##' 
+##' @param object An \code{TVGEV} object.
+##'
+##' @param x A vector of values at which the density is to be
+##'     evaluated.
+##'
+##' @param date A vector that can be coerced to defining the period of
+##'     time.
+##'
+##' @param psi Optional vector of parameters. By default the estimated
+##'     vector of parameters \code{coef(object)} is used.
+##'
+##' @param deriv Logical. If \code{TRUE} the gradient of the density
+##'     will be computed ans returned as the \code{"gradient"}
+##'     attribute of the result.
+##' 
+##' @param derx Logical, If \code{TRUE} the derivative of the density
+##'     w.r.t. \code{x} will be computed and returned as the
+##'     \code{"derx"} attribute of the result.
+##' 
+##' @param ...
+##'
+##' @return A vector of values of the density. Beside the gradient
+##'     (w.r.t. the parameters) returned as the attribute named
+##'     \code{"gradient"}, the derivative w.r.t. \code{x} is also
+##'     returned as the attribute \code{"derx"} of the result.
+##' 
+##' @export
+dMax.TVGEV <- function(object,
+                       x,
+                       date = NULL,
+                       psi = NULL,
+                       deriv = FALSE,
+                       derx = FALSE,
+                       ...) {
+    
+    
+    if (is.null(psi)) psi <- object$estimate
+    if (is.null(date)) date <- object$fDate
+    date <- as.Date(date)
+    theta <- psi2theta(model = object, psi = psi, date = date)
+    
+    if (deriv) {
+        mM <- modelMatrices(object, date = date)$X
+    }
+    
+    res <- rep(0.0, length(x))
+    
+    if (deriv) {
+        grad <- array(0.0, dim = c(length(x), object$p),
+                      dimnames <- list(paste0("x = ", format(x)), parNames(object)))
+        gradp <- array(0.0, dim = c(length(x), object$p),
+                       dimnames <- list(paste0("q = ", format(x)), parNames(object)))
+    }
+    
+    if (derx) {
+        gradx <- rep(0.0, length(x))
+        names(gradx) <- paste0("x = ", format(x))
+    }
+    
+    for (i_x in seq_along(x)) {
+        
+        FGEV_x <- nieve::pGEV(x[i_x],
+                           loc = theta[ , 1],
+                           scale = theta[ , 2],
+                           shape = theta[ , 3],
+                           deriv = deriv)
+        
+        fGEV_x <- nieve::dGEV(x[i_x],
+                              loc = theta[ , 1],
+                              scale = theta[ , 2],
+                              shape = theta[ , 3],
+                              deriv = deriv)
+        
+        FM  <- prod(FGEV_x)
+        S1 <- sum(fGEV_x / FGEV_x)
+        res[i_x] <- fM <- FM * S1
+        
+        if (deriv) {
+            
+            gradFGEV_x <- attr(FGEV_x, "gradient")
+            gradFGEV_x <- sweep(gradFGEV_x, MARGIN = 1, STATS = FGEV_x, FUN = "/")
+            
+            mat <- sweep(attr(fGEV_x, "gradient"), MARGIN = 1,
+                         STATS = FGEV_x, FUN = "/") -
+                sweep(attr(FGEV_x, "gradient"), MARGIN = 1,
+                      STATS = fGEV_x / FGEV_x / FGEV_x, FUN = "*")
+            ## Then gradient w.r.t 'psi'
+            grad0fM <- gradfM <- gradFM <- rep(NA_real_, object$p)
+            
+            for (i in 1:3) {
+                ind_i <- object$ind[[i]]
+                if (!object$isCst[i]) {
+                    gradFM[ind_i] <- FM * (t(gradFGEV_x[ , i, drop = FALSE]) %*% mM[[i]])
+                    grad0fM[ind_i] <- FM * t(mM[[i]]) %*% mat[ , i]
+                } else {
+                    gradFM[ind_i] <- FM * sum(gradFGEV_x[ , i])
+                    grad0fM[ind_i] <- FM * sum(mat[ , i]) 
+                }
+            }
+            
+            ## prepare the second sum in dfM / dm
+            gradfM <- gradFM * S1 + grad0fM
+            grad[i_x, ] <- gradfM
+            gradp[i_x, ] <- gradFM
+        }
+
+        if (derx) {
+            ## prepare the second sum in dfM / dm
+            S2  <- fGEV_x / FGEV_x            
+            denom <-  theta[ , 2] + theta[ , 3] * (x[i_x] - theta[ , 1])
+            ind <- denom > 0.0
+            S2[ind] <- - S2[ind] * (theta[ind, 3] + 1.0) / denom[ind]
+            S2 <- sum(S2[ind])
+            gradx[i_x] <- fM * S1 + FM * S2 
+        }
+        
+    }
+
+    if (derx) attr(res, "derx") <- gradx
+
+    if (deriv) {
+        attr(res, "gradp") <- gradp
+        attr(res, "gradient") <- grad
+    }
+    
+    res
+}
+
+    
 ##' @title Quantile Function for a Random Maximum
 ##'
 ##' @param object An object that can be used to compute/predict the
@@ -592,7 +834,7 @@ quantMaxFun <- function(object, ...) {
 ##' 
 quantMaxFun.TVGEV <- function(object, date = NULL, psi = NULL, theta = NULL,
                               ...) {
-
+    
     if (is.null(theta)) {
         if (is.null(psi)) psi <- object$estimate
         if (is.null(date)) date <- object$fDate
@@ -610,8 +852,8 @@ quantMaxFun.TVGEV <- function(object, date = NULL, psi = NULL, theta = NULL,
     outFun <- function(probs) {
         res <- rep(0.0, length(probs))
         for (i in seq_along(probs)) {
-            interv <- c(.qMin.TVGEV(theta = theta, p = probs[i]),
-                        .qMax.TVGEV(theta = theta, p = probs[i]))
+            interv <- c(.qMaxL.TVGEV(theta = theta, p = probs[i]),
+                        .qMaxU.TVGEV(theta = theta, p = probs[i]))
             resTry <- try(uniroot(f = FMaxZero,  interval = interv,
                                   prob = probs[i]))
             if (!inherits(resTry, "try-error")) {
@@ -623,3 +865,210 @@ quantMaxFun.TVGEV <- function(object, date = NULL, psi = NULL, theta = NULL,
     outFun
 
 }
+
+##' 
+##' @export
+
+qMax.TVGEV <- function(object,
+                       p,
+                       date = NULL,
+                       psi = NULL,
+                       deriv = FALSE,
+                       hessian = FALSE,
+                       trace = 0,
+                       ...) {
+    
+    if (hessian && !deriv) {
+        stop("'hessian' can be TRUE only when 'deriv' is TRUE") 
+    }
+
+    if (is.null(psi)) psi <- object$estimate
+    if (is.null(date)) date <- object$fDate
+    date <- as.Date(date)
+    theta <- psi2theta(model = object, psi = psi, date = date)
+
+    
+    FMaxZero <- function(q, prob) {
+        pMax.TVGEV(q, date = date, psi = psi, object = object) - p
+    }
+    
+    
+    res <- rep(0.0, length(q))
+    
+    if (deriv) {
+        grad <- array(0.0, dim = c(length(p), object$p),
+                      dimnames <- list(paste0("p = ", format(p)),
+                                       parNames(object)))
+        if (hessian) {
+            warning("The computation of the Hessian is experimental. ",
+                    "Though the formulas used seem OK, some instability ",
+                    "in the computation may arise when p >= 0.9")
+            hess <- array(0.0, dim = c(length(p), object$p, object$p),
+                          dimnames <- list(paste0("p = ", format(p)),
+                                           parNames(object),
+                                           parNames(object)))
+            mM <- modelMatrices(object, date = date)$X
+        } else {
+            hess <- NULL
+        }
+    } else {
+        grad <- NULL
+    }
+    
+    for (i_p in seq_along(p)) {
+        
+        interv <- c(.qMaxL.TVGEV(theta = theta, p = p[i_p]),
+                    .qMaxU.TVGEV(theta = theta, p = p[i_p]))
+
+        ## An error would result when the interval is one point.  This
+        ## will happen when 'date' has length one or when the model is
+        ## stationary.
+        ##
+        ## XXX Add such models to the tests.
+        
+        if (interv[1] == interv[2]) {
+            res[i_p] <- interv[1]
+        } else {
+            resTry <- try(uniroot(f = FMaxZero,  interval = interv,
+                                  prob = p[i_p]))
+            ## res[i] is the quantile
+            if (!inherits(resTry, "try-error")) {
+            res[i_p] <- resTry$root
+            }
+        }
+        
+        if (deriv) {
+
+            ## ===============================================================
+            ## we need to re-compute the values of the GEV density and
+            ## of the GEV distribution function since these are not
+            ## stored. Maybe some savings could later be obtained by
+            ## optionnaly storing these?
+            ## ===============================================================
+            
+            fGEV_p <- nieve::dGEV(res[i_p],
+                               loc = theta[ , 1],
+                               scale = theta[ , 2],
+                               shape = theta[ , 3], deriv = hessian)
+            FGEV_p <- nieve::pGEV(res[i_p],
+                               loc = theta[ , 1],
+                               scale = theta[ , 2],
+                               shape = theta[ , 3], deriv = hessian)
+            
+            FM <- pMax.TVGEV(res[i_p], date = date, psi = psi, object = object,
+                             deriv = TRUE, hessian = hessian)
+
+            sumLog <- sum(fGEV_p / FGEV_p)
+            fM <- FM * sumLog
+            
+            grad[i_p, ] <- -attr(FM, "gradient") / fM
+
+            if (hessian) {
+
+                ## =============================================================
+                ## 'grad0fM' is the gradient of the density computed
+                ## by ignoring the dependence of 'm' on 'psi' in the
+                ## differentiation. The computation here is similar to
+                ## that done in the 'dMax.TVGEV' function. The same is
+                ## true for 'derfM' which is coputed as in
+                ## 'dMax.TVGEV' when 'derx' is TRUE.
+                ## =============================================================
+                
+                ## we need to compute the gradient of  
+                ## First gradient w.r.t. the GEV parameter 'theta'.
+                ## 'mat' is a Bstar * 3 matrix
+                mat <- sweep(attr(fGEV_p, "gradient"), MARGIN = 1,
+                             STATS = FGEV_p, FUN = "/") -
+                    sweep(attr(FGEV_p, "gradient"), MARGIN = 1,
+                          STATS = fGEV_p / FGEV_p / FGEV_p, FUN = "*")
+                
+                ## Then gradient w.r.t 'psi'
+                grad0fM <- rep(NA_real_, object$p)
+                
+                for (i in 1:3) {
+                    ind_i <- object$ind[[i]]
+                    if (!object$isCst[i]) {
+                        grad0fM[ind_i]  <- FM * t(mM[[i]]) %*% mat[ , i]
+                    } else {
+                        grad0fM[ind_i] <- FM * sum(mat[ , i]) 
+                    }
+                }
+
+                gradFM <- attr(FM, "gradient") ## to get an easier-to-read code
+                grad0fM <- gradFM * sumLog + grad0fM 
+
+                ## 'derLogfGEV_p' is a vector with length Bstar := nrow(theta)
+                derLogfGEV_p <- fGEV_p / FGEV_p
+                denom <-  theta[ , 2] + theta[ , 3] * (res[i_p] - theta[ , 1])
+                ind <- denom > 0.0
+                derLogfGEV_p[ind] <- - derLogfGEV_p[ind] *
+                    (theta[ , 3] + 1.0) / denom
+                derfM <- fM * sumLog + FM * sum(derLogfGEV_p)
+
+                ## This was wrong
+                ## ## Correction of the gradient because 'm' depends on 'psi'
+                ## if (trace) {
+                ##     cat("correction of grad 'f_M' due to the dependence of",
+                ##         " 'm' on 'psi'\n")
+                ##     print(- derfM * gradFM / fM)
+                ## }
+                ## gradfM <- - derfM * gradFM / fM + grad0fM
+                
+                gradfM <- grad0fM
+                
+                if (trace) {
+                    cat("\nValue of F_M\n")
+                    print(FM)
+                    
+                    cat("\nGradient of f_M\n")
+                    print(gradfM)
+                    
+                    cat("\nGradient of F_M\n")
+                    print(gradFM)
+                   
+                    fMCheck <- dMax.TVGEV(object, date = date,
+                                          x = res[i_p], deriv = TRUE, derx = TRUE)
+                    cat("\nCheck the density 'f_M'\n")
+                    print(c("here" = as.numeric(fM),
+                            "check" = as.numeric(fMCheck)))
+                    cat("\nCheck the derivative 'derf_M'\n")
+                    print(c("here" = as.numeric(derfM),
+                            "check" = as.numeric(attr(fMCheck, "derx"))))
+                }
+
+                ## =============================================================
+                ## compute the derivatives of fM w.r.t the 1-st arg and
+                ## w.r.t. the parameters
+                ## Mind that both 'gradfM' and 'gradFM' are row matrices
+                ## so 'crossprod' acts as a 'tcrossprod' on vectors.
+                ## =============================================================
+                
+                hess[i_p, , ] <- (-attr(FM, "hessian")[1, , ] +
+                                  (crossprod(gradfM, gradFM) +
+                                   crossprod(gradFM, gradfM) -
+                                   derfM * crossprod(gradFM) / fM) / fM) / fM
+
+                if (trace) {
+                    cat("\nComponents in Hessian\n")
+                    print(-attr(FM, "hessian")[1, , ] / fM)
+                    print((crossprod(gradfM, gradFM) +
+                           crossprod(gradFM, gradfM)) / fM / fM)
+                    print(-derfM * crossprod(gradFM) / fM / fM / fM)       
+                }
+                
+            }   
+        }
+    }
+    
+    if (deriv) {
+        attr(res, "gradient") <- grad
+        if (hessian) {
+            attr(res, "hessian") <- hess
+        }
+    }
+    
+    res
+    
+}
+
+    
