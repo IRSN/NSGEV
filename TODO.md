@@ -25,3 +25,5 @@
 - [] **README** file. Make the installation part shortest, and include
   a small example with plots that will be converted into a small
   Google Colab notebook.
+
+- [] **Hexagon sticker**?
