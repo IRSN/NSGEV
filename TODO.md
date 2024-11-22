@@ -8,6 +8,12 @@
 - [] **Profile Likelihood**. Experiment on the computation of profile
   likelihood intervals with the ODE method?
   
+- [] **Imporove Numerical Treatment**. Improve by using the QR method
+  on the design matrices. So the vector of parameters will be
+  internally $\mathbf{R}\boldsymbol{\psi}$ instead of
+  $\boldsymbol{\psi}$. This should eliminate some of the problems met
+  when the covariates are poorly scaled and/or are correlated.
+  
 - [] **Tests**. Improve the code coverage by adding new tests.
   
 - [] **Continuous Integration/Github Actions**. Add an action for the
