@@ -1,19 +1,39 @@
 
 **NSGEV** Package News
-===========================
+======================
 
-# New in version 0.1.9 (pending)
+# New in version 0.1.9
 
 ## Enhancements
 
+- The `quantMax` method for the class `"TVGEV"` now computes the
+  profile-likelihood intervals on the quantile of the maximum on an
+  arbitrary "design-life" period. The computation is quite long for
+  now hence is illustrated in a `dontrun` part of the examples for
+  `quanMax.TVGEV` method.
+
 - The `TVGEV` function did not work when some (non temporal)
-  covariates add missing values. 
+  covariates had missing values. 
 
 - The functions `qMax.TVGEV` and `pMax.TVGEV` now compute the gradient
   and the Hessian w.r.t. the parameters, opening the road to profile
-  likelihood inference on the quantile of the maximum. New function
-  `dMax.TVGEV`.
+  likelihood inference on the quantile of the maximum. The wew
+  function `dMax.TVGEV` computes the gradient w.r.t. the parameters.
 
+- New tests dedicated to the `qMax.TVEV`, `pMax.TVEV` and `dMax.TVGEV`
+  functions.
+  
+- Fixes in the documentation.
+
+- New long-form documentation *NSGEV: Computing Details*, mainly
+  dedicated to the the computation of the profile likelihood
+  intervals. This is a Rweave document `.Rnw` hence will not appear on
+  the `pkgdown` site. It could be removed from the vignettes if this
+  generates installation problems for some users.
+  
+- The bibliography file for the vignettes `NSGEV.bib` has been cleaned
+  and provides DOIs when these are available.
+  
 ## Bug fixes
 
 - In `quantMax.TVGEV` the check on `prob` was misleading.

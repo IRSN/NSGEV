@@ -267,3 +267,41 @@ translude <- function (colors, alpha = 0.6) {
     colors2 <- rgb(red = rgb["red", ], green = rgb["green", ], 
                    blue = rgb["blue", ], alpha = alpha)
 }
+
+##' Test that a provided object containing derivatives is in good
+##' accordance with another similar object containing numeric
+##' derivatives.
+##'
+##' One could think of requiring a small absolute difference or a
+##' small relative difference between the results. However, in
+##' practice it seems that the absolute difference can be large even
+##' with correct derivatives because these contain large values. Also
+##' the relative difference can be large if the derivatives contain
+##' values that are small in absolute value. However, if one of these
+##' two condition is fulfilled, the result must be correct because
+##' none of the condition can be true by chance.
+##'  
+##' @title Test that a Provided Graident, Jacobian or Hessian is in
+##'     Accordance with a Numeric Hessian
+##'
+##' @param der The provided vector, matrix or array of derivatives to
+##'     be checked.
+##' 
+##' @param derNum The numeric vector, matrix or array of derivatives.
+##' 
+##' @param PREC A precision parameter. A value of \code{0.05} seems
+##'     good in practice.
+##' 
+##' @return A logical which is \code{TRUE} if the two objects are
+##'     close enough.
+##'
+##' @export
+##' @keywords internal
+testNumDeriv <- function(der, derNum, PREC = 0.05,
+                          type = c("gradient", "hessian")) {
+    if (any(is.na(der)) || any(is.na(derNum))) return(FALSE)
+    type <- match.arg(type)
+    small <- c("gradient" = 1e-3, "hessian" = 1e-2)[type] 
+    (max(abs(der - derNum)) < small / PREC) ||
+        (max(abs(der - derNum) / (abs(der) + 1e-9)) < small / PREC)
+}

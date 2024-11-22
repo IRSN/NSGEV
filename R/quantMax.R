@@ -37,7 +37,6 @@ quantMax <- function(object, ...) {
 ##' The derivative of the quantile w.r.t. \eqn{\boldsymbol{\psi}}{\psi}
 ##' can be obtained by the implicit function theorem and then be used for
 ##' the inference e.g., using the "delta method".
-##' 
 ##'
 ##' @title Quantiles of the Maximum on a Period of Time
 ##' 
@@ -96,18 +95,18 @@ quantMax <- function(object, ...) {
 ##' qM1 <- quantMax(tv, level = c(0.95, 0.70))
 ##' date2 <- as.Date(sprintf("%4d-01-01", 2025:2054))
 ##' qM2 <- quantMax(tv, date = date2, level = c(0.95, 0.70))
-##' qM2
+##' head(qM2)
 ##' gg <- autoplot(qM2, fillConf = TRUE)
-##' gg <- gg + ggtitle("Quantile of the maximum over years 2025-2054")
+##' gg <- gg + ggtitle("Quantile of the maximum over years 2025-2054 with \"delta\" intervals")
 ##' gg
 ##' ## Use the 'autolayer' method for a quick comparison 
 ##' qM3 <-  quantMax(tv,
 ##'                  date = as.Date(sprintf("%4d-01-01", 2025:2035)),
 ##'                  level = c(0.95, 0.70))
-##'
-##' gg + autolayer(qM3, colour = "SpringGreen3", linetype = "dashed")
+##' gg + autolayer(qM3, colour = "SpringGreen3", linetype = "dashed") +
+##'   ggtitle("Same as before. Green dashed line: restricted period 2025-2035")
 ##' ## Compare with a simulation. Note that 'sim' has class "bts"  and
-##' ## is essentially a numeric matrix. Increas 'nsim' to get a more
+##' ## is essentially a numeric matrix. Increase 'nsim' to get a more
 ##' ## precise estimate of the high quantiles
 ##' sim <- simulate(tv, newdate = date2, nsim = 10000)
 ##' M <- apply(sim, 2, max)
@@ -115,13 +114,19 @@ quantMax <- function(object, ...) {
 ##' qSim <- quantile(M, prob = probs)
 ##' dfSim <- data.frame(Prob = probs, ProbExc = 1 - probs, Quant = qSim)
 ##' gg + geom_point(data = dfSim, mapping = aes(x = ProbExc, y = Quant))
-##' 
+##'\dontrun{
+##' qM3 <- quantMax(tv, level = c(0.95, 0.70), confint = "proflik")
+##' gg3 <- autoplot(qM3, fillConf = TRUE) +
+##'                 ggtitle(paste("Quantile of the maximum over years 2025-2054 with",
+##'                               " \"profile\" intervals"))
+##' gg3
+##' }
 quantMax.TVGEV <- function(object,
                            prob,
                            date = NULL,
                            level = 0.95,
                            psi = NULL,
-                           confintMethod = "delta",
+                           confintMethod = c("delta", "proflik"),
                            out = c("data.frame", "array"),
                            trace = 1L,
                            ...) {
@@ -182,7 +187,7 @@ quantMax.TVGEV <- function(object,
         covPsi <- vcov(object)
         qNorm <- qnorm(cbind(probL, probU), mean = 0.0, sd = 1.0)
 
-        Quant <- array(NA,
+        Quant <- array(NA_real_,
                        dim = c(Prob = nProb, Lim = 3L, Level = nLevel),
                        dimnames = list(Prob = fProb,
                                        Type = c("Quant", "L", "U"),
@@ -287,6 +292,40 @@ quantMax.TVGEV <- function(object,
             
         }
 
+    } else if (confintMethod == "proflik") {
+        Quant <- array(NA_real_,
+                       dim = c(Prob = nProb, Lim = 3L, Level = nLevel),
+                       dimnames = list(Prob = fProb,
+                                       Type = c("Quant", "L", "U"),
+                                       Level = fLevel)) 
+        diagno <- array(NA_real_,
+                        dim = c(Prob = nProb, Type = 2L, Level = nLevel, Diag = 4L),
+                        dimnames = list(Prob = fProb,
+                                        Type = c("L", "U"),
+                                        Level = fLevel,
+                                        Diag = c("status", "objective", "constraint", "gradDist")))
+        Psi <- array(NA_real_,
+                     dim = c(Prob = nProb, Type = 2L, Level = nLevel, Param = p),
+                     dimnames = list(Prob = fProb,
+                                     Type = c("L", "U"),
+                                     Level = fLevel,
+                                     Param = parNames(object)))
+        
+        for (iProb in seq_along(prob)) {
+            qFuni <- function(psi, object) {
+                qMax.TVGEV(object = object, p = prob[iProb], date = date, psi = psi, deriv = TRUE,
+                           trace = 1)
+            }   
+            resi <- profLik(object = object, fun = qFuni, level = level)
+            
+            Quant[iProb, , ] <- resi[c("est", "L", "U"), ]
+            diagno[iProb, , , ] <- attr(resi, "diagno")
+            Psi[iProb, , , ] <- attr(resi, "psi")
+        }
+        if (trace > 1) {
+            cat("Diagnostics for the constrained optim\n")
+            print(diagno)
+        }
     }
     
     ## =========================================================================
@@ -298,7 +337,6 @@ quantMax.TVGEV <- function(object,
         L <- list()
         for (iLevel in seq_along(level)) {
             nm <- fLevel[iLevel]
-            
             L[[nm]] <- data.frame(Prob = prob,
                              ProbExc = 1.0 - prob,
                              Quant = Quant[ , "Quant", iLevel],
@@ -310,7 +348,8 @@ quantMax.TVGEV <- function(object,
         Quant <- data.table::rbindlist(L)
         class(Quant) <- c("quantMax.TVGEV", "data.frame")
     }
-    
+        
+    if (confintMethod == "proflik") attr(Quant, "psi") <- Psi
     Quant
         
 }
@@ -354,7 +393,10 @@ quantMax.TVGEV <- function(object,
     shapeMin <- min(theta[ , "shape"])
     scaleMin <- min(theta[ , "scale"])
     locMin <- min(theta[ , "loc"])
-    nieve::qGEV(p = p^(1 / n), loc = locMin, scale = scaleMin, shape = shapeMin)
+    nieve::qGEV(p = p^(1 / n),
+                loc = locMin,
+                scale = scaleMin,
+                shape = shapeMin)
 }
 
 ## *****************************************************************************
@@ -436,7 +478,7 @@ cdfMaxFun <- function(object, ...) {
 ##'     \code{coef(object)} is used.
 ##'
 ##' @param theta An optional matrix with three columns containing GEV
-##'     parameters. The colums are in the order \emph{location},
+##'     parameters. The columns are in the order \emph{location},
 ##'     \emph{scale} and \emph{shape}. When this argument is used
 ##'     neither \code{date} not \code{psi} can be used.
 ##' 
@@ -500,7 +542,38 @@ cdfMaxFun.TVGEV <- function(object, date = NULL, psi = NULL,
 
 }
 
-
+##' Compute the distribution function of the maximum over a period of
+##' time.
+##'
+##' @title Value of the Distribution Function of the Maximum over a
+##'     Period of Time
+##' 
+##' @param object A \code{TVGEV} object.
+##'
+##' @param q A vector of "quantile" values at which the distribution
+##'     function is to be evaluated.
+##'
+##' @param date A vector that can be coerced to the class
+##'     \code{"Date"} which defines the period of time.
+##'
+##' @param psi Optional vector of parameters. By default, the
+##'     estimated vector of parameters \code{coef(object)} is used.
+##'
+##' @param deriv Logical. If \code{TRUE} the gradient of the
+##'     probability distribution will be computed and returned as the
+##'     \code{"gradient"} attribute of the result.
+##' 
+##' @param hessian Logical. If \code{TRUE} the Hessian of the density
+##'     will be computed and returned as the \code{"hessian"}
+##'     attribute of the result.
+##' 
+##' @param ... Not used yet.
+##'
+##' @return A vector of values for the distribution function. Beside
+##'     the gradient (w.r.t. the parameters) returned as the attribute
+##'     named \code{"gradient"}, the Hessian w.r.t. \code{x} can
+##'     also be returned as the attribute \code{"hessian"} of the result.
+##' 
 ##' @export
 ##' 
 pMax.TVGEV <- function(object,
@@ -518,22 +591,20 @@ pMax.TVGEV <- function(object,
     if (is.null(psi)) psi <- object$estimate
     if (is.null(date)) date <- object$fDate
     date <- as.Date(date)
-    theta <- psi2theta(model = object, psi = psi, date = date)
-    
-    if (deriv) {
-        mM <- modelMatrices(object, date = date)$X
-    }
+    theta <- psi2theta(model = object, psi = psi, date = date,
+                       checkNames = FALSE)
     
     res <- rep(0.0, length(q))
     
     if (deriv) {
+        mM <- modelMatrices(object, date = date)$X
         grad <- array(0.0, dim = c(length(q), object$p),
-                      dimnames <- list(paste0("q = ", format(q)), parNames(object)))
+                      dimnames = list(paste0("q = ", format(q)), parNames(object)))
         if (hessian) {
             hess <- array(0.0, dim = c(length(q), object$p, object$p),
-                          dimnames <- list(paste0("q = ", format(q)),
-                                           parNames(object),
-                                           parNames(object)))
+                          dimnames = list(paste0("q = ", format(q)),
+                                          parNames(object),
+                                          parNames(object)))
         }
     }
     
@@ -549,14 +620,14 @@ pMax.TVGEV <- function(object,
         
         if (deriv) {
             
-            ## 'grad_q'    is an array with dim c(length(date), 3)
+            ## 'grad_q'   is an array with dim c(length(date), 3)
             ## 'mM[[k]]'  is a matrix with dim c(length(date), p_k) where
             ##            'p_k' is the number of "psi" parameters corresponding to
             ##            'theta_k'
             grad_q <- attr(F_q, "gradient")
             grad_q <- sweep(grad_q, MARGIN = 1, STATS = F_q, FUN = "/")
 
-            ## hess_q is an array with dimension (length(date), 3, 3)
+            ## 'hess_q'   is an array with dimension (length(date), 3, 3)
             ## do the same for the Hessian H[b, k, ell] <- H[b, k, ell] / F[b]
             if (hessian) {
                 hess_q <- attr(F_q, "hessian")
@@ -567,7 +638,8 @@ pMax.TVGEV <- function(object,
             for (i in 1:3) {
                 ind_i <- object$ind[[i]]
                 if (!object$isCst[i]) {
-                    grad[i_q, ind_i] <- res[i_q] * (t(grad_q[ , i, drop = FALSE]) %*% mM[[i]])
+                    grad[i_q, ind_i] <- res[i_q] * (t(grad_q[ , i, drop = FALSE]) %*%
+                                                    mM[[i]])
                 } else {
                     grad[i_q, ind_i] <- res[i_q] * sum(grad_q[ , i])
                 }
@@ -588,7 +660,8 @@ pMax.TVGEV <- function(object,
                                     tcrossprod(mM[[i]][b, ], mM[[j]][b, ])
                             }
                             
-                            A <- tcrossprod(grad[i_q, ind_i] / res[i_q], grad[i_q, ind_j] / res[i_q])
+                            A <- tcrossprod(grad[i_q, ind_i] /
+                                            res[i_q], grad[i_q, ind_j] / res[i_q])
                             
                             A <- A + hm_ij
                             
@@ -596,7 +669,8 @@ pMax.TVGEV <- function(object,
                             
                             ## ## XXX
                             ## hess[i_q, ind_i, ind_j] <- hess[i_q, ind_i, ind_j] +
-                            ##     tcrossprod(grad[i_q, ind_i] / res[i_q], grad[i_q, ind_j] / res[i_q])
+                            ##     tcrossprod(grad[i_q, ind_i] /
+                            ##               res[i_q], grad[i_q, ind_j] / res[i_q])
                         }
                     }
                 }
@@ -614,34 +688,38 @@ pMax.TVGEV <- function(object,
 
 ##' Compute the probability density of the maximum over a period of
 ##' time.
+##'
+##' @title Value of the Probability Density of the Maximum over a
+##'     Period of Time
 ##' 
-##' @param object An \code{TVGEV} object.
+##' @param object A \code{TVGEV} object.
 ##'
 ##' @param x A vector of values at which the density is to be
 ##'     evaluated.
 ##'
-##' @param date A vector that can be coerced to defining the period of
-##'     time.
+##' @param date A vector that can be coerced to the class
+##'     \code{"Date"} which defines the period of time.
 ##'
-##' @param psi Optional vector of parameters. By default the estimated
-##'     vector of parameters \code{coef(object)} is used.
+##' @param psi Optional vector of parameters. By default, the
+##'     estimated vector of parameters \code{coef(object)} is used.
 ##'
 ##' @param deriv Logical. If \code{TRUE} the gradient of the density
-##'     will be computed ans returned as the \code{"gradient"}
+##'     will be computed and returned as the \code{"gradient"}
 ##'     attribute of the result.
 ##' 
 ##' @param derx Logical, If \code{TRUE} the derivative of the density
 ##'     w.r.t. \code{x} will be computed and returned as the
 ##'     \code{"derx"} attribute of the result.
 ##' 
-##' @param ...
+##' @param ... Not used yet.
 ##'
-##' @return A vector of values of the density. Beside the gradient
-##'     (w.r.t. the parameters) returned as the attribute named
-##'     \code{"gradient"}, the derivative w.r.t. \code{x} is also
-##'     returned as the attribute \code{"derx"} of the result.
+##' @return A vector of values for the probability density. Beside the
+##'     gradient (w.r.t. the parameters) returned as the attribute
+##'     named \code{"gradient"}, the derivative w.r.t. \code{x} is
+##'     also returned as the attribute \code{"derx"} of the result.
 ##' 
 ##' @export
+##' 
 dMax.TVGEV <- function(object,
                        x,
                        date = NULL,
@@ -654,7 +732,8 @@ dMax.TVGEV <- function(object,
     if (is.null(psi)) psi <- object$estimate
     if (is.null(date)) date <- object$fDate
     date <- as.Date(date)
-    theta <- psi2theta(model = object, psi = psi, date = date)
+    theta <- psi2theta(model = object, psi = psi, date = date,
+                       checkNames = FALSE)
     
     if (deriv) {
         mM <- modelMatrices(object, date = date)$X
@@ -664,9 +743,9 @@ dMax.TVGEV <- function(object,
     
     if (deriv) {
         grad <- array(0.0, dim = c(length(x), object$p),
-                      dimnames <- list(paste0("x = ", format(x)), parNames(object)))
+                      dimnames = list(paste0("x = ", format(x)), parNames(object)))
         gradp <- array(0.0, dim = c(length(x), object$p),
-                       dimnames <- list(paste0("q = ", format(x)), parNames(object)))
+                       dimnames = list(paste0("q = ", format(x)), parNames(object)))
     }
     
     if (derx) {
@@ -693,7 +772,6 @@ dMax.TVGEV <- function(object,
         res[i_x] <- fM <- FM * S1
         
         if (deriv) {
-            
             gradFGEV_x <- attr(FGEV_x, "gradient")
             gradFGEV_x <- sweep(gradFGEV_x, MARGIN = 1, STATS = FGEV_x, FUN = "/")
             
@@ -743,7 +821,6 @@ dMax.TVGEV <- function(object,
     res
 }
 
-    
 ##' @title Quantile Function for a Random Maximum
 ##'
 ##' @param object An object that can be used to compute/predict the
@@ -752,7 +829,7 @@ dMax.TVGEV <- function(object,
 ##' @param ... Further arguments for methods.
 ##' 
 ##' @return A function (or closure) that can be used to compute the
-##'     quantiles for arbitraty given probabilities.
+##'     quantiles for arbitrary given probabilities.
 ##'
 ##' @export
 ##' 
@@ -785,7 +862,7 @@ quantMaxFun <- function(object, ...) {
 ##' @param object An object with class \code{"TVGEV"}.
 ##' 
 ##' @param date An object that can be coerced to the class
-##'     \code{"Date"}. If not provided this will be taken as the date
+##'     \code{"Date"}. If not provided, this will be taken as the date
 ##'     attached to \code{object}.
 ##'
 ##' @param psi An optional vector of coefficients for
@@ -793,7 +870,7 @@ quantMaxFun <- function(object, ...) {
 ##'     \code{coef(object)} is used.
 ##'
 ##' @param theta An optional matrix with three columns containing GEV
-##'     parameters. The colums are in the order \emph{location},
+##'     parameters. The columns are in the order \emph{location},
 ##'     \emph{scale} and \emph{shape}. When this argument is used
 ##'     neither \code{date} not \code{psi} can be used.
 ##' 
@@ -866,9 +943,47 @@ quantMaxFun.TVGEV <- function(object, date = NULL, psi = NULL, theta = NULL,
 
 }
 
+##' Compute the quantiles of the maximum over a period of time.
+##'
+##' @title Values of the Quantile Functon of the Maximum over a
+##'     Period of Time
+##' 
+##' @param object A \code{TVGEV} object.
+##'
+##' @param p A vector of probability values at which the quantile
+##'     function is to be evaluated.
+##'
+##' @param date A vector that can be coerced to the class
+##'     \code{"Date"} which defines the period of time.
+##'
+##' @param psi Optional vector of parameters. By default, the
+##'     estimated vector of parameters \code{coef(object)} is used.
+##'
+##' @param deriv Logical. If \code{TRUE} the gradient of the quantile
+##'     function will be computed and returned as the
+##'     \code{"gradient"} attribute of the result.
+##' 
+##' @param hessian Logical, If \code{TRUE} the Hessian of the quantile
+##'     function will be computed and returned as the \code{"hessian"}
+##'     attribute of the result.
+##'
+##' @param trace Integer level of verbosity.
+##' 
+##' @param ... Not used yet.
+##'
+##' @return A vector of values for the quanitle function. Beside the
+##'     gradient (w.r.t. the parameters) returned as the attribute
+##'     named \code{"gradient"}, the Hessian can also be returned as
+##'     the attribute \code{"Hessian"} of the result.
 ##' 
 ##' @export
-
+##'
+##' @note The \code{\link{quantMax}} method can be used to compute the
+##'     quantiles and confidence intervals: delta or profile
+##'     likelihood.
+##'
+##' @seealso The \code{\link{quantMax.TVGEV}} method.
+##' 
 qMax.TVGEV <- function(object,
                        p,
                        date = NULL,
@@ -885,28 +1000,32 @@ qMax.TVGEV <- function(object,
     if (is.null(psi)) psi <- object$estimate
     if (is.null(date)) date <- object$fDate
     date <- as.Date(date)
-    theta <- psi2theta(model = object, psi = psi, date = date)
+    theta <- psi2theta(model = object, psi = psi, date = date,
+                       checkNames = FALSE)
+    sigmaMin <- min(theta[ , 2])
 
-    
+    if (sigmaMin <= 0.0) {
+        return(NA)
+    }
+        
     FMaxZero <- function(q, prob) {
         pMax.TVGEV(q, date = date, psi = psi, object = object) - p
     }
-    
-    
+        
     res <- rep(0.0, length(q))
     
     if (deriv) {
         grad <- array(0.0, dim = c(length(p), object$p),
-                      dimnames <- list(paste0("p = ", format(p)),
-                                       parNames(object)))
+                      dimnames = list(paste0("p = ", format(p)),
+                                      parNames(object)))
         if (hessian) {
             warning("The computation of the Hessian is experimental. ",
                     "Though the formulas used seem OK, some instability ",
                     "in the computation may arise when p >= 0.9")
             hess <- array(0.0, dim = c(length(p), object$p, object$p),
-                          dimnames <- list(paste0("p = ", format(p)),
-                                           parNames(object),
-                                           parNames(object)))
+                          dimnames = list(paste0("p = ", format(p)),
+                                          parNames(object),
+                                          parNames(object)))
             mM <- modelMatrices(object, date = date)$X
         } else {
             hess <- NULL
@@ -925,6 +1044,8 @@ qMax.TVGEV <- function(object,
         ## stationary.
         ##
         ## XXX Add such models to the tests.
+        
+        cond <- (interv[1] == interv[2])
         
         if (interv[1] == interv[2]) {
             res[i_p] <- interv[1]
@@ -1016,9 +1137,11 @@ qMax.TVGEV <- function(object,
                 
                 gradfM <- grad0fM
                 
-                if (trace) {
+                if (trace > 1) {
                     cat("\nValue of F_M\n")
-                    print(FM)
+                    FMP <- FM
+                    attributes(FMP) <- NULL
+                    print(FMP)
                     
                     cat("\nGradient of f_M\n")
                     print(gradfM)
@@ -1048,7 +1171,7 @@ qMax.TVGEV <- function(object,
                                    crossprod(gradFM, gradfM) -
                                    derfM * crossprod(gradFM) / fM) / fM) / fM
 
-                if (trace) {
+                if (trace > 1) {
                     cat("\nComponents in Hessian\n")
                     print(-attr(FM, "hessian")[1, , ] / fM)
                     print((crossprod(gradfM, gradFM) +

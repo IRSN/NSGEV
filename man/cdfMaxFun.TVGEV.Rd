@@ -19,7 +19,7 @@ attached to \code{object}.}
 \code{coef(object)} is used.}
 
 \item{theta}{An optional matrix with three columns containing GEV
-parameters. The colums are in the order \emph{location},
+parameters. The columns are in the order \emph{location},
 \emph{scale} and \emph{shape}. When this argument is used
 neither \code{date} not \code{psi} can be used.}
 

@@ -11,7 +11,7 @@
 \item{object}{An object with class \code{"TVGEV"}.}
 
 \item{date}{An object that can be coerced to the class
-\code{"Date"}. If not provided this will be taken as the date
+\code{"Date"}. If not provided, this will be taken as the date
 attached to \code{object}.}
 
 \item{psi}{An optional vector of coefficients for
@@ -19,7 +19,7 @@ attached to \code{object}.}
 \code{coef(object)} is used.}
 
 \item{theta}{An optional matrix with three columns containing GEV
-parameters. The colums are in the order \emph{location},
+parameters. The columns are in the order \emph{location},
 \emph{scale} and \emph{shape}. When this argument is used
 neither \code{date} not \code{psi} can be used.}
 

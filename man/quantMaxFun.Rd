@@ -14,7 +14,7 @@ distribution of the random maximum.}
 }
 \value{
 A function (or closure) that can be used to compute the
-    quantiles for arbitraty given probabilities.
+    quantiles for arbitrary given probabilities.
 }
 \description{
 Quantile Function for a Random Maximum

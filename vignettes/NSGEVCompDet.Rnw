@@ -1,0 +1,688 @@
+\documentclass[11pt,a4paper]{article}
+
+%\VignetteIndexEntry{Mauna Loa Example from Rasmussen and Williams' Book}
+%\VignetteEngine{knitr::knitr}
+\usepackage{makeidx}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage[english]{babel}
+\usepackage{multirow}
+\usepackage[pdftex]{hyperref}
+\usepackage{fullpage}
+\usepackage{setspace}
+\usepackage[nodayofweek]{datetime}
+\usepackage[utf8]{inputenc}
+\usepackage{nicematrix}
+\newdateformat{mydate}{\THEYEAR-\twodigit{\THEMONTH}{}-\twodigit{\THEDAY}{}}
+
+%% bibliography
+\if@shortnames
+  \usepackage[authoryear,round]{natbib}
+\else
+  \usepackage[authoryear,round,longnamesfirst]{natbib}
+\fi
+\bibpunct{(}{)}{;}{a}{}{,}
+\bibliographystyle{jss}
+%%-----------------------------------------------
+\pdfinfo{
+  /Title (NSGEV Computing Details)
+  /Subject (Non-Stationary Extremes)
+  /Author  (Yves Deville)
+  /Keywords ()
+}
+  
+\title{NSGEV Computing Details} 
+\author{Yves Deville}
+
+%%=============================================================================
+%% Some commands
+%%=============================================================================
+%
+\newcommand{\code}[1]{\texttt{#1}}   
+\newcommand{\m}{\mathbf}   
+\newcommand{\bs}{\boldsymbol}
+\newcommand{\pkg}[1]{\textbf{#1}}
+\newcommand{\XXX}{{\color{red}\Large\sf A completer}} 
+\newcommand{\Gr}[1]{\Dot{#1}}
+
+%% Stat
+\newcommand{\tr}[1]{#1^{\top}}
+\newcommand{\fsim}{y^{\textrm{sim}}}
+\newcommand{\New}[1]{#1_{\textrm{new}}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Cov}{\textrm{Cov}}
+\newcommand{\Corr}{\textrm{Corr}}
+\newcommand{\Var}{\textrm{Var}}
+%%
+%%=============================================================================
+%% Colours
+%%=============================================================================
+%
+\definecolor{MonVert}{rgb}{0.398,0.801,0.000} 
+\definecolor{MonRouge}{rgb}{0.600,0.060,0.360} 
+\definecolor{MonBleu}{rgb}{0.000,0.602,0.801} 
+\definecolor{SteelBlue2}{rgb}{0.359375,0.671875,0.9296875}
+\definecolor{orange}{rgb}{1.0,0.6470,0.0}
+\definecolor{SteelBlue4}{rgb}{0.212, 0.392, 0.545}
+\definecolor{MonJaune}{rgb}{0.996,0.996,0.875}
+\definecolor{orange1}{rgb}{0.996,0.645,0}
+\definecolor{PaleVioletRed}{rgb}{0.855,0.438,0.574}
+\definecolor{gray}{rgb}{0.15,0.15,0.15}
+%=============================================================================
+% OK
+%=============================================================================
+
+%% \date{}
+                                                                             
+%
+\begin{document}
+\newtheorem{theo}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+\theoremstyle{remark}
+\newtheorem{rk}{Remark}
+\newtheorem{ex}{Example}
+
+%% preliminary chunks (not echoed) 
+<<include=FALSE, echo=FALSE>>=
+library(knitr)
+ opts_chunk$set(fig.path = 'Rgraphics/fig-', 
+                cache = FALSE, dev = 'pdf', 
+                tidy = FALSE, size = "small")
+knit_hooks$set(crop = hook_pdfcrop)
+@
+
+
+\maketitle
+%==============================================================================
+\tableofcontents{}
+\setcounter{tocdepth}{4}  
+
+\pagebreak
+
+\section{The TVGEV block maxima model}
+
+%% \subsection{Model description}
+
+The model discussed here is for a timeseries $Y_b$ of block maxima
+with GEV margins $\bs{\theta}_b = [\mu_b,\,\sigma_b,\,\xi_b]^\top$,
+that is $Y_b\sim \text{GEV}\{\bs{\theta}_b\}$. The GEV location
+parameter~$\mu_b$ depends on the time through a vector of $p^\mu$
+covariates $\m{x}_{\mu}(t)$ according to
+\begin{equation*}
+  \mu_b = \m{x}^{\mu\top}_b \bs{\psi}^{\mu}
+\end{equation*}
+where $\bs{\psi}_\mu$ is a vector of $p^\mu$ fixed yet unknown
+parameters.  Similar relations are used for the scale and shape
+parameters~$\sigma_b$ and~$\xi_b$. A typical example uses a linear
+trend on the location parameter: 
+$\mu_b = \psi^\mu_{0} + \psi^\mu_{1} \, b$, so the model uses
+$p^\mu = 2$ parameters
+$\bs{\psi}^\mu = [ \psi^\mu_{0},\, \psi^\mu_{1}]^\top$. The relation
+between the vector $\bs{\theta}_b$ of GEV parameters and the
+vector~$\bs{\psi}$ of model parameters is
+\begin{equation*}
+  \bs{\theta}_b =
+  \begin{bmatrix}
+    \mu_b \\
+    \sigma_b \\
+    \xi_b
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    \m{x}^{\mu\top}_b \bs{\psi}^\mu \\
+    \m{x}^{\sigma\top}_b \bs{\psi}^\sigma\\
+    \m{x}^{\xi\top}_b \bs{\psi}^\xi
+  \end{bmatrix}
+  =
+  \underset{3 \times p\rule{0pt}{0.7em}}{
+    \begin{bmatrix}
+      \m{x}^{\mu\top}_b \m{i}^\mu \\
+      \m{x}^{\sigma\top}_b \m{i}^\sigma\\
+      \m{x}^{\xi\top}_b \m{i}^\xi
+    \end{bmatrix}}
+  \underset{p \times 1 \rule{0pt}{2.2em}}{
+    \bs{\psi}
+  }
+\end{equation*}
+where for instance $\m{i}^\mu := [1_{p^\mu}^\top, \, \m{0}^\top ]$ is
+the vector of $p$ one-or-zero elements which picks the ``location part''
+in the whole vector of model parameters.
+
+
+\begin{rk}
+  In practice the same covariates can be used for several parameters
+  and the shape~$\xi$ is quite often maintained constant, so that
+  $\m{x}^\xi_b \equiv 1$ and $\bs{\psi}^{\xi} = \xi$.
+\end{rk}
+\begin{rk}
+  For numerical reasons, the scaling of the covariates can matter. For
+  instance it is bad idea to take $x_b$ as a year number such as
+  $x_b=2000$. A common practice  is to scale the time.
+\end{rk}
+\begin{rk}
+  One could allow a same parameter $\psi_k$ to be used in several GEV
+  parameters, typically both $\mu$ and $\sigma$. The three $B^\star \times p$ matrices
+  $\m{X}^\mu$, $ \m{X}^\sigma$ and $\m{X}^\xi$ would be stored as a
+  three-dimensional array say $\widetilde{\m{X}}$ with dimension
+  $3 \times B^\star \times p$. For the $i$-th GEV parameter
+  $\theta^{[i]}$ ($i=1$ to $3$), the slice $\widetilde{\m{X}}[i , \,, \, \,]$ would
+  be a $B^\star \times p$ matrix such that the vector
+  $\bs{\theta}^{[i]}$ with length $B^\star$ is given by
+  $\bs{\theta}^{[i]} = \widetilde{\m{X}}[ i, \,, \, ] \bs{\psi}$.  So
+  the $B^\star \times 3$ matrix $\bs{\Theta}$ would result from a
+  product of arrays.
+\end{rk}
+
+\section{Distribution and quantile of the maximum $M$}
+
+\subsection{Motivation}
+%%---------------------
+As a typical use of the model above, one may consider a period
+$\mathcal{B}^\star$, most often a future period, that is: a set of
+future blocks $b^\star$. This period desgin life
+period~\cite{RootzenKatz_DesignLife}.  Due to the independence of the
+block maxima, the random maximum on the period, namely
+\begin{equation}
+  \label{eq:DefM}
+  M := \max_{b^\star \in \mathcal{B}^\star} \{ Y_{b^\star} \} 
+\end{equation}
+has its distribution function given by the product
+\begin{equation}
+  \label{eq:FM}
+  F_M(m;\, \bs{\psi}) = \prod_{b^\star}  F_{\texttt{GEV}}(m;\, \bs{\theta}_{b^\star})
+\end{equation}
+where the vector
+$\bs{\theta}_{b^\star}= \bs{\theta}_{b^\star}(\bs{\psi})$ contains the
+GEV parameters for the block $b^\star$. This GEV parameter vector
+depends linearly on $\bs{\psi}$ and the on the vector $\m{x}_b$ of
+covariates. Of course, $M$ does not in general follow a GEV
+distribution.
+
+A typical quantity of interest is the quantile $q_M(p)$ corresponding
+to a probability $p$ close to $1$.  For instance the period
+$\mathcal{B}^\star$ may correspond to the design life of a dike.
+Using observed block maxima of the river level, one can fit a TVGEV
+model and the quantile corresponding to $p=0.99$ can be used to find
+the height of the dike corresponding to $1\%$ risk of being exceeded
+during the period.
+
+The quantile $q_M(p)$ is the solution $m$ of the equation $F_M(m) = p$
+which allows its determination by a zero-finding numerical method
+where $F_M(m)$ is evaluated by using (\ref{eq:FM}). It helps much in
+the zero-finding to provide an interval
+$[m_{\texttt{L}}, \, m_{\texttt{U}}]$ in which the quantile is granted
+to lie. This actually required to use the R function
+\code{uniroot}. Fortunately, one can simply use here
+\begin{equation*}
+  m_{\texttt{U}} := q_{\texttt{GEV}}(p, \, \mu_{\texttt{U}}, \,
+  \sigma_{\texttt{U}}, \, \xi_{\texttt{U}})
+\end{equation*}
+where a GEV paramater pseudo-indexed by $\texttt{U}$ means the maximum
+of the coresponding GEV parameters as in
+$\mu_{\texttt{U}} := \max_{b^\star}\{\mu_{b^\star}\}$. A lower bound $m_{\texttt{L}}$
+can be obtained similarly as the GEV quantile corresponding to the
+the minima of the GEV parameters.
+
+In order to infer on the quantile $q_M(p)$ we need to compute its
+dervivatives w.r.t. the vector $\bs{\psi}$ of model parameters. Since
+the \pkg{nieve} package provides the derivatives of the GEV
+probability functions w.r.t. the vector $\bs{\theta}$ of GEV
+parameters, one can actually get the wanted derivatives by using the
+chain rule and the implicit function theorem. We first have to compute
+the derivatives of the distribution function $F_M(m;\,\bs{\psi})$
+w.r.t. the vector $\bs{\psi}$ of model parameters, and then to use the
+implicit function theorem. This will be detailed below.
+
+In the computation we will use matrices and arrays to store the GEV
+parameters and the derivatives. We will denote by $\bs{\Theta}^\star$
+the $B \times 3$ matrix containing the GEV parameter vectors
+$\bs{\theta}_{b^\star}$ as its rows. Then
+\begin{equation*}
+  \underset{B^\star \times 3 \rule{0pt}{1.2em}}{\bs{\Theta}^\star}  =
+  \left[
+    \begin{array}{@{}c|c@{}|c@{}}
+      \m{X}^{\star\mu}\bs{\psi}^\mu
+      \rule[-0.5em]{0pt}{1.6em}
+      & \m{X}^{\star\sigma} \bs{\psi}^\sigma
+      & \m{X}^{\star\xi} \bs{\psi}^\xi
+    \end{array}
+  \right]
+\end{equation*}
+where each ot the three blocks at r.h.s. is $B^\star \times 1$ and
+is the product of a ``design matrix'' with $B^\star$ rows by
+a subvector of the model parameter vector $\bs{\psi}$.
+
+\subsection{Distribution function}
+
+\subsubsection*{First-order}
+
+From (\ref{eq:FM})
+\begin{equation}
+  \label{eq:DpsikFM}
+  \frac{\partial_{\psi_k} F_{M}(m;\,\bs{\psi})}
+  {F_M(m;\,\bs{\psi})} = \sum_{b^\star}
+  \frac{\partial_{\psi_k}F_{\texttt{GEV}}(m;\,\bs{\theta}_{b^\star})}
+  {F_{\texttt{GEV}}(m;\,\bs{\theta}_{b^\star})}.
+\end{equation}
+% Assume that $\psi_k$ is a linear coefficient for the GEV location
+% parameter~$\mu$ so that $\psi_k = \bs{\psi}^\mu_{i_k}$ for some $i_k$ between
+% $1$ and $p_k$. Let $\m{u}^\mu$ be the vector with length $B^\star$
+% and with element
+% \begin{equation}
+%   \label{eq:CrossProd}
+%   u^\mu_{b^\star} :=
+%   \log \partial_{\mu}F_{\texttt{GEV}}(m;\,\bs{\theta}_{b^\star})
+%   \qquad
+%   b^\star = 1, \, \dots,\, B^\star.
+% \end{equation}
+% Then the sum at the r.h.s. of~(\ref{eq:DpsikFM}) is the cross-product
+% $$
+% \partial_{\psi_k} \log F_{M}(m;\,\bs{\psi})
+%  = \m{u}^{\mu\top}
+% \, \m{X}^{\mu}[\: , \, i_k].
+% $$%
+% The same computation for the other GEV parameter $\sigma$ and
+% $\xi$. Of course is the GEV parameter is constant $\psi_k$
+% then being the unkown contant the corresponding vector is a
+% vector of ones and the cross-product is simply a sum.
+
+% One can compute the derivatives of $\log F_M$ for all the indices
+% $\psi_k$ corresponding to the same GEV parameter. For this
+% aim let us introduce som notations.
+
+% \begin{itemize}
+% \item Let $i \in \{1,\, 2,\,3 \}$ be a ``GEV parameter index''
+%   corresponding to $\theta^{[1]} \equiv \mu$ for $i=1$, to
+%   $ \theta^{[2]} \equiv \sigma$ for $i=2$ and to
+%   $\theta^{[3]} \equiv \xi$ for $i=3$. So $\m{X}^{\theta^{[i]}}$ is
+%   the corresponding design matrix with dimension $B^\star \times p_i$.
+% \item For $i \in \{1,\, 2,\,3 \}$ let
+%   $\m{k}_i$ the vector of indices in the vector
+%   $\bs{\psi}$ corresponding to the GEV parameter
+%   $\theta^{[i]}$. So $\m{k}_i$ has length $p_i$.
+% \item Let $\m{G}$ be the $B^\star \times 3$ Jacobian matrix of the
+%   vector-valued function with value
+%   $[\log F_{\texttt{GEV}, b^\star}]_{b^\star}$, the differentiation
+%   being w.r.t. the GEV parameters $\bs{\theta}^{[i]}$.
+% \end{itemize}
+
+% Then  by chain rule
+% $$
+% \partial_{\bs{\psi}_{\m{k}_i}} \log F_{M}
+% = \m{G}[ \:, \, i]^{\top}\m{X}^{\theta^{[i]}}, \qquad i=1, \, 2, \, 3.
+% $$
+% If $\theta^{[i]}$ is specified as being constant across blocks then
+% $\m{k}_i$ has length one and the matrix cross-product is simply the
+% sum of the column $i$ of $\m{G}$. This will typically be the case for
+% the GEV shape parameter~$\xi$.
+
+\subsubsection*{Second order}
+
+The second-order log-derivative w.r.t. the parameters $\psi_\ell$ and
+$\psi_k$ is
+\begin{equation}
+  \label{eq:D2FM}
+  \begin{aligned}
+    \frac{\partial^2_{\psi_\ell \psi_k} F_{M}(m;\,\bs{\psi})}
+    {F_M(m;\,\bs{\psi})}
+    &= 
+      \left\{
+      \sum_{a^\star}
+      \frac{\partial_{\psi_\ell}F_{\texttt{GEV},a^\star}}
+      {F_{\texttt{GEV},a^\star}}
+      \right\}
+      \left\{\sum_{b^\star}
+      \frac{\partial_{\psi_k}F_{\texttt{GEV},b^\star}}
+      {F_{\texttt{GEV}, b^\star}}
+      \right\}\\
+    &+
+      \left\{
+      \sum_{b^\star} \frac{\partial^2_{\psi_\ell \psi_k}F_{\texttt{GEV},b^\star}}
+      {F_{\texttt{GEV},b^\star}} -
+      \sum_{b^\star} \frac{\partial_{\psi_\ell}F_{\texttt{GEV},b^\star}
+      \partial_{\psi_k}F_{\texttt{GEV},b^\star}}
+      {F_{\texttt{GEV},b^\star}^2}
+      \right\}
+  \end{aligned}
+\end{equation}
+where $F_{\texttt{GEV},b^\star}$ is used as a shortcut
+for $F_{\texttt{GEV}}(m;\,\bs{\theta}_{b^\star})$.
+  
+\subsubsection*{Using matrices and arrays}
+
+
+Assume that $\psi_k$ is a linear coefficient for the GEV location
+parameter~$\mu$ so that $\psi_k = \bs{\psi}^\mu_{i_k}$ for some $i_k$ between
+$1$ and $p^\mu$. Let $\m{u}^\mu$ be the vector with length $B^\star$
+and with element
+\begin{equation*}
+  %% \label{eq:CrossProd}
+  u^\mu_{b^\star} :=
+  \partial_{\mu} \log  F_{\texttt{GEV}}(m;\,\bs{\theta}_{b^\star})
+  \qquad
+  b^\star = 1, \, \dots,\, B^\star.
+\end{equation*}
+Then by chain rule the sum at the r.h.s. of~(\ref{eq:DpsikFM}) is the
+cross-product
+\begin{equation}
+\label{eq:CrossProd}
+\partial_{\psi_k} \log F_{M}(m;\,\bs{\psi})
+= \m{u}^{\mu\top}
+\, \m{X}^{\mu}[\: , \, i_k].
+\end{equation}% 
+The same computation holds for the other GEV parameter $\sigma$ and
+$\xi$. Of course, if the GEV parameter is a constant $\psi_k$ then
+the corresponding vector $\m{u}$ is a vector of
+ones and the cross-product in (\ref{eq:CrossProd}) is simply the sum
+of the elements of $\m{u}^\mu$.
+
+One can compute the derivatives of $\log F_M$ for all the indices
+$\psi_k$ corresponding to the same GEV parameter. For this
+aim, let us introduce some notations.
+
+\begin{itemize}
+\item Let $i \in \{1,\, 2,\,3 \}$ be a ``GEV parameter index'' for the
+  GEV parameter according to the rule $\theta^{[1]} \equiv \mu$ for
+  $i=1$, to $ \theta^{[2]} \equiv \sigma$ for $i=2$ and to
+  $\theta^{[3]} \equiv \xi$ for $i=3$. So $\m{X}^{\theta^{[i]}}$ is
+  the design matrix with dimension $B^\star \times p_i$ for the GEV
+  parameter number~$i$. So for instance $p_1 = p^\mu$.
+\item For $i \in \{1,\, 2,\,3 \}$ let
+  $\m{k}_i$ the vector of indices in the vector
+  $\bs{\psi}$ corresponding to the GEV parameter
+  $\theta^{[i]}$. So $\m{k}_i$ has length $p_i$.
+\item Let $\m{G}$ be the $B^\star \times 3$ Jacobian matrix of the
+  vector-valued function with value
+  $[\log F_{\texttt{GEV}, b^\star}]_{b^\star}$, the differentiation
+  being w.r.t. the three GEV parameters $\bs{\theta}^{[i]}$.
+  \begin{equation*}
+    G[b^\star, \, i] = \partial_{\theta^{[i]}}
+    \log F_{\texttt{GEV},b{^\star}}, \qquad 1 \leqslant b^\star \leqslant B^\star,
+    \quad
+    1 \leqslant i \leqslant 3. 
+  \end{equation*}
+  
+\end{itemize}
+
+Then  by chain rule we get as above in~(\ref{eq:CrossProd})
+\begin{equation*}
+  \partial_{\bs{\psi}_{\m{k}_i}} \log F_{M}
+  = \m{G}[ \:, \, i]^{\top}\m{X}^{\theta^{[i]}}, \qquad i=1, \, 2, \, 3.
+\end{equation*}
+If $\theta^{[i]}$ is specified as being constant across blocks then
+$\m{k}_i$ has length one and the matrix cross-product is simply the
+sum of the column $i$ of $\m{G}$. This will typically be the case for
+the GEV shape parameter~$\xi$.
+
+
+The second-order derivatives of $\log F_{\texttt{GEV}}$ can be stored
+as a three-dimensional array $\m{H}$ with dimension
+$B^\star \times 3 \times 3$ and with element
+\begin{equation*}
+  H[b^\star, \, i, \, j] = \partial^2_{\theta^{[i]}\theta^{[j]}}
+  \log F_{\texttt{GEV},b{^\star}}, \qquad 1 \leqslant b^\star \leqslant B^\star,
+  \quad
+  1 \leqslant i,\, j  \leqslant 3. 
+\end{equation*}
+Then for the two GEV parameter vectors $\theta^{[i]}$ and
+$\theta^{[j]}$ the $p_i \times p_j$ matrix of $2$-nd order derivatives
+of $\log F_{\texttt{GEV}, b^\star}$ w.r.t. $\bs{\psi}_{\m{k}_i}$ and
+$\bs{\psi}_{\m{k}_j}$ is obtained by
+\begin{equation*}
+  \sum_{b^\star} \partial^2_{\bs{\psi}_{\m{k}_i} \bs{\psi}_{\m{k}_j}}
+  \log F_{\texttt{GEV},b^\star}
+  = \m{X}^{\theta^{[i]}\top} \, \textrm{diag}(\m{H}[ \:, \, i, \, j]) \,
+  \m{X}^{\theta^{[j]}}
+\end{equation*}
+So, from (\ref{eq:D2FM}), in the $p \times p$ Hessian of $\log F_M$,
+the block corresponding to the indices $\m{k}_i$ and $\m{k}_j$ can be
+written in matrix form
+\begin{equation}
+  \partial^2_{\bs{\psi}_{\m{k}_i} \bs{\psi}_{\m{k}_j}}  \log F_M =
+  \m{X}^{\theta^{[i]}\top}
+  \left\{
+    \m{G}[\:,\,i] \, \m{G}[\:,\,j]^\top
+    + \textrm{diag} \left( \m{h}^{[ij]} - \m{m}^{[ij]}  \right)
+  \right\}
+  \m{X}^{\theta^{[j]}}
+\end{equation}
+where $\m{h}^{[ij]}$ and $\m{m}^{[ij]}$ are the two vectors
+with length $B^\star$ related to the Jacobian matrix
+$\m{G}$ and the Hessian array $\m{H}$ by
+\begin{equation}
+  \label{eq:D2FMDiag}
+  \m{h}^{[ij]}_{b^\star} := H[b^\star, \, i, \, j], \qquad
+  \m{m}^{[ij]}_{b^\star} := G[b^\star, \, i]\,G[b^\star, \, j].
+\end{equation}
+
+\subsection{Quantile}
+
+\subsubsection*{First order}
+
+The partial derivative of the quantile $q_{M}(p;\,\bs{\psi})$ with a
+given probability~$p$ comes by the implicit function theorem
+\begin{equation}
+  \label{eq:Der1qM}
+  \partial_{\psi_k} q_{M}(p;\,\bs{\psi}) =
+  - \frac{\partial_{\psi_k} F_{M}(m_{\bs{\psi}};\,\bs{\psi})}
+  {f_M(m_{\bs{\psi}};\,\bs{\psi})}
+\end{equation}
+where $q_{M}(p;\,\bs{\psi})$ is for simplicity denoted by
+$m_{\bs{\psi}}$ at the r.h.s. The density at the denominator comes by
+evaluating the logarithmic derivative of the the product~(\ref{eq:FM}), that is
+\begin{equation}
+  \label{eq:DensM}
+  f_M(m;\,\bs{\psi}) = F_M(m;\,\bs{\psi})
+  \sum_{b^\star}
+  \frac{f_{\texttt{GEV}}(m;\, \bs{\theta}_{b^\star})}
+  {F_{\texttt{GEV}}(m;\, \bs{\theta}_{b^\star})}
+\end{equation}
+for $m := m_{\bs{\psi}}$.
+
+\subsubsection*{Second order}
+
+In order to differentiate (\ref{eq:Der1qM}) w.r.t. to a second
+parameter $\psi_\ell$, we need the partial derivative of the density
+at the denominator. For a \textit{fixed} value $m$ (not depending on
+$\bs{\psi}$), by differentiating~(\ref{eq:DensM}) w.r.t. $\psi_\ell$
+we get
+\begin{equation}
+  \begin{aligned}
+    \label{eq:Der1fM}
+    \partial_{\psi_\ell} f_M(m;\,\bs{\psi})
+    &= \partial_{\psi_\ell} F_M(m;\,\bs{\psi}) \times 
+      \sum_{b^\star} \frac{f_{\texttt{GEV},b^\star} }
+      {F_{\texttt{GEV},b^\star}} \\
+    &+ F_M(m;\,\bs{\psi}) \times 
+      \sum_{b^\star} \left\{\frac{\partial_{\psi_\ell}f_{\texttt{GEV},b^\star} }
+      {F_{\texttt{GEV},b^\star}}
+      - \frac{f_{\texttt{GEV},b^\star} \, \partial_{\psi_\ell} F_{\texttt{GEV},b^\star}}
+      {F_{\texttt{GEV},b^\star}^2}
+      \right\}
+  \end{aligned}
+\end{equation}
+where as above
+$f_{\texttt{GEV},b^\star} :=
+f_{\texttt{GEV}}(m,\,\bs{\theta}_{b^\star})$.  But since the density is
+to be evaluated at $m_{\bs{\psi}} := q_M(p;\,\bs{\psi})$ which depends on
+$\bs{\psi}$, we get instead
+\begin{equation}
+  \label{eq:gradfM}
+  \partial_{\psi_\ell} f_M(m_{\bs{\psi}};\,\bs{\psi})
+  = \frac{\partial f_M}{\partial m} \,
+  \frac{\partial m_{\bs{\psi}}}{\partial \psi_\ell}  +
+  \frac{\partial f_M}{\partial \psi_\ell}
+  = - \partial_m f_M \,
+  \frac{\partial_{\psi_\ell} F_{M}}{f_M} +
+  \partial_{\psi_\ell} f_M
+\end{equation}
+where  all functions at the r.h.s are evaluated at
+$m_{\bs{\psi}}$ and $\bs{\psi}$. The second equality was obtained by
+using~(\ref{eq:Der1qM}) with $k$ replaced by $\ell$.
+
+Similarly when differentiating the numerator of~(\ref{eq:Der1qM}) w.r.t. $\psi_\ell$
+we get
+\begin{equation*}
+  \partial_{\psi_\ell}
+  \left\{
+    \partial _{\psi_k} F_M(m_{\bs{\psi}};\,\bs{\psi}) \rule{0pt}{1.2em}
+  \right\} = 
+  - \partial^2_{m\psi_k} F_{M} \,
+  \frac{\partial_{\psi_\ell} F_{M}}{f_M} +
+  \partial^2_{\psi_\ell \psi_k} F_M =
+  - \partial_{\psi_k} f_{M} \,
+  \frac{\partial_{\psi_\ell} F_{M}}{f_M} +
+  \partial^2_{\psi_\ell \psi_k} F_M. 
+\end{equation*}
+So by differentiating (\ref{eq:Der1qM}) w.r.t. $\psi_\ell$
+{\small
+  \begin{equation*}
+    \partial^2_{\psi_\ell \psi_k} q_{M}(p;\,\bs{\psi}) =  - \frac{1}{f_M}
+    \left\{
+      - \partial_{\psi_k} f_{M} \,
+      \frac{\partial_{\psi_\ell} F_{M}}{f_M} +
+      \partial^2_{\psi_\ell \psi_k} F_M
+    \right\}
+    +
+    \frac{\partial_{ \psi_k} F_{M}}{f_M^2} \times
+    \left\{
+      - \partial_m f_M 
+      \frac{\partial_{\psi_\ell} F_{M}}{f_M}
+      + \partial_{\psi_\ell} f_M
+    \right\}
+  \end{equation*}}%
+where at the r.h.s. the quantity $\partial_{\psi_\ell} f_M$ between
+the curly braces corresponds to~(\ref{eq:Der1fM}) for
+$m:=m_{\bs{\psi}}$. Similarly $\partial_{\psi_k} f_M$ is given
+by~(\ref{eq:Der1fM}) where $\ell$ is replaced by $k$. By rearranging,
+we get the expression involving $p \times p$ matrices
+\begin{equation}
+  \begin{aligned}
+    \partial^2_{\psi_\ell \psi_k} q_{M}(p;\,\bs{\psi})
+    &=
+      -\frac{1}{f_M} \, \partial^2_{\psi_\ell \psi_k} F_M \\
+    &+ \frac{1}{f_M^2}
+      \left[ \rule{0pt}{1.2em}
+      \{\partial_{\psi_k} f_{M}\} \,  \{\partial_{\psi_\ell} F_M\}
+      + \{\partial_{\psi_\ell} f_{M}\} \, \{\partial_{\psi_k} F_M\}
+      \right] \\
+    &- \frac{\partial_m f_M}{f_M^3}\, 
+      \{\partial_{\psi_k} F_{M}\}
+      \{\partial_{\psi_\ell} F_M\}.
+\end{aligned}
+\end{equation}
+Note that the expression for $\partial^2_{\psi_\ell \psi_k} q_{M}$ is
+symmetric in $\ell$ and $k$, as expected.
+
+The last formula can be used in matrix form
+\begin{equation}
+  \partial^2_{\bs{\psi} \bs{\psi}} q_{M} =
+  -\frac{1}{f_M} \partial^2_{\bs{\psi} \bs{\psi}} F_{M}
+  + \frac{1}{f_M^2}
+  \left[ \rule{0pt}{1.2em}
+    \partial_{\bs{\psi}} f_{M} \,  \partial_{\bs{\psi}} F_M^\top +
+    \partial_{\bs{\psi}} F_{M} \, \partial_{\bs{\psi}} f_M^\top 
+  \right]
+  - \frac{\partial_m f_M}{f_M^3}\, \partial_{\bs{\psi}} F_{M} \,
+  \partial_{\bs{\psi}} F_M^\top. 
+\end{equation}
+Note that some care is needed in the evaluation because $f_M^3$ can be
+very small. We now give details on the computation of
+$\partial_m f_M(m)$.
+
+\subsubsection*{Computing $\partial_m f_M(m)$}
+In the formula (\ref{eq:gradfM}), we need the derivative of $f_M(m)$
+w.r.t. $m$.  For the $\texttt{GEV}(\mu, \, \sigma,\, \xi)$
+distribution, the formula
+\begin{equation*}
+  \log f_{\texttt{GEV}}(m;\,\mu, \, \sigma,\,\xi) =
+  - \log \sigma  -\frac{\xi + 1}{\xi}\,
+  \log \left\{ \rule{0pt}{1em} 1 + \xi \, [m - \mu]/\sigma \right\} +
+  \log F_{\texttt{GEV}}(m;\,\mu, \, \sigma,\,\xi) 
+\end{equation*}
+holds wherever $\sigma + \xi \, [m - \mu] > 0$. So by differentiating
+there w.r.t. $m$
+\begin{equation}
+  \label{eq:derLogfM}
+  \frac{\partial}{\partial m} \log f_{\texttt{GEV}}(m) =
+  -\frac{\xi + 1}{\sigma + \xi \, [m - \mu]}
+  + \frac{f_{\texttt{GEV}}(m)}{F_{\texttt{GEV}}(m)}
+\end{equation}
+where the dependence on the GEV parameters is omitted for
+simplicity. The condition $\sigma + \xi \, [m - \mu] > 0$ defines the
+support of the GEV distribution and the derivative is zero when this
+condition does not hold.
+
+Now let us consider the expression for $f_M(m)$
+\begin{equation*}
+  f_{M}(m)  = F_M(m) \, \sum_{b^\star} \frac{f_{\texttt{GEV},b^\star}(m)}
+  {F_{\texttt{GEV},b^\star}(m)}.
+\end{equation*}
+By differentiating w.r.t. $m$
+\begin{equation*}
+  \frac{\partial}{\partial m} f_{M}(m) =
+  f_M(m) \, \sum_{b^\star} \frac{f_{\texttt{GEV},b^\star}(m)}{F_{\texttt{GEV},b^\star}(m)} +
+  F_M(m) \sum_{b^\star} \left\{
+    \frac{f'_{\texttt{GEV},b^\star}(m)}{F_{\texttt{GEV},b^\star}(m)} -
+    \frac{f_{\texttt{GEV},b^\star}(m)^2}{F_{\texttt{GEV},b^\star}(m)^2}
+  \right\}
+\end{equation*}
+where a prime stands for a differentiation w.r.t. $m$. But by~(\ref{eq:derLogfM})
+\begin{equation*}
+  \frac{f'_{\texttt{GEV},b^\star}(m)}{f_{\texttt{GEV},b^\star}(m)}
+  = -\frac{\xi_{b^\star} + 1}
+  {\sigma_{b^\star} + \xi_{b^\star} \, [m - \mu_{b^\star}]}
+  + \frac{f_{\texttt{GEV},{b^\star}}(m)}{F_{\texttt{GEV}, b^\star}(m)} 
+\end{equation*}
+provided that
+$\sigma_{b^\star} + \xi_{b^\star} \, [m - \mu_{b^\star}] >0$ which
+defines the set $\mathcal{S}^\star(m)$ of the block indices $b^\star$
+such that $m$ lies in the support of
+$\texttt{GEV}(\mu_{b^\star}, \, \sigma_{b^\star}, \, \xi_{b^\star})$.
+Hence when $b^\star \in \mathcal{S}^\star(m)$
+\begin{equation*}
+  \frac{f'_{\texttt{GEV},b^\star}(m)}{F_{\texttt{GEV},b^\star}(m)}
+  = - \left\{\frac{\xi_{b^\star} + 1}
+    {\sigma_{b^\star} + \xi_{b^\star} \, [m - \mu_{b^\star}]} \right\}
+  \times
+  \frac{f_{\texttt{GEV},{b^\star}}(m)}{F_{\texttt{GEV}, b^\star}(m)}
+  +
+  \frac{f_{\texttt{GEV},{b^\star}}(m)^2}{F_{\texttt{GEV}, b^\star}(m)^2}.
+\end{equation*}
+So finally, since the sums are actually for $b^\star \in \mathcal{S}(m)$
+\begin{equation}
+  \label{eq:dermfM}
+  \frac{\partial}{\partial m} f_M(m) =
+  \frac{f_M(m)^2}{F_M(m)}  -
+  F_M(m) \sum_{b^\star \in \mathcal{S}^\star(m)} \left\{
+    \frac{\xi_{b^\star} + 1}
+    {\sigma_{b^\star} + \xi_{b^\star} \, [m - \mu_{b^\star}]}
+  \right\} \times \frac{f_{\texttt{GEV},b^\star}(m)}{F_{\texttt{GEV},b^\star}(m)}.
+\end{equation}
+
+
+\subsubsection*{Computing the crossed derivative $\partial^2_{p,\bs{\psi}} q_M(p;\,\bs{\psi})$}
+
+The crossed derivative $\partial^2_{p,\bs{\psi}} q_M(p;\,\bs{\psi})$
+can be useful e.g., when an Ordinary Differential Equation (ODE)
+method is to be used to get the confidence limits on the quantile
+$q_M(p)$.
+
+For a given probability $p$ let $m_{\bs{\psi}}$ denote as before the
+quantile defined by  $F_M(m_{\bs{\psi}};\,\bs{\psi}) = p$. By differentiating
+this relation w.r.t.~$p$ we get:
+$\partial_p m_{\bs{\psi}} = 1/ f_M(m_{\bs{\psi}};\,\bs{\psi})$, hence with a new
+differentiation
+\begin{equation*}
+  \partial^2_{p,\bs{\psi}} m_{\bs{\psi}} =
+  \frac{-\partial_{\bs{\psi}} f_M(m_{\bs{\psi}};\,\bs{\psi})}%
+  {f_M(m_{\bs{\psi}};\, \bs{\psi})^2}
+\end{equation*}
+where the derivative at the numerator of the fraction is given
+by~(\ref{eq:gradfM}) above.
+
+\bibliography{./NSGEV.bib}
+
+\end{document}

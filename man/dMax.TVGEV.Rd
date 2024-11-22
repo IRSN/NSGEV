@@ -2,8 +2,8 @@
 % Please edit documentation in R/quantMax.R
 \name{dMax.TVGEV}
 \alias{dMax.TVGEV}
-\title{Compute the probability density of the maximum over a period of
-time.}
+\title{Value of the Probability Density of the Maximum over a
+    Period of Time}
 \usage{
 dMax.TVGEV(
   object,
@@ -16,32 +16,32 @@ dMax.TVGEV(
 )
 }
 \arguments{
-\item{object}{An \code{TVGEV} object.}
+\item{object}{A \code{TVGEV} object.}
 
 \item{x}{A vector of values at which the density is to be
 evaluated.}
 
-\item{date}{A vector that can be coerced to defining the period of
-time.}
+\item{date}{A vector that can be coerced to the class
+\code{"Date"} which defines the period of time.}
 
-\item{psi}{Optional vector of parameters. By default the estimated
-vector of parameters \code{coef(object)} is used.}
+\item{psi}{Optional vector of parameters. By default, the
+estimated vector of parameters \code{coef(object)} is used.}
 
 \item{deriv}{Logical. If \code{TRUE} the gradient of the density
-will be computed ans returned as the \code{"gradient"}
+will be computed and returned as the \code{"gradient"}
 attribute of the result.}
 
 \item{derx}{Logical, If \code{TRUE} the derivative of the density
 w.r.t. \code{x} will be computed and returned as the
 \code{"derx"} attribute of the result.}
 
-\item{...}{}
+\item{...}{Not used yet.}
 }
 \value{
-A vector of values of the density. Beside the gradient
-    (w.r.t. the parameters) returned as the attribute named
-    \code{"gradient"}, the derivative w.r.t. \code{x} is also
-    returned as the attribute \code{"derx"} of the result.
+A vector of values for the probability density. Beside the
+    gradient (w.r.t. the parameters) returned as the attribute
+    named \code{"gradient"}, the derivative w.r.t. \code{x} is
+    also returned as the attribute \code{"derx"} of the result.
 }
 \description{
 Compute the probability density of the maximum over a period of

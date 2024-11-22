@@ -165,62 +165,86 @@ profLik.TVGEV <- function(object,
         opts1[["check_derivatives"]] <- TRUE
         opts1[["check_derivatives_print"]] <- "all"
     }
+
+    ## CHNAGE on 2024-11-20. EXPERIMENTAL
+    opts <- list()
+    opts[[1]] <- list("algorithm" = "NLOPT_LD_MMA",
+                      "xtol_rel" = 1.0e-5,
+                      "ftol_abs" = 1.0e-7, "ftol_rel" = 1.0e-5,
+                      "maxeval" = 200,
+                      "check_derivatives" = FALSE,
+                      "print_level" = 0)
     
-    if (deriv) {
-        
-        f <- function(psi, object, level, chgSign) {
-            
-            res <- fun(psi, object)
-            
-            ## 'nloptr' fails on NA and NaN!
-            if (is.na(res)) {
-                if (chgSign) {
-                    return(list("objective" = Inf,
-                                "gradient" = rep(NaN, object$p)))
-                 } else {
-                     return(list("objective" = Inf,
-                                 "gradient" = rep(NaN, object$p)))
-                 }
-            }
+    opts[[2]] <- list("algorithm" = "NLOPT_LD_AUGLAG",
+                      "xtol_rel" = 1.0e-5,
+                      "ftol_abs" = 1.0e-7, "ftol_rel" = 1.0e-5,
+                      "maxeval" = 500,
+                      "check_derivatives" = FALSE,
+                      "local_opts" = list("algorithm" = "NLOPT_LD_MMA",
+                                          "xtol_rel" = 1.0e-5,
+                                          "maxeval" = 1000,
+                                          "ftol_abs" = 1.0e-7,
+                                          "ftol_rel" = 1.0e-5),
+                      "print_level" = 0)
 
-            gradpsi <-  attr(res, "gradient")
-            
-            if (chgSign) {
-                 return(list("objective" = -res, "gradient" = -gradpsi))
-             } else {
-                 return(list("objective" = res, "gradient" = gradpsi))
-             }
-        }
-
-        ## changed on 2019-06-04: add a constraint on the minimum of
-        ## the GEV scales which must be positive. Without this
-        ## constraint, the optimisation accepts negative values of
-        ## the scale and diverges.
-        
-        g <- function(psi, object, level, chgSign) {
-
-            psi1 <- psi
-            names(psi1) <- object$parNames
-            sigma <- min(psi2theta(model = object, psi = psi1)[ , 2])
-
-            ellL <- object$negLogLik + qchisq(level, df = 1) / 2.0
-            res <- object$negLogLikFun(psi = psi, object = object, deriv = TRUE)
-            
-            if (!is.na(sigma) && (sigma > 0)) {
-                res2 <- list("constraints" = res$objective - ellL,
-                             "jacobian" = res$gradient)
-            } else {
-                res2 <-  list("constraints" = 1,
-                              "jacobian" = rep(NaN, object$p))
-            }
-            res2 
-        }
-        
-    } else {
+    
+    if (!deriv) {
         stop("for now, the method is only implemented for deriv = TRUE")
     }
 
-    ## the confidence level is not used here
+    f <- function(psi, object, level, chgSign) {
+
+        ## DEBUG : it could be possible to get sigma <= 0 during optim
+        ## sigma <- min(psi2theta(model = object, psi = psi, checkNames = FALSE)[ , 2])
+        ## cat("sigma = ", sigma, "\n")
+
+        res <- fun(psi, object)
+        
+        ## 'nloptr' fails on NA and NaN!
+        if (is.na(res)) {
+            if (chgSign) {
+                return(list("objective" = Inf,
+                            "gradient" = rep(NaN, object$p)))
+            } else {
+                return(list("objective" = Inf,
+                            "gradient" = rep(NaN, object$p)))
+            }
+        }
+        
+        gradpsi <-  attr(res, "gradient")
+        
+        if (chgSign) {
+            return(list("objective" = -res, "gradient" = -gradpsi))
+        } else {
+            return(list("objective" = res, "gradient" = gradpsi))
+        }
+    }
+    
+    ## changed on 2019-06-04: add a constraint on the minimum of
+    ## the GEV scales which must be positive. Without this
+    ## constraint, the optimisation accepts negative values of
+    ## the scale and diverges.
+    
+    g <- function(psi, object, level, chgSign) {
+        
+        psi1 <- psi
+        names(psi1) <- object$parNames
+        sigma <- min(psi2theta(model = object, psi = psi1)[ , 2])
+        
+        ellL <- object$negLogLik + qchisq(level, df = 1) / 2.0
+        res <- object$negLogLikFun(psi = psi, object = object, deriv = TRUE)
+        
+        if (!is.na(sigma) && (sigma > 0)) {
+            res2 <- list("constraints" = res$objective - ellL,
+                         "jacobian" = res$gradient)
+        } else {
+            res2 <-  list("constraints" = 1,
+                          "jacobian" = rep(NaN, object$p))
+        }
+        res2 
+    }
+    
+    ## the confidence level is not used here so we take any value
     val <- f(psiHat, object, level = 0.95, chgSign = FALSE)$objective
     res["est",  ] <- val
     
@@ -300,7 +324,7 @@ profLik.TVGEV <- function(object,
                                          eval_g_ineq = g,
                                          level = lev,
                                          chgSign = chgSign[LU],
-                                         opts = opts1,
+                                         opts = opts[[1]],
                                          object = object))
 
             diagno[LU, iLev, "status"] <- resOpt$status
@@ -353,16 +377,13 @@ profLik.TVGEV <- function(object,
                 }
 
                 if ( (!is.na(gradDist)) && (gradDist < 0.05)) {
-                
                     optDone <- TRUE
                     psiPrec <- resOpt[["solution"]]
                     res[LU, iLev] <- sign[LU] * resOpt[["objective"]]
                     Psi[LU, iLev, ] <- resOpt[["solution"]]
-                    
                 } else {
                     psiPrec <- NULL
                 }
-      
                 
             } else {
                 psiPrec <- NULL
@@ -375,7 +396,67 @@ profLik.TVGEV <- function(object,
     ## attach diagnostic and parameter values as attributes.
     attr(res, "diagno") <- diagno
     attr(res, "psi") <- Psi
-    
+    attr(res, "class") <- "profLik.TVGEV"
     invisible(res)
 
+}
+
+##' @method print profLik.TVGEV
+##' @export
+##' @keywords internal
+##' 
+print.profLik.TVGEV <- function(x, diagno = FALSE, ...) {
+
+    if (!diagno) {
+        for (nm in c("diagno", "psi", "class")) {
+            attr(x, nm) <- NULL
+        }
+        print(x, ...)
+    } else {
+        diagnoDat <- attr(x, "diagno")
+        for (diagnm in dimnames(diagnoDat)[["Diag"]]) {
+            cat(sprintf("o %s\n", diagnm))
+            print(diagnoDat[ , , diagnm])
+        }
+    }
+    
+}
+
+##' @method summary profLik.TVGEV
+##' @export
+##' @keywords internal
+##' 
+summary.profLik.TVGEV <- function(object, ...) {
+    
+    profLiked <- object
+    for (nm in c("diagno", "psi", "class")) {
+        attr(profLiked, nm) <- NULL
+    }
+    
+    diagnoDat <- attr(object, "diagno")
+    for (diagnm in dimnames(diagnoDat)[["Diag"]]) {
+        cat(sprintf("o %s\n", diagnm))
+        print(diagnoDat[ , , diagnm])
+    }
+
+    L <- list(profLiked = profLiked,
+              diagnoDat = diagnoDat)
+    class(L) <- "summary.profLik.TVGEV"
+    L
+}
+
+##' @method print summary.profLik.TVGEV
+##' @export
+##' @keywords internal
+##' 
+print.summary.profLik.TVGEV <- function(x, ...) {
+    cat("o Profiled quantity\n")
+    print(unclass(x$profLiked))
+    cat("\n")
+    cat("o Optimisation diagnostics\n")
+    for (diagnm in dimnames(x$diagnoDat)[["Diag"]]) {
+        cat(sprintf("   o %s\n", diagnm))
+        print(x$diagnoDat[ , , diagnm])
+    }
+    
 }
