@@ -1,6 +1,9 @@
 
 ### NSGEV TODO List
 
+This is a temporary reminder list by YD. Not a planning for new
+development!
+
 - [] **Profile Likelihood**. Speed up the computation of the profile
   likelihood intervals in `quantMax.TVGEV`. The initial values for the
   constrained optimisation could be better.
@@ -8,7 +11,7 @@
 - [] **Profile Likelihood**. Experiment on the computation of profile
   likelihood intervals with the ODE method?
   
-- [] **Imporove Numerical Treatment**. Improve by using the QR method
+- [] **Improve Numerical Treatment**. Improve by using the QR method
   on the design matrices. So the vector of parameters will be
   internally $\mathbf{R}\boldsymbol{\psi}$ instead of
   $\boldsymbol{\psi}$. This should eliminate some of the problems met
