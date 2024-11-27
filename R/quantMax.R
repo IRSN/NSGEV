@@ -126,7 +126,7 @@ quantMax.TVGEV <- function(object,
                            date = NULL,
                            level = 0.95,
                            psi = NULL,
-                           confintMethod = c("delta", "proflik"),
+                           confintMethod = c("delta", "proflik", "PLODE"),
                            out = c("data.frame", "array"),
                            trace = 1L,
                            ...) {
@@ -299,11 +299,13 @@ quantMax.TVGEV <- function(object,
                                        Type = c("Quant", "L", "U"),
                                        Level = fLevel)) 
         diagno <- array(NA_real_,
-                        dim = c(Prob = nProb, Type = 2L, Level = nLevel, Diag = 4L),
+                        dim = c(Prob = nProb, Type = 2L,
+                                Level = nLevel, Diag = 4L),
                         dimnames = list(Prob = fProb,
                                         Type = c("L", "U"),
                                         Level = fLevel,
-                                        Diag = c("status", "objective", "constraint", "gradDist")))
+                                        Diag = c("status", "objective",
+                                                 "constraint", "gradDist")))
         Psi <- array(NA_real_,
                      dim = c(Prob = nProb, Type = 2L, Level = nLevel, Param = p),
                      dimnames = list(Prob = fProb,
@@ -313,8 +315,8 @@ quantMax.TVGEV <- function(object,
         
         for (iProb in seq_along(prob)) {
             qFuni <- function(psi, object) {
-                qMax.TVGEV(object = object, p = prob[iProb], date = date, psi = psi, deriv = TRUE,
-                           trace = 1)
+                qMax.TVGEV(object = object, p = prob[iProb], date = date,
+                           psi = psi, deriv = TRUE, trace = 1)
             }   
             resi <- profLik(object = object, fun = qFuni, level = level)
             
@@ -326,6 +328,9 @@ quantMax.TVGEV <- function(object,
             cat("Diagnostics for the constrained optim\n")
             print(diagno)
         }
+    } else if (confintMethod == "PLODE") {
+        warning("The `PLODE` method is still experimental")
+        quantMaxPLODE(object, date = date, level = level, out = "array")
     }
     
     ## =========================================================================
@@ -383,8 +388,7 @@ quantMax.TVGEV <- function(object,
 ##' 
 ##' @keywords internal
 ##' @export
-##' @seealso
-##' \code{\link{.qMax.TVGEV}}
+##' 
 .qMaxL.TVGEV <- function(theta, p) {
     if (ncol(theta) != 3) {
         stop("'theta' must be a numeric matrix with three columns")
@@ -427,8 +431,7 @@ quantMax.TVGEV <- function(object,
 ##'
 ##' @keywords internal
 ##' @export
-##' @seealso
-##' \code{\link{.qMin.TVGEV}}
+##' 
 .qMaxU.TVGEV <- function(theta, p) {
     if (ncol(theta) != 3) {
         stop("'theta' must be a numeric matrix with three columns")
@@ -1009,7 +1012,7 @@ qMax.TVGEV <- function(object,
     }
         
     FMaxZero <- function(q, prob) {
-        pMax.TVGEV(q, date = date, psi = psi, object = object) - p
+        pMax.TVGEV(q, date = date, psi = psi, object = object) - prob
     }
         
     res <- rep(0.0, length(q))

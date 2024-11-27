@@ -53,7 +53,7 @@
 ##' plot(mu, e, type = "p", pch = 16, col = "darkcyan",
 ##'      main = "generalised residuals against 'loc'")
 residuals.TVGEV <- function(object,
-                            type = c("exp", "unif", "gumbel"),
+                            type = c("gumbel", "exp", "unif"),
                             ...) {
 
     type <- match.arg(type)

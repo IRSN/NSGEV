@@ -2,6 +2,29 @@
 **NSGEV** Package News
 ======================
 
+# New in version 0.2.0 (pending)
+
+## Enhancements
+
+- Experimental implementation of the ODE method for the determination
+  of the profile likelihood confidence intervals on the quantile of
+  the maximum. See the help of the `quanMax.TVGEV` method, and 
+  the function `quantMaxPLODE`.
+  
+- Edits in the vignette *Introduction to NSGEV*. Typos and
+  clarification for the generalised residuals, thanks to Jesper Rydén
+  (Uppsala University).  New references related to the generalised
+  residuals. The section on the quantile of the maximum a.k.a. *design
+  life level* now includes an example with profile likelihood
+  intervals, at the price of an increased computation time.
+   
+## Changes
+ 
+- In the `resid` method for the class `"TVGEV"` the generalised
+  residuals now use the standard Gumbel target distribution rather
+  than a standard exponential.
+  
+
 # New in version 0.1.9
 
 ## Enhancements

@@ -489,7 +489,7 @@ plot(pBreakPL)
 framework. These are obtained by aggregating several times
 corresponding to a prediction period. Many definitions are possible;
 a natural requirement is that the usual definition continues to
-hold when a stationary model is considered as time-varying.	      
+hold when a stationary model is considered as time-varying.	
 
 Following Parey et al [@PareyEtAl_DifRetLev], we can define the return
 level corresponding to $T$ years as the level $\rho$ such that the
@@ -507,7 +507,7 @@ kable(pUCBreak, digits = 2)
 
 For instance the return level corresponding to $T=30$ years for the
 origin `"2020-01-01"` should be exceeded once (on average) during the
-ten years 2021 to 2050. This level is estimated here to be
+30 years 2021 to 2050. This level is estimated here to be
 `r round(subset(pUCBreak, Period == 30)$Quant, digits = 2)` Celsius.
 
 Note that an alternative definition of the return level can be
@@ -529,10 +529,11 @@ the time-varying framework, one can simply consider the random maximum
 $M^\star := \max_{b} Y_{b}$ where the maximum is over a set
 $\mathcal{B}^\star$ of $n^\star$ blocks. The most common case is when
 $\mathcal{B}^\star$ is a future period $b = b_0^\star + 1$, $\dots$,
-$b_0^\star + n^\star$, such as the lifetime of an equipment, and one
-want to assess a risk related to the possible exceedance over some
-high level during this period. Since the blocks are assumed to be
-independent we have
+$b_0^\star + n^\star$, such as the lifetime or *design life* 
+[@RootzenKatz_DesignLife] of an
+equipment, and one want to assess a risk related to the possible
+exceedance over some high level during this period. Since the blocks
+are assumed to be independent we have
 
 $$
    F_{M^\star}(m^\star;\,\boldsymbol{\psi}) 
@@ -581,8 +582,24 @@ number $N$ of exceedances over the corresponding quantile is
 $\mathbb{E}[N] \approx \bar{p}$. This approximation is acceptable when
 $\bar{p} < 0.05$.
 
-**Note** At the this time, only confidence intervals based on the
-delta method can be computed.
+On the previous plot, confidence intervals based on the delta method
+are shown. It is now possible to use profile likelihood intervals, at 
+the price of an increased computation time.
+
+```{r quantMax2}
+qM2 <- quantMax(fitNBreak, date = newDate, level = c(0.70, 0.95),
+                confint = "proflik")
+gqM2 <- autoplot(qM2) +
+    ggtitle("Maximum on years 2025-2054 with profile likelihood  intervals")
+print(gqM2)
+```
+
+Needless to say, for a small probability of exceedance, the upper
+bound of the profile likelihood $95\%$ confidence interval is much
+larger than that of the delta interval.
+
+
+
 
 # Simulate from a fitted model
 
@@ -618,17 +635,23 @@ simulated paths.
 The generalized residuals are random variables $e_b$ related to the
 observations $y_b$, so they form a block time-series. The distribution
 of $e_b$ should be nearly the same for all blocks $b$ and the
-dependence between the blocks should be weak. Several definitions of
-the residuals are possible, in relation with their target
-distribution. A simple choice is $e_b := F_{\text{GEV}}(y_b;\,
-\widehat{\boldsymbol{\theta}}_b)$ which should lead nearly to a
-uniform distribution on the interval $(0,\,1)$ [@PanagouliaEtAl_NonStationaryGEV].  The inverse
-transformation is $y_b = q_{\text{GEV}}(e_b;\,
-\widehat{\boldsymbol{\theta}}_b)$. When the GEV marginal distributions
-have a nearly exponential tail $\xi \approx 0$ using the standard
-exponential distribution for the generalized residuals can be
-preferred because this will use a milder transformation of the data. This is
-the default choice. 
+dependence between the blocks should be weak
+[@CoxSnell_GeneralResiduals]. Several definitions of the residuals are
+possible, in relation with a target distribution. A simple choice
+is $e_b := F_{\text{GEV}}(y_b;\, \widehat{\boldsymbol{\theta}}_b)$
+which should lead nearly to a uniform distribution on the interval
+$(0,\,1)$. Other possible choices are $e_b := -\log[1 -
+F_{\text{GEV}}(y_b;\, \widehat{\boldsymbol{\theta}}_b)]\}$ for a
+standard exponential target as used by @PanagouliaEtAl_NonStationaryGEV
+and by @KatzEtAl_ExtremesHydrology, or $e_b := \log\{-\log[1 -
+F_{\text{GEV}}(y_b;\, \widehat{\boldsymbol{\theta}}_b)]\}$ for
+a standard Gumbel target.  Note that the `resid` method of the package
+uses an *increasing* transformation so that large/small residuals
+correspond to large/small observations.  When the GEV marginal
+distributions have a nearly exponential tail $\xi \approx 0$ using the
+standard Gumbel target for the generalized residuals can be preferred
+because this will use a milder transformation of the data. This is now
+the default choice.
 
 ```{r resid, warning=FALSE}
 autoplot(resid(fitNBreak))
@@ -684,7 +707,7 @@ autoplot(density(fitNBreak), fill = TRUE)
         
 If needed, the time series with class `"bts"` can be coerced into a
 standard time series inheriting from `"ts"` for which many methods
-have been written in different packages.    
+have been written in different packages.
 
 
  

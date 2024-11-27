@@ -166,7 +166,7 @@ profLik.TVGEV <- function(object,
         opts1[["check_derivatives_print"]] <- "all"
     }
 
-    ## CHNAGE on 2024-11-20. EXPERIMENTAL
+    ## CHANGE on 2024-11-20. EXPERIMENTAL
     opts <- list()
     opts[[1]] <- list("algorithm" = "NLOPT_LD_MMA",
                       "xtol_rel" = 1.0e-5,

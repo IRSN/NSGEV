@@ -32,7 +32,4 @@ probability \eqn{p^{1/n^\star}}{p^(1/ nStar)}, where
 This function is used by \code{\link{quantMaxFun.TVGEV}} and
 \code{\link{quantMax.TVGEV}}.
 }
-\seealso{
-\code{\link{.qMax.TVGEV}}
-}
 \keyword{internal}

@@ -32,7 +32,4 @@ the number of blocks.
 ##' This function is used by \code{\link{quantMaxFun.TVGEV}} and
 \code{\link{quantMax.TVGEV}}.
 }
-\seealso{
-\code{\link{.qMin.TVGEV}}
-}
 \keyword{internal}

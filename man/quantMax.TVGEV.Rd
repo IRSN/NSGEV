@@ -10,7 +10,7 @@
   date = NULL,
   level = 0.95,
   psi = NULL,
-  confintMethod = c("delta", "proflik"),
+  confintMethod = c("delta", "proflik", "PLODE"),
   out = c("data.frame", "array"),
   trace = 1L,
   ...

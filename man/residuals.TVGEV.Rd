@@ -5,7 +5,7 @@
 \alias{resid.TVGEV}
 \title{Generalised Residuals for a \code{TVGEV} Model}
 \usage{
-\method{residuals}{TVGEV}(object, type = c("exp", "unif", "gumbel"), ...)
+\method{residuals}{TVGEV}(object, type = c("gumbel", "exp", "unif"), ...)
 }
 \arguments{
 \item{object}{A \code{TVGEV} object.}
