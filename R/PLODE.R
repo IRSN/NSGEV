@@ -56,7 +56,6 @@
 ##' Yves Deville (2024)
 ##' "Profile Likelihood via Optimisation and Differential Equations" arXiv
 ##' \doi{10.48550/arXiv.2404.02774}.
-##' library(NSGEV)
 ##'
 ##' @section Caution: This function is experimental.
 ##' 
