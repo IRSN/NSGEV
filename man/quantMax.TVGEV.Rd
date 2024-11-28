@@ -47,13 +47,13 @@ from \code{"data.frame"}. A few methods exist for this class.}
 An object with its class depending on the value of
    \code{out}.
 
-   \itemize{
-        \item {\code{out = "data.frame" }}{
+   \describe{
+        \item{\code{out = "data.frame" }}{
             An object inheriting
             from the \code{"data.frame"} class which can be used
             in methods such as \code{autoplot}.
         }
-        \item {\code{out = "array" }}{
+        \item{\code{out = "array" }}{
             A 3-dimensional array with dimensions, \emph{probability},
             \emph{type of result} (Quantile, Lower or Upper confidence
             limit) and \emph{confidence level}.

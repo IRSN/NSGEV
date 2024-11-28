@@ -69,13 +69,13 @@ quantMax <- function(object, ...) {
 ##' @return An object with its class depending on the value of
 ##'    \code{out}.
 ##' 
-##'    \itemize{
-##'         \item {\code{out = "data.frame" }}{
+##'    \describe{
+##'         \item{\code{out = "data.frame" }}{
 ##'             An object inheriting
 ##'             from the \code{"data.frame"} class which can be used
 ##'             in methods such as \code{autoplot}.
 ##'         }
-##'         \item {\code{out = "array" }}{
+##'         \item{\code{out = "array" }}{
 ##'             A 3-dimensional array with dimensions, \emph{probability},
 ##'             \emph{type of result} (Quantile, Lower or Upper confidence
 ##'             limit) and \emph{confidence level}.
@@ -623,7 +623,7 @@ pMax.TVGEV <- function(object,
                            loc = theta[ , 1],
                            scale = theta[ , 2],
                            shape = theta[ , 3],
-                           deriv = deriv, hessian = hessian)
+                           deriv = deriv)
         
         res[i_q] <- prod(F_q)
         

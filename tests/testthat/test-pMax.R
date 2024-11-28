@@ -48,7 +48,7 @@ for (iDate in seq_along(newDates)) {
     for (iq in seq_along(q)) {
         
         pM <- pMax.TVGEV(object = tv, q = q[iq],
-                         date = newDates[[iDate]], deriv = TRUE, hessian = HESSIAN)
+                         date = newDates[[iDate]], deriv = TRUE)
         
         myFun <- function(psi) {
             pMax.TVGEV(object = tv, q = q[iq], date = newDates[[iDate]],

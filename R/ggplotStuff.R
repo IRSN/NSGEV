@@ -9,7 +9,7 @@
 ##' @param object An object with class \code{"quantMax.TVGEV"} as
 ##'     produced by the \code{\link{quantMax}} method.
 ##' 
-##' @param fillConf Logical. If \¢ode{TRUE} the "confidence band(s)"
+##' @param fillConf Logical. If \code{TRUE} the "confidence band(s)"
 ##'     will be filled.
 ##'
 ##' @param ... Not used.

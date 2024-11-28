@@ -3,7 +3,6 @@ Type: Package
 Title: Non-Stationary GEV Time Series
 Version: 0.1.9
 Date: 2024-11-29
-Author: Yves Deville <deville.yves@alpestat.com>
 Authors@R:
     c(person(given = "Yves",
              family = "Deville",

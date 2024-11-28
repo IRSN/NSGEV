@@ -10,7 +10,7 @@
 \item{object}{An object with class \code{"quantMax.TVGEV"} as
 produced by the \code{\link{quantMax}} method.}
 
-\item{fillConf}{Logical. If \¢ode{TRUE} the "confidence band(s)"
+\item{fillConf}{Logical. If \code{TRUE} the "confidence band(s)"
 will be filled.}
 
 \item{...}{Not used.}
