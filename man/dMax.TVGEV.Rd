@@ -47,3 +47,11 @@ A vector of values for the probability density. Beside the
 Compute the probability density of the maximum over a period of
 time.
 }
+\section{Caution}{
+ This function may be renamed in a future version.
+}
+
+\references{
+See the Computing Details vignette of the package for
+    the computation of the derivatives.
+}

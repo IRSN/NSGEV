@@ -54,6 +54,14 @@ The \code{\link{quantMax}} method can be used to compute the
     quantiles and confidence intervals: delta or profile
     likelihood.
 }
+\section{Caution}{
+ This function may be renamed in a future version.
+}
+
+\references{
+See the Computing Details vignette of the package for
+    the computation of the derivatives.
+}
 \seealso{
 The \code{\link{quantMax.TVGEV}} method.
 }

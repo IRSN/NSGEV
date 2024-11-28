@@ -2,7 +2,7 @@
 % Please edit documentation in R/residTVGEV.R
 \name{autoplot.resid.TVGEV}
 \alias{autoplot.resid.TVGEV}
-\title{Plot Residuals of a \code{TGVEV} Model}
+\title{Plot Residuals of a \code{TVGEV} Model}
 \usage{
 \method{autoplot}{resid.TVGEV}(object, geom = c("line", "segment"), ...)
 }

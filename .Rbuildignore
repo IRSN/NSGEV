@@ -1,4 +1,5 @@
 TODO*
+^INSTALL*
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README.Rmd

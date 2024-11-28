@@ -98,7 +98,6 @@ to a destination located on the surface likelihood.
 }
 \references{
 Yves Deville (2024)
-"Profile Likelihood via Optimisation and Differential Equations" arXiv
+"Profile Likelihood via Optimisation and Differential Equations" \emph{arXiv}
 \doi{10.48550/arXiv.2404.02774}.
-library(NSGEV)
 }

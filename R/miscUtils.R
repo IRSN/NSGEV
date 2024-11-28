@@ -154,6 +154,9 @@ formatPerc <- function(x,
 
 # ***********************************************************************
 ##' Select (nearly) a given number of dates.
+##'
+##' This function is used to select the dates for a conditional
+##' prediction it those are not given by the user.
 ##' 
 ##' @title Select (Nearly) a Given Number of Dates
 ##'

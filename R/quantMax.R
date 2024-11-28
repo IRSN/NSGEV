@@ -578,6 +578,11 @@ cdfMaxFun.TVGEV <- function(object, date = NULL, psi = NULL,
 ##'     also be returned as the attribute \code{"hessian"} of the result.
 ##' 
 ##' @export
+##'
+##' @section Caution: This function may be renamed in a future version.
+##'
+##' @references See the Computing Details vignette of the package for
+##'     the computation of the derivatives.
 ##' 
 pMax.TVGEV <- function(object,
                        q,
@@ -602,7 +607,8 @@ pMax.TVGEV <- function(object,
     if (deriv) {
         mM <- modelMatrices(object, date = date)$X
         grad <- array(0.0, dim = c(length(q), object$p),
-                      dimnames = list(paste0("q = ", format(q)), parNames(object)))
+                      dimnames = list(paste0("q = ", format(q)),
+                                      parNames(object)))
         if (hessian) {
             hess <- array(0.0, dim = c(length(q), object$p, object$p),
                           dimnames = list(paste0("q = ", format(q)),
@@ -722,6 +728,11 @@ pMax.TVGEV <- function(object,
 ##'     also returned as the attribute \code{"derx"} of the result.
 ##' 
 ##' @export
+##'
+##' @section Caution: This function may be renamed in a future version.
+##'
+##' @references See the Computing Details vignette of the package for
+##'     the computation of the derivatives.
 ##' 
 dMax.TVGEV <- function(object,
                        x,
@@ -788,7 +799,8 @@ dMax.TVGEV <- function(object,
             for (i in 1:3) {
                 ind_i <- object$ind[[i]]
                 if (!object$isCst[i]) {
-                    gradFM[ind_i] <- FM * (t(gradFGEV_x[ , i, drop = FALSE]) %*% mM[[i]])
+                    gradFM[ind_i] <- FM * (t(gradFGEV_x[ , i, drop = FALSE]) %*%
+                                           mM[[i]])
                     grad0fM[ind_i] <- FM * t(mM[[i]]) %*% mat[ , i]
                 } else {
                     gradFM[ind_i] <- FM * sum(gradFGEV_x[ , i])
@@ -986,6 +998,12 @@ quantMaxFun.TVGEV <- function(object, date = NULL, psi = NULL, theta = NULL,
 ##'     likelihood.
 ##'
 ##' @seealso The \code{\link{quantMax.TVGEV}} method.
+##'
+##' @section Caution: This function may be renamed in a future version.
+##'
+##' @references See the Computing Details vignette of the package for
+##'     the computation of the derivatives.
+##' 
 ##' 
 qMax.TVGEV <- function(object,
                        p,

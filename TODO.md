@@ -4,6 +4,9 @@
 This is a temporary reminder list by YD. Not a planning for new
 development!
 
+- [ ] Make an alias of the `anova` method under a better name making
+      clear that this is for a Likelihood Ratio test.
+ 
 - [ ] **Profile Likelihood**. Speed up the computation of the profile
      likelihood intervals in `quantMax.TVGEV`. The initial values for
      the constrained optimisation could be better.
@@ -24,7 +27,7 @@ development!
 - [x] **Tests**. Improve the code coverage by adding new tests. IN
       PROGRESS.
   
-- [ ] **Continuous Integration/Github Actions**. Add an action for the
+- [x] **Continuous Integration/Github Actions**. Add an action for the
      check, and an action for the build to produce a release when a
      tag is used on for the commit.
   

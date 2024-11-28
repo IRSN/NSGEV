@@ -47,3 +47,11 @@ A vector of values for the distribution function. Beside
 Compute the distribution function of the maximum over a period of
 time.
 }
+\section{Caution}{
+ This function may be renamed in a future version.
+}
+
+\references{
+See the Computing Details vignette of the package for
+    the computation of the derivatives.
+}

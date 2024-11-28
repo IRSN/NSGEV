@@ -19,3 +19,7 @@ and covering approximately the range of \code{date}.
 \description{
 Select (nearly) a given number of dates.
 }
+\details{
+This function is used to select the dates for a conditional
+prediction it those are not given by the user.
+}
