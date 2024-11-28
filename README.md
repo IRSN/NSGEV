@@ -1,15 +1,19 @@
 
-### NSGEV
+## NSGEV
 
 The **NSGEV** R package is devoted to some Non-Stationary Extreme Value
-models
+models.
 
 The main function of the package is `TVGEV` which creates an object with
 class `"TVGEV"` representing a Time-Varying model with GEV margins
 depending on the time. This kind of model is especially useful to study
-*block maxima*, usually annual maxima.
+*block maxima*, usually annual maxima. This kind of models could be used
+with CRAN packages such as **extRemes**, yet **NSGEV** makes it easier
+to cope with bases of functions. It also brings some new things such as
+the profile likelihood confidence intervals on the return levels or on
+the quantile of the maximum on an arbitrary period.
 
-### Example
+## Example
 
 In this example we use the annual maxima of the daily maximal
 temperature (TX) in Dijon (France) provided as the `TXMax_Dijon` data
@@ -30,7 +34,7 @@ head(TXMax_Dijon)
 
 Note that the warnings and messages will not be shown in this example.
 
-A TVGEV model requires a date variable beginnings of the annuela blocks
+A TVGEV model requires a date variable beginnings of the annual blocks
 
 ``` r
 df <- within(TXMax_Dijon, Date <- as.Date(paste0(Year, "-01-01")))
@@ -66,30 +70,11 @@ coef(fit1)
     ##        mu_0       mu_t1     sigma_0        xi_0 
     ## 32.93752186  0.01527735  1.84567285 -0.20471258
 
-``` r
-anova(fit0, fit1)
-```
-
-    ## Analysis of Deviance Table
-    ## 
-    ##      df deviance      W  Pr(>W)  
-    ## fit0  3   364.74                 
-    ## fit1  4   361.20 3.5412 0.05986 .
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
 The `predict` method can be used to compute conditional return levels
 corresponding to a given year, be it a past or future year
 
 ``` r
 pred <- predict(fit1)
-```
-
-    ## Since 'object' is really time-varying, the Return Levels
-    ## depend on the date. A default choice of dates is made here.
-    ## Use the 'newdate' formal to change this.
-
-``` r
 autoplot(pred)
 ```
 
@@ -98,10 +83,6 @@ autoplot(pred)
 ``` r
 autoplot(predict(fit1, confint = "proflik", trace = 0))
 ```
-
-    ## Since 'object' is really time-varying, the Return Levels
-    ## depend on the date. A default choice of dates is made here.
-    ## Use the 'newdate' formal to change this.
 
 ![](README_files/figure-gfm/DijonPred-2.png)<!-- -->
 

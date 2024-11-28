@@ -2,17 +2,22 @@
 output: github_document
 ---
 
-### NSGEV 
+## NSGEV 
 
 The **NSGEV** R package is devoted to some Non-Stationary 
-Extreme Value models
+Extreme Value models.
 
 The main function of the package is `TVGEV` which creates an object
 with class `"TVGEV"` representing a Time-Varying model with GEV
 margins depending on the time. This kind of model is especially useful
-to study *block maxima*, usually annual maxima.
+to study *block maxima*, usually annual maxima. This kind of models
+could be used with CRAN packages such as **extRemes**, yet **NSGEV**
+makes it easier to cope with bases of functions. It also brings some
+new things such as the profile likelihood confidence intervals on the
+return levels or on the quantile of the maximum on an arbitrary
+period.
 
-### Example
+## Example
 
 In this example we use the annual maxima of the daily maximal
 temperature (TX) in Dijon (France) provided as the `TXMax_Dijon` data
@@ -25,7 +30,7 @@ head(TXMax_Dijon)
 ```
 Note that the warnings and messages will not be shown in this example.
 
-A TVGEV model requires a date variable beginnings of the annuela blocks 
+A TVGEV model requires a date variable beginnings of the annual blocks
 
 
 ```{r Dijon0, message=FALSE, warning=FALSE}
@@ -44,14 +49,13 @@ fit1 <- TVGEV(data = df, response = "TXMax", date = "Date",
               loc = ~ t1)
 autoplot(fit1)
 coef(fit1)
-anova(fit0, fit1)
 
 ```
 
 The `predict` method can be used to compute conditional return levels
 corresponding to a given year, be it a past or future year
 
-```{r, DijonPred}
+```{r, DijonPred, message=FALSE, warning=FALSE}
 pred <- predict(fit1)
 autoplot(pred)
 autoplot(predict(fit1, confint = "proflik", trace = 0))
