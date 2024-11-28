@@ -5,3 +5,4 @@ TODO*
 ^README.Rmd
 ^README.md
 ^\.github$
+^vignettes/jss.bst
