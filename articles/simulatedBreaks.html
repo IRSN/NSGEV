@@ -6,20 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TVGEV: Check Simulated Trend • NSGEV</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="TVGEV: Check Simulated Trend">
-<meta property="og:description" content="NSGEV">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -33,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -45,7 +44,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -62,10 +61,10 @@
       <a href="../articles/ProfLik.html">TVGEV: Check Profile Likelihood</a>
     </li>
     <li>
-      <a href="../articles/Venice.html">TVGEV: Check Venice Example</a>
+      <a href="../articles/simulatedBreaks.html">TVGEV: Check Simulated Trend</a>
     </li>
     <li>
-      <a href="../articles/simulatedBreaks.html">TVGEV: Check Simulated Trend</a>
+      <a href="../articles/Venice.html">TVGEV: Check Venice Example</a>
     </li>
   </ul>
 </li>
@@ -77,7 +76,7 @@
 <li>
   <a href="https://github.com/IRSN/NSGEV/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -88,7 +87,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -96,7 +95,7 @@
       <h1 data-toc-skip>TVGEV: Check Simulated Trend</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/HEAD/vignettes/simulatedBreaks.Rmd" class="external-link"><code>vignettes/simulatedBreaks.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/vignettes/simulatedBreaks.Rmd" class="external-link"><code>vignettes/simulatedBreaks.Rmd</code></a></small>
       <div class="hidden name"><code>simulatedBreaks.Rmd</code></div>
 
     </div>
@@ -107,17 +106,27 @@
 <h2 id="the-broken-line-trend">The broken line trend<a class="anchor" aria-label="anchor" href="#the-broken-line-trend"></a>
 </h2>
 <p>In this report we simulate a trend for the location parameter. We
-chose the model <span class="math inline">\(Y_b \sim \text{GEV}(\mu_b,
-\, \sigma, \,\xi)\)</span> with constant scale and shape <span class="math inline">\(\xi\)</span>, while the location is given by</p>
-<p><span class="math display">\[
-    \mu_b = \psi_{\mu, 0} + \psi_{\mu, 1} + \psi_{\mu, 2} (b -
-b_0)_+    
-\]</span></p>
-<p>where the annual block <span class="math inline">\(b_0\)</span> is
-chosen to be <span class="math inline">\(1980\)</span>, and the data
-will from 1921 to 2020. Using the <code>breaksX</code> design function
-we get a matrix <code>X</code> with a linear trend <code>t1</code> and a
-broken line <code>t1_1980</code> with slope: <span class="math inline">\(0\)</span> before 1980 and slope <span class="math inline">\(1\)</span> from <span class="math inline">\(1980\)</span> on.</p>
+chose the model
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>b</mi></msub><mo>∼</mo><mtext mathvariant="normal">GEV</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>μ</mi><mi>b</mi></msub><mo>,</mo><mspace width="0.167em"></mspace><mi>σ</mi><mo>,</mo><mspace width="0.167em"></mspace><mi>ξ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y_b \sim \text{GEV}(\mu_b, \, \sigma, \,\xi)</annotation></semantics></math>
+with constant scale and shape
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ξ</mi><annotation encoding="application/x-tex">\xi</annotation></semantics></math>,
+while the location is given by</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>μ</mi><mi>b</mi></msub><mo>=</mo><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>0</mn></mrow></msub><mo>+</mo><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>2</mn></mrow></msub><msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo>−</mo><msub><mi>b</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo></msub></mrow><annotation encoding="application/x-tex">
+    \mu_b = \psi_{\mu, 0} + \psi_{\mu, 1} + \psi_{\mu, 2} (b - b_0)_+    
+</annotation></semantics></math></p>
+<p>where the annual block
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>b</mi><mn>0</mn></msub><annotation encoding="application/x-tex">b_0</annotation></semantics></math>
+is chosen to be
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1980</mn><annotation encoding="application/x-tex">1980</annotation></semantics></math>,
+and the data will from 1921 to 2020. Using the <code>breaksX</code>
+design function we get a matrix <code>X</code> with a linear trend
+<code>t1</code> and a broken line <code>t1_1980</code> with slope:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math>
+before 1980 and slope
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>
+from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1980</mn><annotation encoding="application/x-tex">1980</annotation></semantics></math>
+on.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/IRSN/NSGEV/" class="external-link">NSGEV</a></span><span class="op">)</span></span>
 <span><span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%4d-01-01"</span>, <span class="fl">1921</span><span class="op">:</span><span class="fl">2020</span><span class="op">)</span><span class="op">)</span> </span>
@@ -126,13 +135,23 @@ broken line <code>t1_1980</code> with slope: <span class="math inline">\(0\)</sp
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">X</span><span class="op">[</span> , <span class="fl">1</span><span class="op">]</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"n"</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matlines</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">X</span>, type <span class="op">=</span> <span class="st">"l"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="Rgraphics/sim0-1.png" width="576"></p>
+<p><img src="Rgraphics%2Fsim0-1.png" width="576"></p>
 </div>
 <div class="section level2">
 <h2 id="simulation-of-the-data-and-gev-estimation">Simulation of the data and GEV estimation<a class="anchor" aria-label="anchor" href="#simulation-of-the-data-and-gev-estimation"></a>
 </h2>
-<p>We simulate a sample of size <code>ns</code> for the vector <span class="math inline">\(\boldsymbol{\psi}\)</span> of <span class="math inline">\(p=4\)</span> coefficients <span class="math inline">\(\psi_{\mu, 0}\)</span>, <span class="math inline">\(\psi_{\mu, 1}\)</span>, <span class="math inline">\(\sigma\)</span> and <span class="math inline">\(\xi\)</span>. The results are stored in a matrix
-<code>psi</code> with <code>ns</code> rows.</p>
+<p>We simulate a sample of size <code>ns</code> for the vector
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛙</mi><annotation encoding="application/x-tex">\boldsymbol{\psi}</annotation></semantics></math>
+of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">p=4</annotation></semantics></math>
+coefficients
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>0</mn></mrow></msub><annotation encoding="application/x-tex">\psi_{\mu, 0}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\psi_{\mu, 1}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ξ</mi><annotation encoding="application/x-tex">\xi</annotation></semantics></math>.
+The results are stored in a matrix <code>psi</code> with <code>ns</code>
+rows.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span>    </span>
 <span><span class="va">GEVnms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"loc"</span>, <span class="st">"scale"</span>, <span class="st">"shape"</span><span class="op">)</span>  </span>
@@ -188,8 +207,12 @@ broken line <code>t1_1980</code> with slope: <span class="math inline">\(0\)</sp
 dimension <code>c(ns, n , 3)</code>. A slice <code>theta[is, , ]</code>
 will contain the GEV parameters for the simulation number
 <code>is</code> i.e., a matrix with dimension <code>c(n , 3)</code> of
-the GEV parameters <span class="math inline">\(\boldsymbol{\theta}_b\)</span> for the blocks
-<span class="math inline">\(b=1\)</span> to <span class="math inline">\(b =n\)</span>.</p>
+the GEV parameters
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝛉</mi><mi>b</mi></msub><annotation encoding="application/x-tex">\boldsymbol{\theta}_b</annotation></semantics></math>
+for the blocks
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">b=1</annotation></semantics></math>
+to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">b =n</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="cn">NA</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ns</span>, <span class="va">n</span>, <span class="fl">3</span><span class="op">)</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>, <span class="va">GEVnms</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="cn">NA</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ns</span>, <span class="va">n</span><span class="op">)</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -252,14 +275,15 @@ the GEV parameters <span class="math inline">\(\boldsymbol{\theta}_b\)</span> fo
 <span>    <span class="op">}</span> <span class="kw">else</span> <span class="va">CVG</span><span class="op">[</span><span class="va">is</span>, <span class="st">"ismev"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
 <span>    </span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Error in solve.default(x<span class="math inline">\(hessian)
-:  Lapack routine dgesv: system is exactly singular: U[2,2] = 0 Error in
-solve.default(x\)</span>hessian) : Lapack routine dgesv: system is
-exactly singular: U[2,2] = 0</p>
+<p>Error in
+solve.default(x<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mi>e</mi><mi>s</mi><mi>s</mi><mi>i</mi><mi>a</mi><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>:</mo><mi>L</mi><mi>a</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>k</mi><mi>r</mi><mi>o</mi><mi>u</mi><mi>t</mi><mi>i</mi><mi>n</mi><mi>e</mi><mi>d</mi><mi>g</mi><mi>e</mi><mi>s</mi><mi>v</mi><mo>:</mo><mi>s</mi><mi>y</mi><mi>s</mi><mi>t</mi><mi>e</mi><mi>m</mi><mi>i</mi><mi>s</mi><mi>e</mi><mi>x</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>l</mi><mi>y</mi><mi>s</mi><mi>i</mi><mi>n</mi><mi>g</mi><mi>u</mi><mi>l</mi><mi>a</mi><mi>r</mi><mo>:</mo><mi>U</mi><mrow><mo stretchy="true" form="prefix">[</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mn>0</mn><mi>E</mi><mi>r</mi><mi>r</mi><mi>o</mi><mi>r</mi><mi>i</mi><mi>n</mi><mi>s</mi><mi>o</mi><mi>l</mi><mi>v</mi><mi>e</mi><mi>.</mi><mi>d</mi><mi>e</mi><mi>f</mi><mi>a</mi><mi>u</mi><mi>l</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">hessian) :
+  Lapack routine dgesv: system is exactly singular: U[2,2] = 0
+Error in solve.default(x</annotation></semantics></math>hessian) :
+Lapack routine dgesv: system is exactly singular: U[2,2] = 0</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="Rgraphics/simPlot-1.png" alt="Ten simulated paths" width="576"><p class="caption">
+<img src="Rgraphics%2FsimPlot-1.png" alt="Ten simulated paths" width="576"><p class="caption">
 Ten simulated paths
 </p>
 </div>
@@ -283,7 +307,8 @@ Ten simulated paths
 </tr></tbody>
 </table>
 <p>We can inspect the content of the array <code>co</code> containing
-the estimated coefficients <span class="math inline">\(\widehat{\boldsymbol{\psi}}\)</span>.</p>
+the estimated coefficients
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>𝛙</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\widehat{\boldsymbol{\psi}}</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">kable</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/aperm.html" class="external-link">aperm</a></span><span class="op">(</span><span class="va">co</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, , <span class="op">]</span>, perm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -415,15 +440,22 @@ samples are as follows.</p>
 </tbody>
 </table>
 <p>so the estimation produced by <strong>NSGEV</strong> seems better for
-simulation <span class="math inline">\(\#1\)</span>, since it leads to a
-greater log-likelihood. Note the estimated shape parameter <span class="math inline">\(\widehat{\xi} &lt; - 1\)</span> both with
-<strong>extRemes</strong> and <strong>ismev</strong> which can be
-considered as an alert. Indeed, as far as <span class="math inline">\(\xi &lt; -1\)</span> is allowed we could find an
-infinite log-likelihood and an estimated shape <span class="math inline">\(&lt; - 1\)</span> can be considered as a
-non-convergence or as an error.</p>
+simulation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>#</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">\#1</annotation></semantics></math>,
+since it leads to a greater log-likelihood. Note the estimated shape
+parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>ξ</mi><mo accent="true">̂</mo></mover><mo>&lt;</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\widehat{\xi} &lt; - 1</annotation></semantics></math>
+both with <strong>extRemes</strong> and <strong>ismev</strong> which can
+be considered as an alert. Indeed, as far as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ξ</mi><mo>&lt;</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\xi &lt; -1</annotation></semantics></math>
+is allowed we could find an infinite log-likelihood and an estimated
+shape
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">&lt; - 1</annotation></semantics></math>
+can be considered as a non-convergence or as an error.</p>
 <p>We notice that both <code><a href="https://rdrr.io/pkg/extRemes/man/fevd.html" class="external-link">extRemes::fevd</a></code> and
 <code><a href="https://rdrr.io/pkg/ismev/man/gev.fit.html" class="external-link">ismev::gev.fit</a></code> tend to find not infrequently very low
-values for the estimated shape, <span class="math inline">\(\widehat{\xi} &lt; -1\)</span>.</p>
+values for the estimated shape,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>ξ</mi><mo accent="true">̂</mo></mover><mo>&lt;</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\widehat{\xi} &lt; -1</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xiRange</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">co</span><span class="op">[</span> , , <span class="st">"xi_0"</span><span class="op">]</span>, <span class="fl">2</span>, <span class="va">range</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">xiRange</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"shape min"</span>, <span class="st">"shape max"</span><span class="op">)</span></span>
@@ -452,8 +484,9 @@ values for the estimated shape, <span class="math inline">\(\widehat{\xi} &lt; -
 </table>
 <p>In order to compare the maximised log-likelihoods for the two
 packages, we will consider that these are nearly equal when their
-absolute difference is <span class="math inline">\(&lt;0.05\)</span> and
-set any <code>NA</code> value to <code>-Inf</code></p>
+absolute difference is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">&lt;0.05</annotation></semantics></math>
+and set any <code>NA</code> value to <code>-Inf</code></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ML</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">ML</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="cn">Inf</span>  </span>
 <span><span class="va">compML</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">ML</span><span class="op">[</span> , <span class="st">"NSGEV"</span><span class="op">]</span> <span class="op">-</span> <span class="va">ML</span><span class="op">[</span> , <span class="st">"extR"</span><span class="op">]</span>,</span>
@@ -478,7 +511,7 @@ set any <code>NA</code> value to <code>-Inf</code></p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ML</span><span class="op">[</span> , <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NSGEV"</span>, <span class="st">"extR"</span><span class="op">)</span><span class="op">]</span>, asp <span class="op">=</span> <span class="fl">1</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"orangered"</span>, cex <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="Rgraphics/sim7-1.png" alt="Comparison of the maximised log-likelihoods." width="576"><p class="caption">
+<img src="Rgraphics%2Fsim7-1.png" alt="Comparison of the maximised log-likelihoods." width="576"><p class="caption">
 Comparison of the maximised log-likelihoods.
 </p>
 </div>
@@ -505,7 +538,7 @@ Comparison of the maximised log-likelihoods.
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ML</span><span class="op">[</span> , <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NSGEV"</span>, <span class="st">"ismev"</span><span class="op">)</span><span class="op">]</span>, asp <span class="op">=</span> <span class="fl">1</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"SeaGreen"</span>, cex <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="Rgraphics/sim7b-1.png" alt="Comparison of the maximised log-likelihoods." width="576"><p class="caption">
+<img src="Rgraphics%2Fsim7b-1.png" alt="Comparison of the maximised log-likelihoods." width="576"><p class="caption">
 Comparison of the maximised log-likelihoods.
 </p>
 </div>
@@ -536,10 +569,12 @@ functions, and also seem to be pretty less frequent with
 <code><a href="https://rdrr.io/pkg/extRemes/man/fevd.html" class="external-link">extRemes::fevd</a></code>.</p></li>
 <li><p>A problem with the functions <code><a href="https://rdrr.io/pkg/extRemes/man/fevd.html" class="external-link">extRemes::fevd</a></code> and
 <code><a href="https://rdrr.io/pkg/ismev/man/gev.fit.html" class="external-link">ismev::gev.fit</a></code> is that they quite often find estimates with
-a shape <span class="math inline">\(&lt; -1\)</span> which can be
-considered as absurd. For the simulated data used here, the risk of
-finding <span class="math inline">\(\widehat{\xi} &lt; -1\)</span> is
-higher when the linear trend is stronger, i.e. when the slope takes a
+a shape
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">&lt; -1</annotation></semantics></math>
+which can be considered as absurd. For the simulated data used here, the
+risk of finding
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>ξ</mi><mo accent="true">̂</mo></mover><mo>&lt;</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\widehat{\xi} &lt; -1</annotation></semantics></math>
+is higher when the linear trend is stronger, i.e. when the slope takes a
 larger absolute value. Since real data usually show a weaker dependence
 on the covariates than the data used here, the problems of convergence
 shown here have been overstated.</p></li>
@@ -549,9 +584,7 @@ shown here have been overstated.</p></li>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -564,16 +597,16 @@ shown here have been overstated.</p></li>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>

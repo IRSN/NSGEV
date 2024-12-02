@@ -6,20 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TVGEV: Checks • NSGEV</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="TVGEV: Checks">
-<meta property="og:description" content="NSGEV">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -33,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -45,7 +44,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -62,10 +61,10 @@
       <a href="../articles/ProfLik.html">TVGEV: Check Profile Likelihood</a>
     </li>
     <li>
-      <a href="../articles/Venice.html">TVGEV: Check Venice Example</a>
+      <a href="../articles/simulatedBreaks.html">TVGEV: Check Simulated Trend</a>
     </li>
     <li>
-      <a href="../articles/simulatedBreaks.html">TVGEV: Check Simulated Trend</a>
+      <a href="../articles/Venice.html">TVGEV: Check Venice Example</a>
     </li>
   </ul>
 </li>
@@ -77,7 +76,7 @@
 <li>
   <a href="https://github.com/IRSN/NSGEV/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -88,7 +87,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -97,9 +96,9 @@
                         <h4 data-toc-skip class="author">Yves Deville,
 Lise Bardet</h4>
             
-            <h4 data-toc-skip class="date">2023-12-05</h4>
+            <h4 data-toc-skip class="date">2024-12-02</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/HEAD/vignettes/NSGEV_Val.Rmd" class="external-link"><code>vignettes/NSGEV_Val.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/vignettes/NSGEV_Val.Rmd" class="external-link"><code>vignettes/NSGEV_Val.Rmd</code></a></small>
       <div class="hidden name"><code>NSGEV_Val.Rmd</code></div>
 
     </div>
@@ -118,35 +117,68 @@ Lise Bardet</h4>
 <p>The <strong>NSGEV</strong> package is dedicated to Non-Stationary
 models with Generalized Extreme Value (GEV) observations which are often
 called <em>Extreme Value Regression</em> models. These concern data with
-observations attached to <em>blocks</em> <span class="math inline">\(b =
-1\)</span>, <span class="math inline">\(2\)</span>, <span class="math inline">\(\dots\)</span>, <span class="math inline">\(B\)</span>, typically years. A response variable
-<span class="math inline">\(Y\)</span> has one observation <span class="math inline">\(Y_b\)</span> for each block, which is typically a
-maximum reached within the block <span class="math inline">\(b\)</span>.
-The response relates to a vector <span class="math inline">\(\mathbf{x}\)</span> of covariates with
-observations <span class="math inline">\(\mathbf{x}_b\)</span>. The
-<span class="math inline">\(B\)</span> r.vs <span class="math inline">\(Y_b\)</span> are assumed to be independent with
-GEV margin</p>
-<p><span class="math display">\[
+observations attached to <em>blocks</em>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">b = 1</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>2</mn><annotation encoding="application/x-tex">2</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>…</mi><annotation encoding="application/x-tex">\dots</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>,
+typically years. A response variable
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
+has one observation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Y</mi><mi>b</mi></msub><annotation encoding="application/x-tex">Y_b</annotation></semantics></math>
+for each block, which is typically a maximum reached within the block
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>.
+The response relates to a vector
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐱</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>
+of covariates with observations
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐱</mi><mi>b</mi></msub><annotation encoding="application/x-tex">\mathbf{x}_b</annotation></semantics></math>.
+The
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+r.vs
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Y</mi><mi>b</mi></msub><annotation encoding="application/x-tex">Y_b</annotation></semantics></math>
+are assumed to be independent with GEV margin</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>b</mi></msub><mo>∼</mo><mtext mathvariant="normal">GEV</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>μ</mi><mi>b</mi></msub><mo>,</mo><mspace width="0.167em"></mspace><msub><mi>σ</mi><mi>b</mi></msub><mo>,</mo><mspace width="0.167em"></mspace><msub><mi>ξ</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
    Y_b \sim \text{GEV}(\mu_b,\,\sigma_b,\, \xi_b),
-\]</span></p>
-<p>and the three GEV parameters can depend on the covariates in <span class="math inline">\(\mathbf{x}_b\)</span> through a link function. For
-example with one covariate <span class="math inline">\(x_b\)</span> we
-can use</p>
-<p><span class="math display">\[
+</annotation></semantics></math></p>
+<p>and the three GEV parameters can depend on the covariates in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐱</mi><mi>b</mi></msub><annotation encoding="application/x-tex">\mathbf{x}_b</annotation></semantics></math>
+through a link function. For example with one covariate
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>b</mi></msub><annotation encoding="application/x-tex">x_b</annotation></semantics></math>
+we can use</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>μ</mi><mi>b</mi></msub><mo>=</mo><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>0</mn></mrow></msub><mo>+</mo><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>1</mn></mrow></msub><msub><mi>x</mi><mi>b</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
   \mu_b = \psi_{\mu,0} + \psi_{\mu, 1} x_b,         
-\]</span></p>
-<p>where <span class="math inline">\(\psi_{\mu,0}\)</span> and <span class="math inline">\(\psi_{\mu, 1}\)</span> are parameters to be
-estimated. The pseudo-index <span class="math inline">\(\mu\)</span> of
-<span class="math inline">\(\psi\)</span> is used to show which GEV
-parameter <span class="math inline">\(\psi\)</span> relates to. We can
-have similarly a formula and a link for the scale <span class="math inline">\(\sigma\)</span> and even for the shape <span class="math inline">\(\xi\)</span>, leading to parameters <span class="math inline">\(\psi_{\sigma,i}\)</span> and <span class="math inline">\(\psi_{\xi,i}\)</span>.</p>
+</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>0</mn></mrow></msub><annotation encoding="application/x-tex">\psi_{\mu,0}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\psi_{\mu, 1}</annotation></semantics></math>
+are parameters to be estimated. The pseudo-index
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math>
+of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math>
+is used to show which GEV parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math>
+relates to. We can have similarly a formula and a link for the scale
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+and even for the shape
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ξ</mi><annotation encoding="application/x-tex">\xi</annotation></semantics></math>,
+leading to parameters
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ψ</mi><mrow><mi>σ</mi><mo>,</mo><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">\psi_{\sigma,i}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ψ</mi><mrow><mi>ξ</mi><mo>,</mo><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">\psi_{\xi,i}</annotation></semantics></math>.</p>
 <p>An alternative notation for the GEV distribution uses the vector
-<span class="math inline">\(\boldsymbol{\theta}_b :=
-[\mu_b,\,\sigma_b,\,\xi_b]\)</span> and writes <span class="math inline">\(Y_b \sim
-\text{GEV}(\boldsymbol{\theta}_b)\)</span>. The GEV parameters <span class="math inline">\(\theta_{b,i}\)</span> which depend on the block
-<span class="math inline">\(b\)</span> should not be confused with the
-parameters <span class="math inline">\(\psi\)</span> of the model, which
-do not depend on the block <span class="math inline">\(b\)</span>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝛉</mi><mi>b</mi></msub><mo>:=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>μ</mi><mi>b</mi></msub><mo>,</mo><mspace width="0.167em"></mspace><msub><mi>σ</mi><mi>b</mi></msub><mo>,</mo><mspace width="0.167em"></mspace><msub><mi>ξ</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{\theta}_b := [\mu_b,\,\sigma_b,\,\xi_b]</annotation></semantics></math>
+and writes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>b</mi></msub><mo>∼</mo><mtext mathvariant="normal">GEV</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>𝛉</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y_b
+\sim \text{GEV}(\boldsymbol{\theta}_b)</annotation></semantics></math>.
+The GEV parameters
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mrow><mi>b</mi><mo>,</mo><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">\theta_{b,i}</annotation></semantics></math>
+which depend on the block
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
+should not be confused with the parameters
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math>
+of the model, which do not depend on the block
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>.</p>
 </div>
 <div class="section level4">
 <h4 id="time-varying-gev-models">Time-Varying GEV models<a class="anchor" aria-label="anchor" href="#time-varying-gev-models"></a>
@@ -155,74 +187,123 @@ do not depend on the block <span class="math inline">\(b\)</span>.</p>
 the main concern in the package, and are used as objects of a S3 class
 named <code>"TVGEV"</code>. In this setting, the blocks are assumed to
 have the <em>same duration</em>; Moreover, attached with each block
-<span class="math inline">\(b\)</span> we have a <em>date</em> <span class="math inline">\(t_b\)</span> which can conveniently chosen as the
-beginning of the block. The GEV parameters are now linked to covariates
-which are deterministic functions <span class="math inline">\(x(t_b)\)</span> of <span class="math inline">\(t_b\)</span>. For instance, a quadratic trend can
-be used for the location parameter <span class="math inline">\(\mu\)</span></p>
-<p><span class="math display">\[
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
+we have a <em>date</em>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mi>b</mi></msub><annotation encoding="application/x-tex">t_b</annotation></semantics></math>
+which can conveniently chosen as the beginning of the block. The GEV
+parameters are now linked to covariates which are deterministic
+functions
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">x(t_b)</annotation></semantics></math>
+of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mi>b</mi></msub><annotation encoding="application/x-tex">t_b</annotation></semantics></math>.
+For instance, a quadratic trend can be used for the location parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>μ</mi><mi>b</mi></msub><mo>=</mo><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>0</mn></mrow></msub><mo>+</mo><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>1</mn></mrow></msub><mspace width="0.167em"></mspace><msub><mi>t</mi><mi>b</mi></msub><mo>+</mo><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>2</mn></mrow></msub><mspace width="0.167em"></mspace><msubsup><mi>t</mi><mi>b</mi><mn>2</mn></msubsup><mi>.</mi></mrow><annotation encoding="application/x-tex"> 
   \mu_b = \psi_{\mu, 0} + \psi_{\mu,1} \, t_b + \psi_{\mu,2} \,t_b^2.
-\]</span></p>
+</annotation></semantics></math></p>
 <p>An implicit assumption is that <em>the GEV parameters should vary
 slowly</em>, with only very small variation from a block to the next
-one. So the choice of a specific reference date <span class="math inline">\(t_b\)</span> within the block <span class="math inline">\(b\)</span> does not really matter. We can think of
-the vector of GEV parameters as a time-varying <span class="math inline">\(\boldsymbol{\theta}(t)\)</span> with a slow
-variation.</p>
+one. So the choice of a specific reference date
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mi>b</mi></msub><annotation encoding="application/x-tex">t_b</annotation></semantics></math>
+within the block
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
+does not really matter. We can think of the vector of GEV parameters as
+a time-varying
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛉</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{\theta}(t)</annotation></semantics></math>
+with a slow variation.</p>
 <p>For <code>TVGEV</code> models, we assume that each GEV parameter is
 linked to a linear combination of the trend functions having the form
-<span class="math inline">\(\mathbf{x}(t_b)^\top
-\boldsymbol{\psi}\)</span>. The standard R formulas for linear models
-can be used to specify the dependence of each GEV parameter on the basis
-covariates via an object with class <code>"formula"</code>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐱</mi><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><mi>𝛙</mi></mrow><annotation encoding="application/x-tex">\mathbf{x}(t_b)^\top \boldsymbol{\psi}</annotation></semantics></math>.
+The standard R formulas for linear models can be used to specify the
+dependence of each GEV parameter on the basis covariates via an object
+with class <code>"formula"</code>.</p>
 <p>Although Time-Varying models may appear as special cases of more
 general Non-Stationary models, they deserve a special treatment because
 it is often a concern then to make special ‘predictions’ in relation
 with a period of time or an origin.</p>
 <p><em>Remark</em>. Choosing the begining of a block as reference date
-<span class="math inline">\(t_b\)</span> is convenient because the it is
-easy to convert a year number and a reference date are easily converted
-into each other.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mi>b</mi></msub><annotation encoding="application/x-tex">t_b</annotation></semantics></math>
+is convenient because the it is easy to convert a year number and a
+reference date are easily converted into each other.</p>
 </div>
 <div class="section level4">
 <h4 id="designs">Designs<a class="anchor" aria-label="anchor" href="#designs"></a>
 </h4>
 <p>Within the package are “design functions” which provide bases of
-functions. A basis consist in <span class="math inline">\(r\)</span>
-linearly independent functions <span class="math inline">\(x_k(t)\)</span> of the date <span class="math inline">\(t\)</span> forming a covariate vector <span class="math inline">\(\mathbf{x}(t)\)</span> of length <span class="math inline">\(r\)</span> with elements</p>
-<p><span class="math display">\[
+functions. A basis consist in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math>
+linearly independent functions
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>k</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">x_k(t)</annotation></semantics></math>
+of the date
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+forming a covariate vector
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐱</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbf{x}(t)</annotation></semantics></math>
+of length
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math>
+with elements</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="0.167em"></mspace><msub><mi>x</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="0.167em"></mspace><mi>…</mi><mo>,</mo><mspace width="0.167em"></mspace><msub><mi>x</mi><mrow><mi>r</mi><mo>−</mo><mn>1</mn></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
     x_0(t), \, x_1(t), \, \dots, \,x_{r-1}(t).  
-\]</span></p>
-<p>By evaluating the basis functions at the reference dates <span class="math inline">\(t_b\)</span> for <span class="math inline">\(b=1\)</span>, <span class="math inline">\(2\)</span>, <span class="math inline">\(\dots\)</span>, <span class="math inline">\(B\)</span> we get a “design” matrix <span class="math inline">\(\mathbf{X}\)</span> with <span class="math inline">\(B\)</span> rows and <span class="math inline">\(r\)</span> columns as in a linear regression
-framework. As suggested by the use of a zero index, a basis might embed
-the constant function <span class="math inline">\(x_0(t) = 1\)</span>.
-For a polynomial basis, we can take <span class="math inline">\(x_k(t)
-:= t^k\)</span> for <span class="math inline">\(k=0\)</span> to <span class="math inline">\(r-1\)</span>. However it is often necessary to
-scale the basis functions because they can otherwise take large values,
-which can cause problems in likelihood maximisation. A simple and widely
-adopted precaution consists in changing the origin, i.e. in using <span class="math inline">\(x_k(t) := (t - t^\star)^k\)</span> for some chosen
-origin <span class="math inline">\(t^\star\)</span>. By taking the
-origin <span class="math inline">\(t^\star\)</span> as roughly located
-at the centre of the time period used in the fit will neatly facilitate
-the estimation.</p>
+</annotation></semantics></math></p>
+<p>By evaluating the basis functions at the reference dates
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mi>b</mi></msub><annotation encoding="application/x-tex">t_b</annotation></semantics></math>
+for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">b=1</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>2</mn><annotation encoding="application/x-tex">2</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>…</mi><annotation encoding="application/x-tex">\dots</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+we get a “design” matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐗</mi><annotation encoding="application/x-tex">\mathbf{X}</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+rows and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math>
+columns as in a linear regression framework. As suggested by the use of
+a zero index, a basis might embed the constant function
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x_0(t) = 1</annotation></semantics></math>.
+For a polynomial basis, we can take
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>k</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>:=</mo><msup><mi>t</mi><mi>k</mi></msup></mrow><annotation encoding="application/x-tex">x_k(t) :=
+t^k</annotation></semantics></math> for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">k=0</annotation></semantics></math>
+to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r-1</annotation></semantics></math>.
+However it is often necessary to scale the basis functions because they
+can otherwise take large values, which can cause problems in likelihood
+maximisation. A simple and widely adopted precaution consists in
+changing the origin, i.e. in using
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>k</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>:=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>−</mo><msup><mi>t</mi><mo>⋆</mo></msup><mo stretchy="true" form="postfix">)</mo></mrow><mi>k</mi></msup></mrow><annotation encoding="application/x-tex">x_k(t) := (t - t^\star)^k</annotation></semantics></math>
+for some chosen origin
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>t</mi><mo>⋆</mo></msup><annotation encoding="application/x-tex">t^\star</annotation></semantics></math>.
+By taking the origin
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>t</mi><mo>⋆</mo></msup><annotation encoding="application/x-tex">t^\star</annotation></semantics></math>
+as roughly located at the centre of the time period used in the fit will
+neatly facilitate the estimation.</p>
 <p>For now, the design functions include: <em>polynomial</em> basis,
 <em>natural spline</em> basis, and (continuous) broken line basis. Using
 the broken line basis, it is possible to specify a <em>kink
 regression</em>, but only with a known date for the change of slope.</p>
 <p>In <strong>NSGEV</strong>, the definition of the design function used
 by a TVGEV model is attached to the R object representing a fitted
-model. So for a given “new” block given its reference date <span class="math inline">\(t^{\text{new}}\)</span> we can straightforwardly
-obtain the estimated <span class="math inline">\(\widehat{\boldsymbol{\theta}}(t^{\text{new}})\)</span>
-from the covariate vector <span class="math inline">\(\mathbf{x}(t^{\text{new}})\)</span> and the vector
-<span class="math inline">\(\widehat{\boldsymbol{\psi}}\)</span> of the
-estimated parameters.</p>
+model. So for a given “new” block given its reference date
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>t</mi><mtext mathvariant="normal">new</mtext></msup><annotation encoding="application/x-tex">t^{\text{new}}</annotation></semantics></math>
+we can straightforwardly obtain the estimated
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>𝛉</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>t</mi><mtext mathvariant="normal">new</mtext></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\widehat{\boldsymbol{\theta}}(t^{\text{new}})</annotation></semantics></math>
+from the covariate vector
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐱</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>t</mi><mtext mathvariant="normal">new</mtext></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbf{x}(t^{\text{new}})</annotation></semantics></math>
+and the vector
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>𝛙</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\widehat{\boldsymbol{\psi}}</annotation></semantics></math>
+of the estimated parameters.</p>
 </div>
 <div class="section level4">
 <h4 id="ordinary-stationary-gev-model">Ordinary Stationary GEV model<a class="anchor" aria-label="anchor" href="#ordinary-stationary-gev-model"></a>
 </h4>
 <p>As a special case of TVGEV model, the ordinary stationary model is
-obtained with all three GEV parameters being constant <span class="math inline">\(\boldsymbol{\theta}(t) =
-\boldsymbol{\theta}\)</span> for all <span class="math inline">\(t\)</span>. Because the ML estimation and the
-profile-likelihood inference of this model can be taken over by many R
-packages, it will be used in the tests.</p>
+obtained with all three GEV parameters being constant
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛉</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>𝛉</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{\theta}(t) = \boldsymbol{\theta}</annotation></semantics></math>
+for all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.
+Because the ML estimation and the profile-likelihood inference of this
+model can be taken over by many R packages, it will be used in the
+tests.</p>
 </div>
 </div>
 <div class="section level3">
@@ -240,7 +321,7 @@ argument of the <code><a href="../reference/TVGEV.html">NSGEV::TVGEV</a></code> 
 function <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">stats::optim</a></code>, as do most EV packages. The gradient
 is not used in this case.</p></li>
 <li><p><code>estim = "nloptr"</code> uses the
-<code><a href="https://rdrr.io/pkg/nloptr/man/nloptr.html" class="external-link">nloptr::nloptr</a></code> function. It uses the exact gradient of the
+<code><a href="https://astamm.github.io/nloptr/reference/nloptr.html" class="external-link">nloptr::nloptr</a></code> function. It uses the exact gradient of the
 log-likelihood, which is computed by chain rule.</p></li>
 </ul>
 <p>The choice <code>estim = "nloptr"</code> should lead to a faster
@@ -258,76 +339,135 @@ statistical meaning; it is consistent with the use of the
 distribution of a “new” random variable, for instance moments.</p>
 <ul>
 <li><p>The <em>conditional</em> prediction relates to a specific
-“target” or “new” block <span class="math inline">\(b^{\text{new}}\)</span> or to the corresponding
-reference date <span class="math inline">\(t^{\text{new}}\)</span>. The
-unknown vector <span class="math inline">\(\boldsymbol{\theta}^{\text{new}} :=
-\boldsymbol{\theta}_{b^{\text{new}}}\)</span> of the GEV parameters can
-be estimated, and along with its estimate we have an estimate <span class="math inline">\(\widehat{\rho}(m)\)</span> of the return level
-corresponding to a given period of <span class="math inline">\(m\)</span> years <span class="math display">\[
+“target” or “new” block
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>b</mi><mtext mathvariant="normal">new</mtext></msup><annotation encoding="application/x-tex">b^{\text{new}}</annotation></semantics></math>
+or to the corresponding reference date
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>t</mi><mtext mathvariant="normal">new</mtext></msup><annotation encoding="application/x-tex">t^{\text{new}}</annotation></semantics></math>.
+The unknown vector
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>𝛉</mi><mtext mathvariant="normal">new</mtext></msup><mo>:=</mo><msub><mi>𝛉</mi><msup><mi>b</mi><mtext mathvariant="normal">new</mtext></msup></msub></mrow><annotation encoding="application/x-tex">\boldsymbol{\theta}^{\text{new}} :=
+\boldsymbol{\theta}_{b^{\text{new}}}</annotation></semantics></math> of
+the GEV parameters can be estimated, and along with its estimate we have
+an estimate
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\widehat{\rho}(m)</annotation></semantics></math>
+of the return level corresponding to a given period of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+years
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>:=</mo><msub><mi>q</mi><mtext mathvariant="normal">GEV</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>p</mi><mo>;</mo><mspace width="0.167em"></mspace><msup><mi>𝛉</mi><mtext mathvariant="normal">new</mtext></msup><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><mi>p</mi><mo>:=</mo><mn>1</mn><mo>−</mo><mn>1</mn><mi>/</mi><mi>m</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
 \rho(m) := q_{\text{GEV}}(p;\, \boldsymbol{\theta}^{\text{new}}),
 \qquad p := 1 - 1 / m.
-\]</span></p></li>
+</annotation></semantics></math></p></li>
 <li><p>The <em>unconditional</em> or <em>integrated</em> prediction
 relates to a period of time i.e., a collection of consecutive blocks
 given by its start date and its end date e.g., the next century. The
-Non-Stationary Return Level <span class="math inline">\(\rho_{\text{NS}}\)</span> of Parey et al. <span class="citation">(Parey, Sylvie and Hoang, Thi Thu Huong and
-Dacunha-Castelle, Didier 2010)</span> is defined as the level <span class="math inline">\(\rho\)</span> such that the (random) number of
-exceedances <span class="math inline">\(N\)</span> over <span class="math inline">\(\rho\)</span> has expectation <span class="math inline">\(1\)</span> on the chosen period.</p></li>
+Non-Stationary Return Level
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mtext mathvariant="normal">NS</mtext></msub><annotation encoding="application/x-tex">\rho_{\text{NS}}</annotation></semantics></math>
+of Parey et al. <span class="citation">(Parey, Sylvie and Hoang, Thi Thu
+Huong and Dacunha-Castelle, Didier 2010)</span> is defined as the level
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
+such that the (random) number of exceedances
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+over
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
+has expectation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>
+on the chosen period.</p></li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="inference-profile-likelihood">Inference: profile-likelihood<a class="anchor" aria-label="anchor" href="#inference-profile-likelihood"></a>
 </h4>
 <p>The profile-likelihood method uses an original implementation
-differing from the one usually retained. Given a confidence level <span class="math inline">\(1 - \alpha\)</span>, the usual method to find a
-confidence interval on the return level <span class="math inline">\(\rho(m)\)</span> for a fixed period <span class="math inline">\(m\)</span> consists in the following steps.</p>
+differing from the one usually retained. Given a confidence level
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1 -
+\alpha</annotation></semantics></math>, the usual method to find a
+confidence interval on the return level
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\rho(m)</annotation></semantics></math>
+for a fixed period
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+consists in the following steps.</p>
 <ul>
 <li><p>Re-parameterize the model by replacing one of the parameters by
-<span class="math inline">\(\rho\)</span>. The constant <span class="math inline">\(\psi_{\mu,0}\)</span> in the inverse link for the
-location <span class="math inline">\(\mu\)</span> is a good candidate
-when it exists. The model now depends on <span class="math inline">\(\rho\)</span> and on the vector say <span class="math inline">\(\boldsymbol{\psi}_{-}\)</span> of the <span class="math inline">\(p-1\)</span> remaining parameters.</p></li>
-<li><p>Consider the <em>profile log-likelihood</em> <span class="math inline">\(\ell_{\text{prof}}(\rho) := \log L[\rho,\,
-\widehat{\boldsymbol{\psi}}_{-}(\rho)]\)</span>, where <span class="math inline">\(\widehat{\boldsymbol{\psi}}_{-}(\rho)\)</span> is
-the value of <span class="math inline">\(\boldsymbol{\psi}_{-}\)</span>
-maximizing <span class="math inline">\(\ell(\rho, \,
-\boldsymbol{\psi}_{-})\)</span> with <span class="math inline">\(\rho\)</span> fixed. Then, find the values <span class="math inline">\(\rho\)</span> such that <span class="math display">\[ \ell_{\text{prof}}(\rho) = \max \ell - \delta
-\]</span> where <span class="math inline">\(\delta\)</span> relates to
-the quantile of the chi-square distribution with one degree of freedom
-according to <span class="math inline">\(\delta := q_{\chi^2(1)}(1 -
-\alpha) / 2\)</span>. Normally, two solutions <span class="math inline">\(\rho_{\text{L}}\)</span> and <span class="math inline">\(\rho_{\text{U}}\)</span> exist, one on both sides
-of the ML estimate <span class="math inline">\(\widehat{\rho}\)</span>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>.
+The constant
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ψ</mi><mrow><mi>μ</mi><mo>,</mo><mn>0</mn></mrow></msub><annotation encoding="application/x-tex">\psi_{\mu,0}</annotation></semantics></math>
+in the inverse link for the location
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math>
+is a good candidate when it exists. The model now depends on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
+and on the vector say
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝛙</mi><mo>−</mo></msub><annotation encoding="application/x-tex">\boldsymbol{\psi}_{-}</annotation></semantics></math>
+of the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">p-1</annotation></semantics></math>
+remaining parameters.</p></li>
+<li><p>Consider the <em>profile log-likelihood</em>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>ℓ</mo><mtext mathvariant="normal">prof</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>ρ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>:=</mo><mo>log</mo><mi>L</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>ρ</mi><mo>,</mo><mspace width="0.167em"></mspace><msub><mover><mi>𝛙</mi><mo accent="true">̂</mo></mover><mo>−</mo></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>ρ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\ell_{\text{prof}}(\rho) :=
+\log L[\rho,\, \widehat{\boldsymbol{\psi}}_{-}(\rho)]</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>𝛙</mi><mo accent="true">̂</mo></mover><mo>−</mo></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>ρ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\widehat{\boldsymbol{\psi}}_{-}(\rho)</annotation></semantics></math>
+is the value of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝛙</mi><mo>−</mo></msub><annotation encoding="application/x-tex">\boldsymbol{\psi}_{-}</annotation></semantics></math>
+maximizing
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>ℓ</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>ρ</mi><mo>,</mo><mspace width="0.167em"></mspace><msub><mi>𝛙</mi><mo>−</mo></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\ell(\rho, \,
+\boldsymbol{\psi}_{-})</annotation></semantics></math> with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
+fixed. Then, find the values
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
+such that
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>ℓ</mo><mtext mathvariant="normal">prof</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>ρ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>max</mo><mo>ℓ</mo><mo>−</mo><mi>δ</mi></mrow><annotation encoding="application/x-tex"> \ell_{\text{prof}}(\rho) = \max \ell - \delta </annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>δ</mi><annotation encoding="application/x-tex">\delta</annotation></semantics></math>
+relates to the quantile of the chi-square distribution with one degree
+of freedom according to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mo>:=</mo><msub><mi>q</mi><mrow><msup><mi>χ</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">\delta :=
+q_{\chi^2(1)}(1 - \alpha) / 2</annotation></semantics></math>. Normally,
+two solutions
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mtext mathvariant="normal">L</mtext></msub><annotation encoding="application/x-tex">\rho_{\text{L}}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mtext mathvariant="normal">U</mtext></msub><annotation encoding="application/x-tex">\rho_{\text{U}}</annotation></semantics></math>
+exist, one on both sides of the ML estimate
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\widehat{\rho}</annotation></semantics></math>.
 These solutions can be found by using a standard numerical method such
 as that implemented in the <code>uniroot</code> function. Note that the
-value of <span class="math inline">\(\widehat{\boldsymbol{\psi}}_{-}\)</span> depends
-on <span class="math inline">\(\rho\)</span>, and that each evaluation
-of the profile log-likelihood requires a <span class="math inline">\(p-1\)</span>-dimensional optimization.</p></li>
+value of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>𝛙</mi><mo accent="true">̂</mo></mover><mo>−</mo></msub><annotation encoding="application/x-tex">\widehat{\boldsymbol{\psi}}_{-}</annotation></semantics></math>
+depends on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>,
+and that each evaluation of the profile log-likelihood requires a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">p-1</annotation></semantics></math>-dimensional
+optimization.</p></li>
 </ul>
 <p>In <strong>NSGEV</strong>, we do not re-parameterise the model but
 rather solve constrained optimization problems. The upper end-point
-<span class="math inline">\(\rho_{\text{U}}\)</span> of the confidence
-interval is found by solving</p>
-<p><span class="math display">\[\begin{equation}
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mtext mathvariant="normal">U</mtext></msub><annotation encoding="application/x-tex">\rho_{\text{U}}</annotation></semantics></math>
+of the confidence interval is found by solving</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="left" style="text-align: left"><munder><mo>max</mo><mi>𝛙</mi></munder><mspace width="1.0em"></mspace><mi>ρ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo>;</mo><mi>𝛙</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">s.t.</mtext><mspace width="1.0em"></mspace><mo>ℓ</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝛙</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mo>max</mo><mo>ℓ</mo><mo>−</mo><mi>δ</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{equation}
   \label{eq:OptimConstr}
   \begin{array}{l}  
    \underset{\boldsymbol{\psi}}{\max} \quad \rho(m; \boldsymbol{\psi})\\
    \text{s.t.} \quad \ell(\boldsymbol{\psi}) \geq \max \ell - \delta
    \end{array}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\delta\)</span> is as above. A
-minimisation problem with the same constraint is solved to find the
-lower end-point <span class="math inline">\(\rho_{\text{L}}\)</span>. In
-both cases, we solve one constrained <span class="math inline">\(p\)</span>-dimensional problem.</p>
+\end{equation}</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>δ</mi><annotation encoding="application/x-tex">\delta</annotation></semantics></math>
+is as above. A minimisation problem with the same constraint is solved
+to find the lower end-point
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mtext mathvariant="normal">L</mtext></msub><annotation encoding="application/x-tex">\rho_{\text{L}}</annotation></semantics></math>.
+In both cases, we solve one constrained
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-dimensional
+problem.</p>
 <p>A major advantage of this alternative approach is that it does not
 require a re-parameterization. To a certain extend, we can consider that
 the optimisation routine will perform automatically a local
 re-parameterisation of the model in connection with the constraint. A
 drawback is that the convergence of the constrained optimisation is more
 difficult to check than that of the zero finding e.g., graphically.
-However it can happen in the classical method that the <span class="math inline">\(p-1\)</span>-dimensional optimisation fails,
-meaning that the profile-likelihood function evaluation is not correctly
-evaluated, with possible consequences on the zero-finding task. It is
-clear that the constraint in our method must be active at both optima,
-which provides a possible convergence diagnostic.</p>
+However it can happen in the classical method that the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">p-1</annotation></semantics></math>-dimensional
+optimisation fails, meaning that the profile-likelihood function
+evaluation is not correctly evaluated, with possible consequences on the
+zero-finding task. It is clear that the constraint in our method must be
+active at both optima, which provides a possible convergence
+diagnostic.</p>
 </div>
 </div>
 <div class="section level3">
@@ -338,8 +478,9 @@ Time Varying GEV models as special cases of Non-Stationary GEV models.
 Maybe the oldest of these, <strong>evd</strong> can only cope with a TV
 location only, the scale and shape parameters being unknown but fixed.
 Some packages can use more than one observation by block, a possibility
-known under the name of <em><span class="math inline">\(r\)</span>-largest values</em> analysis. This is
-not allowed in <strong>NSGEV</strong>.</p>
+known under the name of
+<em><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math>-largest
+values</em> analysis. This is not allowed in <strong>NSGEV</strong>.</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">package</th>
@@ -418,7 +559,7 @@ non-convergence message will be given.</p></li>
 are correct, with the same limitation on data and models.</p></li>
 </ul>
 <p>In both cases, the results should be compared to those returned by
-other EV packages. We will mainly use <strong>ismev</strong> <span class="citation">(Heffernan and Stephenson 2018)</span> and
+other EV packages. We will mainly use <strong>ismev</strong> <span class="citation">(<strong>Rpack_ismev?</strong>)</span> and
 <strong>extRemes</strong> <span class="citation">(Gilleland and Katz
 2016)</span>, because they are often cited for the analysis of TV
 models. Note that according to CRAN logs, <strong>evd</strong> <span class="citation">(Stephenson 2002)</span> remains (by far) the most
@@ -482,7 +623,7 @@ correct.</p></li>
 </tr>
 <tr class="odd">
 <td align="left"><strong>extRemes</strong></td>
-<td align="left">2.1-3</td>
+<td align="left">2.2</td>
 </tr>
 <tr class="even">
 <td align="left"><strong>ismev</strong></td>
@@ -490,7 +631,7 @@ correct.</p></li>
 </tr>
 <tr class="odd">
 <td align="left"><strong>NSGEV</strong></td>
-<td align="left">0.1.8</td>
+<td align="left">0.2.0</td>
 </tr>
 </tbody>
 </table>
@@ -500,19 +641,15 @@ correct.</p></li>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-Coles_ExtremeValues" class="csl-entry">
 Coles, Suart. 2001. <em><span class="nocase">An Introduction to
-Statistical Modelling of Extreme Values</span></em>. Springer. <a href="https://doi.org/10.1007/978-1-4471-3675-0" class="external-link">https://doi.org/10.1007/978-1-4471-3675-0</a>.
+Statistical Modeling of Extreme Values</span></em>. Springer. <a href="https://doi.org/10.1007/978-1-4471-3675-0" class="external-link">https://doi.org/10.1007/978-1-4471-3675-0</a>.
 </div>
 <div id="ref-Rpack_extRemes" class="csl-entry">
 Gilleland, Eric, and Richard W. Katz. 2016. <span>“<span class="nocase">extRemes 2.0: An Extreme Value Analysis Package in
 R</span>.”</span> <em>Journal of Statistical Software</em> 72 (8): 1–39.
 <a href="https://doi.org/10.18637/jss.v072.i08" class="external-link">https://doi.org/10.18637/jss.v072.i08</a>.
-</div>
-<div id="ref-Rpack_ismev" class="csl-entry">
-Heffernan, Janet E., and Alec G. Stephenson. 2018. <em><span class="nocase">ismev: An Introduction to Statistical Modeling of Extreme
-Values</span></em>. <a href="https://CRAN.R-project.org/package=ismev" class="external-link">https://CRAN.R-project.org/package=ismev</a>.
 </div>
 <div id="ref-PareyEtAl_DifRetLev" class="csl-entry">
 Parey, Sylvie and Hoang, Thi Thu Huong and Dacunha-Castelle, Didier.
@@ -522,7 +659,8 @@ Return Levels in the Climate Change Context</span>.”</span>
 </div>
 <div id="ref-Rpack_evd" class="csl-entry">
 Stephenson, Alec G. 2002. <span>“<span class="nocase">evd: Extreme Value
-Distributions</span>.”</span> <em>R News</em> 2 (2): 0. <a href="http://CRAN.R-project.org/doc/Rnews/" class="external-link">http://CRAN.R-project.org/doc/Rnews/</a>.
+Distributions</span>.”</span> <em><span>The R Journal</span></em> 2 (2):
+0. <a href="http://CRAN.R-project.org/doc/Rnews/" class="external-link">http://CRAN.R-project.org/doc/Rnews/</a>.
 </div>
 </div>
 </div>
@@ -530,9 +668,7 @@ Distributions</span>.”</span> <em>R News</em> 2 (2): 0. <a href="http://CRAN.R
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -545,16 +681,16 @@ Distributions</span>.”</span> <em>R News</em> 2 (2): 0. <a href="http://CRAN.R
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>

@@ -6,20 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TVGEV: Check Return Levels • NSGEV</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="TVGEV: Check Return Levels">
-<meta property="og:description" content="NSGEV">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -33,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -45,7 +44,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -62,10 +61,10 @@
       <a href="../articles/ProfLik.html">TVGEV: Check Profile Likelihood</a>
     </li>
     <li>
-      <a href="../articles/Venice.html">TVGEV: Check Venice Example</a>
+      <a href="../articles/simulatedBreaks.html">TVGEV: Check Simulated Trend</a>
     </li>
     <li>
-      <a href="../articles/simulatedBreaks.html">TVGEV: Check Simulated Trend</a>
+      <a href="../articles/Venice.html">TVGEV: Check Venice Example</a>
     </li>
   </ul>
 </li>
@@ -77,7 +76,7 @@
 <li>
   <a href="https://github.com/IRSN/NSGEV/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -88,7 +87,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -96,7 +95,7 @@
       <h1 data-toc-skip>TVGEV: Check Return Levels</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/HEAD/vignettes/NSRL.Rmd" class="external-link"><code>vignettes/NSRL.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/vignettes/NSRL.Rmd" class="external-link"><code>vignettes/NSRL.Rmd</code></a></small>
       <div class="hidden name"><code>NSRL.Rmd</code></div>
 
     </div>
@@ -119,18 +118,42 @@ consistent with the definition of the NSRL.</p>
 <p>The check relies on the <code>simulate</code> method for the
 <code>"TVGEV"</code> class. Firstly, an unconditional prediction is
 obtained for each period in a set of periods of interest. All these
-periods share the same beginning date, say <span class="math inline">\(t_0\)</span>. The period with number <span class="math inline">\(j\)</span> contains <span class="math inline">\(B_j\)</span> blocks where <span class="math inline">\(B_j\)</span> is the maximal horizon chosen via
-<code>period</code> (or set by default if <code>period</code> is not
-given). Remind that <code>predictUncond</code> generally computes the
-results for <em>several</em> periods with the same origin <span class="math inline">\(t_0\)</span> as required here. Secondly, a large
-number, say <span class="math inline">\(m\)</span>, of paths <span class="math inline">\(Y^{[i]}(t)\)</span> is generated from the model.
-For each predicted period <span class="math inline">\(j\)</span> and
-each path <span class="math inline">\(i\)</span>, we compute the number
-<span class="math inline">\(N^{[i]}(u_j)\)</span> of exceedances over
-the quantile <span class="math inline">\(u_j\)</span> corresponding to
-the period. We eventually take the average of the <span class="math inline">\(m\)</span> values <span class="math inline">\(N^{[i]}(u_j)\)</span> for <span class="math inline">\(i= 1\)</span> to <span class="math inline">\(m\)</span> and compare it to the expectation. If
-<span class="math inline">\(m\)</span> is large, then the average should
-be close to the expectation.</p>
+periods share the same beginning date, say
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>.
+The period with number
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+contains
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>B</mi><mi>j</mi></msub><annotation encoding="application/x-tex">B_j</annotation></semantics></math>
+blocks where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>B</mi><mi>j</mi></msub><annotation encoding="application/x-tex">B_j</annotation></semantics></math>
+is the maximal horizon chosen via <code>period</code> (or set by default
+if <code>period</code> is not given). Remind that
+<code>predictUncond</code> generally computes the results for
+<em>several</em> periods with the same origin
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>
+as required here. Secondly, a large number, say
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>,
+of paths
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>Y</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo stretchy="true" form="postfix">]</mo></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y^{[i]}(t)</annotation></semantics></math>
+is generated from the model. For each predicted period
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+and each path
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>,
+we compute the number
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>N</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo stretchy="true" form="postfix">]</mo></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>u</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N^{[i]}(u_j)</annotation></semantics></math>
+of exceedances over the quantile
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>u</mi><mi>j</mi></msub><annotation encoding="application/x-tex">u_j</annotation></semantics></math>
+corresponding to the period. We eventually take the average of the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+values
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>N</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo stretchy="true" form="postfix">]</mo></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>u</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N^{[i]}(u_j)</annotation></semantics></math>
+for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i=
+1</annotation></semantics></math> to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+and compare it to the expectation. If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+is large, then the average should be close to the expectation.</p>
 </div>
 <div class="section level2">
 <h2 id="example-annual-maxima-of-tx-in-dijon">Example: annual maxima of TX in Dijon<a class="anchor" aria-label="anchor" href="#example-annual-maxima-of-tx-in-dijon"></a>
@@ -158,63 +181,63 @@ following code computes the NSRL for several periods of time.</p>
 <td align="right">5</td>
 <td align="left">95%</td>
 <td align="right">37.15</td>
-<td align="right">36.15</td>
-<td align="right">38.22</td>
+<td align="right">35.97</td>
+<td align="right">38.38</td>
 </tr>
 <tr class="even">
 <td align="left">2020-01-01</td>
 <td align="right">10</td>
 <td align="left">95%</td>
 <td align="right">38.23</td>
-<td align="right">37.16</td>
-<td align="right">39.49</td>
+<td align="right">36.95</td>
+<td align="right">39.62</td>
 </tr>
 <tr class="odd">
 <td align="left">2020-01-01</td>
 <td align="right">20</td>
 <td align="left">95%</td>
 <td align="right">39.31</td>
-<td align="right">38.07</td>
-<td align="right">40.99</td>
+<td align="right">37.82</td>
+<td align="right">41.00</td>
 </tr>
 <tr class="even">
 <td align="left">2020-01-01</td>
 <td align="right">30</td>
 <td align="left">95%</td>
 <td align="right">40.04</td>
-<td align="right">38.48</td>
-<td align="right">42.00</td>
+<td align="right">38.33</td>
+<td align="right">42.01</td>
 </tr>
 <tr class="odd">
 <td align="left">2020-01-01</td>
 <td align="right">40</td>
 <td align="left">95%</td>
 <td align="right">40.65</td>
-<td align="right">38.76</td>
-<td align="right">42.87</td>
+<td align="right">38.71</td>
+<td align="right">42.89</td>
 </tr>
 <tr class="even">
 <td align="left">2020-01-01</td>
 <td align="right">50</td>
 <td align="left">95%</td>
 <td align="right">41.22</td>
-<td align="right">39.07</td>
-<td align="right">43.69</td>
+<td align="right">39.03</td>
+<td align="right">43.72</td>
 </tr>
 <tr class="odd">
 <td align="left">2020-01-01</td>
 <td align="right">70</td>
 <td align="left">95%</td>
 <td align="right">42.30</td>
-<td align="right">39.63</td>
-<td align="right">45.35</td>
+<td align="right">39.57</td>
+<td align="right">45.36</td>
 </tr>
 <tr class="even">
 <td align="left">2020-01-01</td>
 <td align="right">100</td>
 <td align="left">95%</td>
 <td align="right">43.90</td>
-<td align="right">40.30</td>
+<td align="right">40.29</td>
 <td align="right">47.85</td>
 </tr>
 </tbody>
@@ -223,19 +246,21 @@ following code computes the NSRL for several periods of time.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pu</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in plot.predict.TVGEV(pu): Inasmuch the plot is actually a 'ggplot', it</span></span>
 <span><span class="co">## is better to use the 'autoplot' method for consistency</span></span></code></pre>
-<p>For instance, for the period of <span class="math inline">\(B_j =
-40\)</span> years beginning at the date <code>"2020-01-01"</code>, the
-level <span class="math inline">\(u_j =40.65\)</span> Celsius is
-expected to be exceeded once (in average) across a large number of
-paths.</p>
+<p>For instance, for the period of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>B</mi><mi>j</mi></msub><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">B_j = 40</annotation></semantics></math>
+years beginning at the date <code>"2020-01-01"</code>, the level
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>j</mi></msub><mo>=</mo><mn>40.65</mn></mrow><annotation encoding="application/x-tex">u_j =40.65</annotation></semantics></math>
+Celsius is expected to be exceeded once (in average) across a large
+number of paths.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/check_predictUncond.html">check_predictUncond</a></span><span class="op">(</span><span class="va">res2</span>, newdateFrom <span class="op">=</span> <span class="st">"2020-01-01"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         5        10        20        30        40        50        70       100 </span></span>
 <span><span class="co">## 1.0175000 1.0113333 0.9903333 0.9911667 1.0005000 0.9916667 1.0031667 1.0260000</span></span></code></pre>
-<p>We use the default number of paths <span class="math inline">\(m =
-5000\)</span>, but only the <code>100</code> first paths are displayed
-on the plot. The results are in good accordance with the definition.</p>
+<p>We use the default number of paths
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>5000</mn></mrow><annotation encoding="application/x-tex">m = 5000</annotation></semantics></math>,
+but only the <code>100</code> first paths are displayed on the plot. The
+results are in good accordance with the definition.</p>
 </div>
 <div class="section level2">
 <h2 id="findings">Findings<a class="anchor" aria-label="anchor" href="#findings"></a>
@@ -247,9 +272,7 @@ is in good accordance with the definition.</p>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -262,16 +285,16 @@ is in good accordance with the definition.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>
