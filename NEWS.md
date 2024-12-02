@@ -2,7 +2,7 @@
 **NSGEV** Package News
 ======================
 
-# New in version 0.2.0 (pending)
+# New in version 0.2.0
 
 ## Enhancements
 
