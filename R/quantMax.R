@@ -55,7 +55,14 @@ quantMax <- function(object, ...) {
 ##'     tested yet.
 ##' 
 ##' @param confintMethod Character indicating the method to be used
-##'     for the confidence intervals on the quantiles.
+##'     for the confidence intervals on the quantiles. The "delta"
+##'     method a.k.a. Wald method) with the choice \code{"delta"} and
+##'     the profile likelihood with the choice \code{"proflik"}. The
+##'     choice \code{"PLODE"} corresponds to an experimental
+##'     computation of the profile likelihood intervals using Ordinary
+##'     Differential Equations. This choice is only possible with
+##'     \pkg{nieve >= 0.1.5} because the Hessian for the GEV
+##'     log-likelihood is needed.
 ##' 
 ##' @param out Character indicating what type of object will be
 ##'     returned. When \code{out} is \code{"data.frame"} the output
@@ -618,13 +625,25 @@ pMax.TVGEV <- function(object,
     }
     
     for (i_q in seq_along(q)) {
-        
-        F_q <- nieve::pGEV(q[i_q],
-                           loc = theta[ , 1],
-                           scale = theta[ , 2],
-                           shape = theta[ , 3],
-                           deriv = deriv)
-        
+       
+        ## This condition is necessary with nieve < 0.1.5 because the
+        ## 'hessian' argument of pGEV does not exist
+        if (hessian) {
+            F_q <- nieve::pGEV(q[i_q],
+                               loc = theta[ , 1],
+                               scale = theta[ , 2],
+                               shape = theta[ , 3],
+                               deriv = deriv,
+                               hessian = hessian)
+        } else {
+            F_q <- nieve::pGEV(q[i_q],
+                               loc = theta[ , 1],
+                               scale = theta[ , 2],
+                               shape = theta[ , 3],
+                               deriv = deriv)
+        }
+
+            
         res[i_q] <- prod(F_q)
         
         if (deriv) {
@@ -1012,7 +1031,7 @@ qMax.TVGEV <- function(object,
                        deriv = FALSE,
                        hessian = FALSE,
                        trace = 0,
-                       ...) {
+                       ...) {    
     
     if (hessian && !deriv) {
         stop("'hessian' can be TRUE only when 'deriv' is TRUE") 

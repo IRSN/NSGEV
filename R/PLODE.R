@@ -58,6 +58,8 @@
 ##' \doi{10.48550/arXiv.2404.02774}.
 ##'
 ##' @section Caution: This function is experimental.
+##'
+##' @importFrom utils packageVersion
 ##' 
 ##' @export
 ##' 
@@ -90,6 +92,11 @@ quantMaxPLODE <- function(object, date, probIni = 0.70, level = 0.95,
         stop("This function requires the use of the `deSolve' package")
     }
 
+    if (utils::packageVersion("nieve") < "0.1.5") {
+        stop("This function requires 'nieve >= 0.1.5'.",
+             "Use the GitHub version if needed: https://github.com/yvesdeville/nieve")
+    }
+    
     out <- match.arg(out)
     p <- object$p
     newDate <- date

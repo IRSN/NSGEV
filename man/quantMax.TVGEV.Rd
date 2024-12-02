@@ -32,7 +32,14 @@ of interest.}
 tested yet.}
 
 \item{confintMethod}{Character indicating the method to be used
-for the confidence intervals on the quantiles.}
+for the confidence intervals on the quantiles. The "delta"
+method a.k.a. Wald method) with the choice \code{"delta"} and
+the profile likelihood with the choice \code{"proflik"}. The
+choice \code{"PLODE"} corresponds to an experimental
+computation of the profile likelihood intervals using Ordinary
+Differential Equations. This choice is only possible with
+\pkg{nieve >= 0.1.5} because the Hessian for the GEV
+log-likelihood is needed.}
 
 \item{out}{Character indicating what type of object will be
 returned. When \code{out} is \code{"data.frame"} the output
