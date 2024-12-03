@@ -102,7 +102,8 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>In this example we use the annual maxima of the daily maximal temperature (TX) in Dijon (France) provided as the <code>TXMax_Dijon</code> data frame</p>
+<p>In this example we use the annual maxima of the daily maximal temperature (TX) in Dijon (France) provided as the <code>TXMax_Dijon</code> data frame. Note that the warnings and messages will not be shown in this example.</p>
+<p>The annual maxima in Celsius are given in in the column <code>TXMax</code></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/IRSN/NSGEV/" class="external-link">NSGEV</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">TXMax_Dijon</span><span class="op">)</span></span></code></pre></div>
@@ -113,8 +114,7 @@
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">## 4 1924  33.6</span></span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">## 5 1925  34.2</span></span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">## 6 1926  34.8</span></span></code></pre></div>
-<p>Note that the warnings and messages will not be shown in this example.</p>
-<p>A TVGEV model requires a date variable beginnings of the annual blocks</p>
+<p>A <code>TVGEV</code> model requires a date variable indicating the beginnings of the annual blocks. This variable can be easily created from the <code>Year</code> variable</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></span><span class="op">(</span><span class="va">TXMax_Dijon</span>, <span class="va">Date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">Year</span>, <span class="st">"-01-01"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">fit0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/TVGEV.html">TVGEV</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, response <span class="op">=</span> <span class="st">"TXMax"</span>, date <span class="op">=</span> <span class="st">"Date"</span>,</span>
@@ -125,7 +125,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">fit0</span><span class="op">)</span></span></code></pre></div>
 <p><img src="README_files/figure-gfm/Dijon0-1.png"><!-- --></p>
-<p>We can fit a model with a linear time trend</p>
+<p>We can fit a model with a linear time trend. A possibility is to use the <code>polynomX</code> function that creates a basis of polynomial functions for a given degree. This makes a variable <code>t1</code> available for the fit</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/TVGEV.html">TVGEV</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, response <span class="op">=</span> <span class="st">"TXMax"</span>, date <span class="op">=</span> <span class="st">"Date"</span>,</span>
 <span>              design <span class="op">=</span> <span class="fu"><a href="reference/polynomX.html">polynomX</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">Date</span>, degree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
@@ -136,7 +136,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit1</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="do">##        mu_0       mu_t1     sigma_0        xi_0 </span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## 32.93752186  0.01527735  1.84567285 -0.20471258</span></span></code></pre></div>
-<p>The <code>predict</code> method can be used to compute conditional return levels corresponding to a given year, be it a past or future year</p>
+<p>The <code>predict</code> method can be used to compute conditional return levels corresponding to a given year, be it a past or future year. Since a <code>TVGEV</code> object keeps trace of the design function(s) used the prediction does not require a data preparation step. By default the “new” dates at which the return levels are computed are those in the data frame used to fit the model</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></span></code></pre></div>
@@ -147,8 +147,8 @@
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit1</span>, newdate <span class="op">=</span> <span class="st">"2040-01-01"</span>, confint <span class="op">=</span> <span class="st">"proflik"</span>, trace <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="README_files/figure-gfm/DijonPred-3.png"><!-- --></p>
-<p>The default confidence intervals are obtained by using the “delta method” but profile likelihood intervals can be otained as well.</p>
-<p>Rather than considering the maximum on a specific block, one can consider the maximum <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math> on a larger period as sometimes called a <em>design life period</em>. The distribution of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math> is then no longer a GEV</p>
+<p>The default confidence intervals are obtained by using the “delta method” but profile likelihood intervals can be obtained as well by using the <code>confintMethod</code> argument (possibly abbreviated as <code>confint</code> of <code>conf</code>). Note that the <code>autoplot</code> method is to be used rather than the <code>plot</code> method, because the **ggplot2* package is used.</p>
+<p>Rather than the maximum on a specific block, one can consider the maximum <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math> on a larger period as sometimes called a <em>design life period</em>. The distribution of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math> is then no longer a GEV but the its quantiles can be computed with confidence intervals</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fl">2025</span><span class="op">:</span><span class="fl">2040</span>, <span class="st">"-01-01"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">qm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/quantMax.html">quantMax</a></span><span class="op">(</span><span class="va">fit1</span>, date <span class="op">=</span> <span class="va">date</span>, confint <span class="op">=</span> <span class="st">"proflik"</span>, trace <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
