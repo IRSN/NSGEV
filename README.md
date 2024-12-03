@@ -17,7 +17,10 @@ the quantile of the maximum on an arbitrary period.
 
 In this example we use the annual maxima of the daily maximal
 temperature (TX) in Dijon (France) provided as the `TXMax_Dijon` data
-frame
+frame. Note that the warnings and messages will not be shown in this
+example.
+
+The annual maxima in Celsius are given in in the column `TXMax`
 
 ``` r
 library(NSGEV)
@@ -32,9 +35,9 @@ head(TXMax_Dijon)
     ## 5 1925  34.2
     ## 6 1926  34.8
 
-Note that the warnings and messages will not be shown in this example.
-
-A TVGEV model requires a date variable beginnings of the annual blocks
+A `TVGEV` model requires a date variable indicating the beginnings of
+the annual blocks. This variable can be easily created from the `Year`
+variable
 
 ``` r
 df <- within(TXMax_Dijon, Date <- as.Date(paste0(Year, "-01-01")))
@@ -52,7 +55,9 @@ autoplot(fit0)
 
 ![](README_files/figure-gfm/Dijon0-1.png)<!-- -->
 
-We can fit a model with a linear time trend
+We can fit a model with a linear time trend. A possibility is to use the
+`polynomX` function that creates a basis of polynomial functions for a
+given degree. This makes a variable `t1` available for the fit
 
 ``` r
 fit1 <- TVGEV(data = df, response = "TXMax", date = "Date",
@@ -71,7 +76,11 @@ coef(fit1)
     ## 32.93752186  0.01527735  1.84567285 -0.20471258
 
 The `predict` method can be used to compute conditional return levels
-corresponding to a given year, be it a past or future year
+corresponding to a given year, be it a past or future year. Since a
+`TVGEV` object keeps trace of the design function(s) used the prediction
+does not require a data preparation step. By default the “new” dates at
+which the return levels are computed are those in the data frame used to
+fit the model
 
 ``` r
 pred <- predict(fit1)
@@ -93,11 +102,15 @@ autoplot(predict(fit1, newdate = "2040-01-01", confint = "proflik", trace = 0))
 ![](README_files/figure-gfm/DijonPred-3.png)<!-- -->
 
 The default confidence intervals are obtained by using the “delta
-method” but profile likelihood intervals can be otained as well.
+method” but profile likelihood intervals can be obtained as well by
+using the `confintMethod` argument (possibly abbreviated as `confint` of
+`conf`). Note that the `autoplot` method is to be used rather than the
+`plot` method, because the \*\*ggplot2\* package is used.
 
-Rather than considering the maximum on a specific block, one can
-consider the maximum $M$ on a larger period as sometimes called a
-*design life period*. The distribution of $M$ is then no longer a GEV
+Rather than the maximum on a specific block, one can consider the
+maximum $M$ on a larger period as sometimes called a *design life
+period*. The distribution of $M$ is then no longer a GEV but the its
+quantiles can be computed with confidence intervals
 
 ``` r
 date <- as.Date(paste0(2025:2040, "-01-01"))

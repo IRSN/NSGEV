@@ -21,16 +21,19 @@ period.
 
 In this example we use the annual maxima of the daily maximal
 temperature (TX) in Dijon (France) provided as the `TXMax_Dijon` data
-frame
+frame. Note that the warnings and messages will not be shown in this
+example.
 
+The annual maxima in Celsius are given in in the column `TXMax`
 
 ```{r, DijonDat, message=FALSE, warning=FALSE}
 library(NSGEV)
 head(TXMax_Dijon)
 ```
-Note that the warnings and messages will not be shown in this example.
 
-A TVGEV model requires a date variable beginnings of the annual blocks
+A `TVGEV` model requires a date variable indicating the beginnings of
+the annual blocks. This variable can be easily created from the `Year`
+variable
 
 
 ```{r Dijon0, message=FALSE, warning=FALSE}
@@ -41,7 +44,10 @@ coef(fit0)
 autoplot(fit0)
 ```
 
-We can fit a model with a linear time trend
+We can fit a model with a linear time trend. A possibility is 
+to use the `polynomX` function that creates a basis of polynomial
+functions for a given degree. This makes a variable `t1` available
+for the fit
 	
 ```{r, Dijon1, message=FALSE, warning=FALSE}
 fit1 <- TVGEV(data = df, response = "TXMax", date = "Date",
@@ -53,7 +59,12 @@ coef(fit1)
 ```
 
 The `predict` method can be used to compute conditional return levels
-corresponding to a given year, be it a past or future year
+corresponding to a given year, be it a past or future year. Since a 
+`TVGEV` object keeps trace of the design function(s) used the prediction
+does not require a data preparation step. By default the "new" dates
+at which the return levels are computed are those in the data frame
+used to fit the model
+
 
 ```{r, DijonPred, message=FALSE, warning=FALSE}
 pred <- predict(fit1)
@@ -63,12 +74,15 @@ autoplot(predict(fit1, newdate = "2040-01-01", confint = "proflik", trace = 0))
 ```
 
 The default confidence intervals are obtained by using the "delta
-method" but profile likelihood intervals can be otained as well.
+method" but profile likelihood intervals can be obtained as well by
+using the `confintMethod` argument (possibly abbreviated as `confint`
+of `conf`). Note that the `autoplot` method is to be used rather than
+the `plot` method, because the **ggplot2* package is used.
 
-
-Rather than considering the maximum on a specific block, one can
-consider the maximum $M$ on a larger period as sometimes called a *design
-life period*. The distribution of $M$ is then no longer a GEV 
+Rather than the maximum on a specific block, one can consider the
+maximum $M$ on a larger period as sometimes called a *design life
+period*. The distribution of $M$ is then no longer a GEV but the
+its quantiles can be computed with confidence intervals
 
 
 ```{r, DijonMax, warning=FALSE, message=FALSE}

@@ -4,5 +4,6 @@ TODO*
 ^\.Rproj\.user$
 ^README.Rmd
 ^README.md
+^README_files$
 ^\.github$
 ^vignettes/jss.bst
