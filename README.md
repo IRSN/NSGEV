@@ -25,15 +25,14 @@ The annual maxima in Celsius are given in in the column `TXMax`
 ``` r
 library(NSGEV)
 head(TXMax_Dijon)
+#>   Year TXMax
+#> 1 1921    NA
+#> 2 1922    NA
+#> 3 1923    NA
+#> 4 1924  33.6
+#> 5 1925  34.2
+#> 6 1926  34.8
 ```
-
-    ##   Year TXMax
-    ## 1 1921    NA
-    ## 2 1922    NA
-    ## 3 1923    NA
-    ## 4 1924  33.6
-    ## 5 1925  34.2
-    ## 6 1926  34.8
 
 A `TVGEV` model requires a date variable indicating the beginnings of
 the annual blocks. This variable can be easily created from the `Year`
@@ -44,16 +43,12 @@ df <- within(TXMax_Dijon, Date <- as.Date(paste0(Year, "-01-01")))
 fit0 <- TVGEV(data = df, response = "TXMax", date = "Date",
               loc = ~ 1)
 coef(fit0)
-```
-
-    ##     mu_0  sigma_0     xi_0 
-    ## 32.94616  1.87935 -0.19645
-
-``` r
+#>     mu_0  sigma_0     xi_0 
+#> 32.94616  1.87935 -0.19645
 autoplot(fit0)
 ```
 
-![](README_files/figure-gfm/Dijon0-1.png)<!-- -->
+![](man/figures/README-Dijon0-1.png)<!-- -->
 
 We can fit a model with a linear time trend. A possibility is to use the
 `polynomX` function that creates a basis of polynomial functions for a
@@ -66,14 +61,13 @@ fit1 <- TVGEV(data = df, response = "TXMax", date = "Date",
 autoplot(fit1)
 ```
 
-![](README_files/figure-gfm/Dijon1-1.png)<!-- -->
+![](man/figures/README-Dijon1-1.png)<!-- -->
 
 ``` r
 coef(fit1)
+#>        mu_0       mu_t1     sigma_0        xi_0 
+#> 32.93752186  0.01527735  1.84567285 -0.20471258
 ```
-
-    ##        mu_0       mu_t1     sigma_0        xi_0 
-    ## 32.93752186  0.01527735  1.84567285 -0.20471258
 
 The `predict` method can be used to compute conditional return levels
 corresponding to a given year, be it a past or future year. Since a
@@ -87,19 +81,19 @@ pred <- predict(fit1)
 autoplot(pred)
 ```
 
-![](README_files/figure-gfm/DijonPred-1.png)<!-- -->
+![](man/figures/README-DijonPred-1.png)<!-- -->
 
 ``` r
 autoplot(predict(fit1, confint = "proflik", trace = 0))
 ```
 
-![](README_files/figure-gfm/DijonPred-2.png)<!-- -->
+![](man/figures/README-DijonPred-2.png)<!-- -->
 
 ``` r
 autoplot(predict(fit1, newdate = "2040-01-01", confint = "proflik", trace = 0))
 ```
 
-![](README_files/figure-gfm/DijonPred-3.png)<!-- -->
+![](man/figures/README-DijonPred-3.png)<!-- -->
 
 The default confidence intervals are obtained by using the “delta
 method” but profile likelihood intervals can be obtained as well by
@@ -118,7 +112,7 @@ qm <- quantMax(fit1, date = date, confint = "proflik", trace = 0)
 autoplot(qm) + ggtitle("Quantile of the maximum on 2025-2040")
 ```
 
-![](README_files/figure-gfm/DijonMax-1.png)<!-- -->
+![](man/figures/README-DijonMax-1.png)<!-- -->
 
 By changing the value of the `design` argument one can different use
 basis functions such as splines with given knots.

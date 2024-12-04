@@ -181,9 +181,10 @@ in the whole vector of model parameters.
 %%---------------------
 As a typical use of the model above, one may consider a period
 $\mathcal{B}^\star$, most often a future period, that is: a set of
-future blocks $b^\star$. This period desgin life
-period~\cite{RootzenKatz_DesignLife}.  Due to the independence of the
-block maxima, the random maximum on the period, namely
+future blocks $b^\star$. This period is sometimes called the
+\textit{design life period}~\cite{RootzenKatz_DesignLife}. Due to the
+independence of the block maxima, the random maximum on the period,
+namely
 \begin{equation}
   \label{eq:DefM}
   M := \max_{b^\star \in \mathcal{B}^\star} \{ Y_{b^\star} \} 
@@ -196,7 +197,7 @@ has its distribution function given by the product
 where the vector
 $\bs{\theta}_{b^\star}= \bs{\theta}_{b^\star}(\bs{\psi})$ contains the
 GEV parameters for the block $b^\star$. This GEV parameter vector
-depends linearly on $\bs{\psi}$ and the on the vector $\m{x}_b$ of
+depends linearly on $\bs{\psi}$ and on the vector $\m{x}_b$ of
 covariates. Of course, $M$ does not in general follow a GEV
 distribution.
 
@@ -205,7 +206,7 @@ to a probability $p$ close to $1$.  For instance the period
 $\mathcal{B}^\star$ may correspond to the design life of a dike.
 Using observed block maxima of the river level, one can fit a TVGEV
 model and the quantile corresponding to $p=0.99$ can be used to find
-the height of the dike corresponding to $1\%$ risk of being exceeded
+the height of the dike corresponding to a $1\%$ risk of being exceeded
 during the period.
 
 The quantile $q_M(p)$ is the solution $m$ of the equation $F_M(m) = p$
@@ -213,7 +214,7 @@ which allows its determination by a zero-finding numerical method
 where $F_M(m)$ is evaluated by using (\ref{eq:FM}). It helps much in
 the zero-finding to provide an interval
 $[m_{\texttt{L}}, \, m_{\texttt{U}}]$ in which the quantile is granted
-to lie. This actually required to use the R function
+to lie. This is actually required to use the R function
 \code{uniroot}. Fortunately, one can simply use here
 \begin{equation*}
   m_{\texttt{U}} := q_{\texttt{GEV}}(p, \, \mu_{\texttt{U}}, \,
@@ -250,7 +251,7 @@ $\bs{\theta}_{b^\star}$ as its rows. Then
     \end{array}
   \right]
 \end{equation*}
-where each ot the three blocks at r.h.s. is $B^\star \times 1$ and
+where each of the three blocks at r.h.s. is $B^\star \times 1$ and
 is the product of a ``design matrix'' with $B^\star$ rows by
 a subvector of the model parameter vector $\bs{\psi}$.
 
@@ -396,7 +397,7 @@ aim, let us introduce some notations.
 \item Let $\m{G}$ be the $B^\star \times 3$ Jacobian matrix of the
   vector-valued function with value
   $[\log F_{\texttt{GEV}, b^\star}]_{b^\star}$, the differentiation
-  being w.r.t. the three GEV parameters $\bs{\theta}^{[i]}$.
+  being w.r.t. the three GEV parameters $\bs{\theta}^{[i]}$. So
   \begin{equation*}
     G[b^\star, \, i] = \partial_{\theta^{[i]}}
     \log F_{\texttt{GEV},b{^\star}}, \qquad 1 \leqslant b^\star \leqslant B^\star,
@@ -411,11 +412,10 @@ Then  by chain rule we get as above in~(\ref{eq:CrossProd})
   \partial_{\bs{\psi}_{\m{k}_i}} \log F_{M}
   = \m{G}[ \:, \, i]^{\top}\m{X}^{\theta^{[i]}}, \qquad i=1, \, 2, \, 3.
 \end{equation*}
-If $\theta^{[i]}$ is specified as being constant across blocks then
+If $\theta^{[i]}$ is specified as being constant across blocks, then
 $\m{k}_i$ has length one and the matrix cross-product is simply the
 sum of the column $i$ of $\m{G}$. This will typically be the case for
 the GEV shape parameter~$\xi$.
-
 
 The second-order derivatives of $\log F_{\texttt{GEV}}$ can be stored
 as a three-dimensional array $\m{H}$ with dimension
