@@ -2,9 +2,7 @@ name: R-CMD-INSTALL
       
 on:
   push:
-    branches: [main, master]
   pull_request:
-    branches: [main, master]
     
 jobs:
   release:
