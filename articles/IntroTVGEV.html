@@ -98,7 +98,7 @@ Deville</h4>
             
             <h4 data-toc-skip class="date">2024-12-10</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/vignettes/IntroTVGEV.Rmd" class="external-link"><code>vignettes/IntroTVGEV.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/0.2.0/vignettes/IntroTVGEV.Rmd" class="external-link"><code>vignettes/IntroTVGEV.Rmd</code></a></small>
       <div class="hidden name"><code>IntroTVGEV.Rmd</code></div>
 
     </div>
@@ -1324,12 +1324,12 @@ retrieved if needed by first using <code>estim = "none"</code>.</p>
 <span>          loc <span class="op">=</span> <span class="op">~</span> <span class="va">t1</span> <span class="op">+</span> <span class="va">t1_1970</span>,</span>
 <span>          estim <span class="op">=</span> <span class="st">"nloptr"</span>,</span>
 <span>          coefLower <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xi_0"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.15</span><span class="op">)</span>, coefUpper <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xi_0"</span> <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in MLE.TVGEV(object = tv, y = NULL, psi0 = psi0, estim = estim, : some</span></span>
-<span><span class="co">## estimated parameters at the bounds, inference results are misleading</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in MLE.TVGEV(object = tv, y = NULL, psi0 = psi0, estim = estim, :</span></span>
+<span><span class="co">## convergence not reached in optimisation</span></span></code></pre>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fitNBreak2</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##        mu_0       mu_t1  mu_t1_1970     sigma_0        xi_0 </span></span>
-<span><span class="co">## 32.02318423 -0.02420594  0.07812270  1.72977928 -0.15000000</span></span></code></pre>
+<pre><code><span><span class="co">##       mu_0      mu_t1 mu_t1_1970    sigma_0       xi_0 </span></span>
+<span><span class="co">##         NA         NA         NA         NA         NA</span></span></code></pre>
 <p>The GEV shape parameter
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ξ</mi><annotation encoding="application/x-tex">\xi</annotation></semantics></math>
 is usually taken as constant, not time-varying; inasmuch the
