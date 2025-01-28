@@ -988,11 +988,15 @@ TVGEV <- function(data,
 
     tv[["design"]] <- mc[["design"]]
 
+    allVars <- union(union(all.vars(loc), all.vars(scale)),
+                     all.vars(shape))
+    
     if (!is.null(tv$design)) {
         if (is.call(tv$design)) {
             dfAll <- as.data.frame(eval(tv$design, envir = data))
-            dfAll <- data.frame(data[ , response], dfAll)
-            colnames(dfAll) <- c(response, colnames(dfAll)[-1])
+            ## dfAll <- data.frame(data[ , response], dfAll)
+            dfAll <- data.frame(data, dfAll)
+            ## colnames(dfAll) <- c(response, colnames(dfAll)[-1])
         } else {
             dfAll <- tv$design
         }
