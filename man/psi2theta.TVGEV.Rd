@@ -35,9 +35,9 @@ the names of \code{psi} match the \code{parNames} element of
 \item{\dots}{Not used yet.}
 }
 \value{
-A matrix with \code{length(date)} rows and \code{3} colums.
-The columns contain the location, the scale and the shape GEV parameters
-in that order.
+A matrix with \code{length(date)} rows and \code{3}
+    colums.  The columns contain the location, the scale and the
+    shape GEV parameters in that order.
 }
 \description{
 Compute the GEV parameters for the marginal distributions of a

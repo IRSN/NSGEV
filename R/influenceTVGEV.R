@@ -12,7 +12,7 @@
 ##' 
 ##' @title Diagnostic of Influence for \code{TVGEV} Objects
 ##' 
-##' @param model A \code{TVGEV} object. 
+##' @param model A \code{TVGEV} object.
 ##'
 ##' @param what A function with one argument \code{object} defining or
 ##'     extracting the (numeric) quantity for which the influence is
@@ -24,7 +24,7 @@
 ##'
 ##' @param which Identifies the observation which influence will be
 ##'     analysed. Can be: an integer giving the observation, the
-##'     character \code{"min"}, the character{"max"}, a character that
+##'     character \code{"min"}, the character \code{"max"}, a character that
 ##'     can be coerced to a date, or an object with class
 ##'     \code{"Date"} that identifies the observation.  This argument
 ##'     must define an observation existing in the data frame used to

@@ -26,9 +26,9 @@
 ##'
 ##' @param \dots Not used yet.
 ##'
-##' @return A matrix with \code{length(date)} rows and \code{3} colums.
-##' The columns contain the location, the scale and the shape GEV parameters
-##' in that order.
+##' @return A matrix with \code{length(date)} rows and \code{3}
+##'     colums.  The columns contain the location, the scale and the
+##'     shape GEV parameters in that order.
 ##'
 ##' @seealso The \code{\link{GEV}} for the GEV probability functions.
 ##'
@@ -447,6 +447,7 @@ MLE.TVGEV <- function(object,
                               hessian = FALSE,
                               opts = opts,
                               object = object))
+
         
         if (!inherits(res$fit, "try-error")) {
             if (res$fit$status > 0) {
@@ -485,19 +486,29 @@ MLE.TVGEV <- function(object,
         ##                       x = res$estimate, deriv = FALSE,
         ##                       object = object)
 
-        res$hessian <- optimHess(par = res$estimate,
-                                 fn = negLogLikFun,
-                                 deriv = FALSE,
-                                 object = object)
-        
-        vcov <- try(solve(res$hessian), silent = TRUE)
-        
-        if (!inherits(vcov, "try-error")) {
-            rownames(vcov) <- colnames(vcov) <- object$parNames
-            res$vcov <- vcov
-            res$sd <- sqrt(diag(vcov))
+        ## Using exact derivatives seems better, all in all.
+        if (TRUE) {    
+            nllOpt <- negLogLikFun(psi = res$estimate,
+                                   deriv = TRUE, hessian = TRUE,
+                                   object = object)
+            res$hessian <- nllOpt$hessian
+        } else {
+            res$hessian  <- optimHess(par = res$estimate,
+                                      fn = negLogLikFun,
+                                      deriv = FALSE,
+                                      object = object)
         }
-    }
+        vcov <- try(solve(res$hessian), silent = TRUE)
+     
+        if (inherits(vcov, "try-error")) {
+            warning("singular Hessian")
+            vcov <- array(NA_real_, dim = c(p, p))
+        }
+        rownames(vcov) <- colnames(vcov) <- object$parNames
+        res$vcov <- vcov
+        res$sd <- sqrt(diag(vcov))
+        
+    } 
     
     if (parTrack) {
         tpsi <-  matrix(trackEnv$psi, ncol = object$p,
@@ -1067,7 +1078,36 @@ TVGEV <- function(data,
                 "'estim' is set to \"nloptr\". They will be ignored.")
     }
 
-   
+    if (TRUE) {
+        
+        lb <- rep(-Inf, p)
+        
+        if (length(coefLower)) {
+            lm <- match(names(coefLower), tv$parNames)
+            if ((length(lm) != length(coefLower)) ||
+                any(is.na(lm))) {
+                stop("when given, 'coefLower' must be a named vector ",
+                     "with suitable element names")
+            }
+            lb[lm] <- coefLower
+        } 
+        
+        ub <- rep(Inf, p)
+        
+        if (length(coefUpper)) {
+            um <- match(names(coefUpper), tv$parNames)
+            if ((length(um) != length(coefUpper)) ||
+                any(is.na(lm))) {
+                stop("when given, 'coefUpper' must be a named vector ",
+                     "with suitable element names")
+            }
+            ub[lm] <- coefUpper
+        }
+    
+        tv$coefLower <- lb
+        tv$coefUpper <- ub
+    }
+    
     ## print(dl <- dim(tv$X[["loc"]]))
     ## print(ds <- dim(tv$X[["scale"]]))
     

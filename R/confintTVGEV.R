@@ -200,7 +200,7 @@ confint.TVGEV <- function(object,
         for (k in 1L:object$p) {
             
             if (trace) cat(sprintf("\n\no Finding CI for \"%s\"\n", object$parNames[k]))
-
+            
             ilevPrec <- 1L
             
             for (ilev in seq_along(level)) {
@@ -226,6 +226,8 @@ confint.TVGEV <- function(object,
                 resL <- try(nloptr::nloptr(x0 = psi0,
                                            eval_f = f,
                                            eval_g_ineq = g,
+                                           lb = object$coefLower,
+                                           ub = object$coefUpper,
                                            k = k, level = lev, chgSign = FALSE,
                                            opts = opts1,
                                            object = object))
@@ -275,6 +277,8 @@ confint.TVGEV <- function(object,
                 resU <- try(nloptr::nloptr(x0 = psi0,
                                            eval_f = f,
                                            eval_g_ineq = g,
+                                           lb = object$coefLower,
+                                           ub = object$coefUpper,
                                            k = k, level = lev, chgSign = TRUE,
                                            opts = opts1,
                                            object = object))
