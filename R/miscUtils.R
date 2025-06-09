@@ -308,3 +308,86 @@ testNumDeriv <- function(der, derNum, PREC = 0.05,
     (max(abs(der - derNum)) < small / PREC) ||
         (max(abs(der - derNum) / (abs(der) + 1e-9)) < small / PREC)
 }
+
+##' 
+##' @title Check New Data for Prediction
+##' 
+##' @param object A \code{TSGEV} object.
+##'
+##' @param newdata An atomic vector or a data frame providing the data
+##'     for a prediction.
+##'
+##' @param design Not used yet.
+##' 
+##' @return A data frame with the variables required for prediction.
+##'     This must always contain a column with is name given by
+##'     \code{object$date} and with class \code{"Date"}. If
+##'     \code{object} contains \code{TSVars}, the corresponding
+##'     variables must be provided as well, but with no check on their
+##'     class.
+##'
+##' @keywords internal
+##' 
+## @examples
+## df <- within(TXMax_Dijon, Date <- as.Date(sprintf("%4d-01-01", Year)))
+## fit <- TVGEV(data = df, response = "TXMax", date = "Date",
+##              design = breaksX(date = Date, breaks = "1970-01-01", degree = 1),
+##              loc = ~ t1 + t1_1970)
+## try(checkNewdata.TVGEV(fit, data.frame(date = "2026-01-20")))
+## checkNewdata.TVGEV(fit, data.frame(Date = "2026-01-20"))
+## 
+## \dontrun{
+##    data(fremantle)
+##    df <- within(fremantle, Date <- as.Date(paste0(Year, "-01-01")))
+##    fit <- TVGEV(data = df, response = "SeaLevel", date = "Date",
+##                 design = polynomX(date = Date, degree = 1),
+##                 loc = ~ t1 + SOI, trace = 2)
+##    try(checkNewdata.TVGEV(fit, data.frame(Date = "2026-01-20", x = 2)))
+##    checkNewdata.TVGEV(fit, data.frame(Date = "2026-01-20", SOI = 2.1))
+## }
+## 
+checkNewdata.TVGEV <- function(object, newdata = NULL, design = FALSE) {
+
+    
+    if (length(object$TSVars)) {
+        if (is.null(newdata)) {
+            newdata <- object$data
+            fDate <- object$fDate
+        }
+        newdata <- as.data.frame(newdata)
+        requiredVars <- c(object$date, object$TSVars)
+        notFound <- setdiff(requiredVars, names(newdata))
+        if (length(notFound)) {
+            stop("Required variables not found: ",
+                 paste(notFound, collapse = ", "))
+        }
+    } else {
+        if (is.null(newdata)) {
+            newdata <- object$data[[object$date]]
+            fDate <- object$fDate
+        }
+        if (is.atomic(newdata)) {
+            newdata <- data.frame(as.Date(newdata))
+            colnames(newdata) <- object$date
+            fDate <- format(newdata[[object$date]])
+        } else {
+            newdata <- as.data.frame(newdata)
+            if (ncol(newdata) == 1) {
+                if (names(newdata) != object$date)
+                    stop("Bad column name in 'newdata'.",
+                         " Expecting '", object$date, "'.")
+                newdata[[object$date]] <- as.Date(newdata[[object$date]])
+            } else {
+                if (is.na(m <- match(object$date, names(newdata))))
+                    stop("Bad column names in 'newdata'.",
+                         " Expecting to find '", object$date, "'.")
+                newdata[[object$date]] <- as.Date(newdata[[object$date]])
+                newdata <- newdata[, m, drop = FALSE]
+            }
+            fDate <- format(newdata[[object$date]])
+        }
+           
+    }
+
+    newdata
+}

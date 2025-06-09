@@ -45,7 +45,7 @@ the RL computed with the estimated parameters in \code{object}.}
 
 \item{trace}{Integer level of verbosity.}
 
-\item{...}{Arguments to be passed to \code{bs}.}
+\item{...}{Arguments to be passed to the \code{bs} method.}
 }
 \value{
 A data frame or an array with the RL and confidence limits

@@ -47,7 +47,7 @@
 ##'
 ##' @param trace Integer level of verbosity.
 ##'
-##' @param ... Arguments to be passed to \code{bs}. 
+##' @param ... Arguments to be passed to the \code{bs} method. 
 ##'
 ##' @return A data frame or an array with the RL and confidence limits
 ##' for each combination of \emph{date}, \emph{period} and
@@ -78,6 +78,7 @@
 ##'
 ##' @importFrom utils getS3method
 ##' @importFrom nieve qGEV
+##' @import data.table
 ##' @importFrom reshape2 melt
 ##' @importFrom stats predict qnorm
 ##' @method predict TVGEV
@@ -99,6 +100,8 @@ predict.TVGEV <- function(object,
                           trace = 1L,
                           ...) {
 
+    Date <- Period <- NULL ## Avoid 'NOTE' in `R CMD check`
+    
     dots <- match.call(expand.dots = FALSE)$...
     confintMethod <- match.arg(confintMethod)
     
@@ -117,7 +120,6 @@ predict.TVGEV <- function(object,
         }
     }
 
-    
     if (!all(object$isCst)) {
         if (is.null(newdate)) {
             message("Since 'object' is really time-varying, the Return Levels\n",
@@ -152,17 +154,19 @@ predict.TVGEV <- function(object,
     nLevel <- length(level)
     
     if (is.null(newdate)) {
-        newdate <- selectDate(object$data[ , object$date])
+        if (length(object$TSVars) == 0) {
+            newdate <- selectDate(object$data[ , object$date])
+        } else {
+            stop("Since `object` uses TSVars, a data frame must be given ",
+                 "with the columns '", object$date, "' and ",
+                 paste(paste0("'", object$TSVars, "'"), collapse = ", "), ".")
+            
+        }
     }
-
-    ## OLD CODE working with else            
-    ## X <- object$X
-    ## n <- object$n
-    ## ind <- object$ind
-    ## newdate <- object$data[ , object$date]
-    ## fDate <- object$fDate
-
-    n <- length(newdate)
+    newdate <- as.data.frame(newdate)
+    names(newdate) <- object$date
+    ## newdate <- data.frame(Id = 1:nrow(newdate), newdate)
+    n <- nrow(newdate)
     
     ## special case for non TV model
     if (!all(object$isCst)) {
@@ -170,7 +174,13 @@ predict.TVGEV <- function(object,
         X <- L$X
     } else X <- NULL
 
-    fDate <- format(newdate)
+    ## Attempt to make rownames. Not successful and maybe not useful...
+    fDate <- format(newdate[[object$date]])
+    for (nm in object$TSVars) {
+        fDate <- paste0(fDate, ", nm = ", format(newdate[[nm]]))
+    }
+    ## ... so by-pass
+    fDate <- 1:n
     
     theta <- psi2theta(object, date = newdate, deriv = TRUE)
 
@@ -186,7 +196,6 @@ predict.TVGEV <- function(object,
                                        scale = theta[ , 2],
                                        shape = theta[ , 3])
         }
-       
         
     } else if (method == "delta") {
         
@@ -398,7 +407,7 @@ predict.TVGEV <- function(object,
              
              theta <- psi2theta(model = object,
                                 psi = psi,
-                                date = newdate[iDate],
+                                date = newdate[iDate, ],
                                 deriv = TRUE, checkNames = FALSE)
              
              RL <- nieve::qGEV(prob, theta[ , 1], theta[ , 2],
@@ -560,7 +569,8 @@ predict.TVGEV <- function(object,
                             if (trace && (optNum > 1)) {
                                 cat("        <retrying optimisation!>\n")
                             }
-                            
+
+                            ## XXX remove 'try'
                             resOpt <- try(nloptr::nloptr(x0 = psi0,
                                                          eval_f = f,
                                                          eval_g_ineq = g,
@@ -655,48 +665,94 @@ predict.TVGEV <- function(object,
     
     if (out == "data.frame") {
         
-        if (requireNamespace("reshape2", quietly = TRUE)) {
-            
-            if (method == "none") {
-                RL <- melt(RL, value.name = "Quant", varnames = c("Date", "Period"))
-                RL$Date <- as.Date(RL$Date)
-            } else {
-                ## ====================================================================
-                ## UGGLY CODE: there must be a simpler and more
-                ## efficient way of doing that. The problem is that we
-                ## want to drop the " Type" dimension but not the
-                ## "Level" dimension even when it has no extension
-                ## ====================================================================
-                
-                df <- list()
-                for (nm in c("Quant", "L", "U")) {
-                    RL1 <- RL[ , , nm, , drop = FALSE]
-                    df[[nm]]  <- melt(RL1,
-                                      value.name = nm,
-                                      varnames = c("Date", "Period", "Type", "Level"))
-                }
-                RL <- data.frame(df[["Quant"]][, c("Date", "Period", "Level", "Quant")],
-                                 L = df[["L"]]$L, U = df[["U"]]$U)
-                
-                RL$Date <- as.Date(RL$Date)
-                ind <- with(RL, order(Date, Level, Period))
-                RL <- RL[ind, , drop = FALSE]
-            }
-            
+        if (method == "none") {            
+            RLDT <- RL
+            newdate <- data.frame(Id = 1:nrow(newdate), newdate)
+            newdateDT <- as.data.table(newdate)
+            dim(RLDT) <- c(dim(RL), 1)
+            dimnames(RLDT) <- c(dimnames(RL), "Drop" = 1)
+            RLDT <- as.data.table(RLDT)
+            RLDT[["Drop"]] <- NULL
+            RLDT[ , Date := as.integer(Date)]
+            RLDT[ , Period := as.numeric(Period)]
+            setnames(RLDT, c("Date", "Period", "value"), c("Id", "Period", "Quant"))
+            RLDT <- RLDT[newdateDT, on = "Id"]
+            RLDT[["Id"]] <- NULL
+            RL <- as.data.frame(RLDT)
         } else {
-            stop("the package 'reshape2' could not be used")
+            newdate <- data.frame(Id = 1:nrow(newdate), newdate)
+            RLDT <- as.data.table(RL)
+            newdateDT <- as.data.table(newdate)
+            RLDT[["Id"]] <- as.integer(RLDT[["Date"]])
+            RLDT[["Date"]] <- NULL
+            
+            ## RLDT[["Id"]] <- as.integer(RLDT[[object$date]])
+            ## Merge
+            RLDT <- RLDT[newdateDT, on = "Id"]
+            RLDT <- dcast(RLDT, ... ~ Type)
+            
+            RL <- as.data.frame(RLDT)
+            RL$Period <- as.numeric(RL$Period)
+            RLDT[["Id"]] <- NULL
         }
 
         class(RL) <- c("predict.TVGEV", "data.frame")
+        
     }
 
     ## use fDate to display information in title?
     attr(RL, "title") <- "Conditional Return Levels"
     attr(RL, "diagno") <- diagno
     attr(RL, "type") <- "conditional"
+    attr(RL, "TSVars") <- object$TSVars
     
     return(RL)
-
+    
+    ## STEP TO GET RID of the 'reshape2' package
+    ## ##' @importFrom reshape2 melt
+    
+    ##     if (requireNamespace("reshape2", quietly = TRUE)) {
+    
+    ##         if (method == "none") {
+    ##             RL <- melt(RL, value.name = "Quant", varnames = c("Date", "Period"))
+    ##             RL$Date <- as.Date(RL$Date)
+    ##         } else {
+    ##             ## ====================================================================
+    ##             ## UGGLY CODE: there must be a simpler and more
+    ##             ## efficient way of doing that. The problem is that we
+    ##             ## want to drop the " Type" dimension but not the
+    ##             ## "Level" dimension even when it has no extension
+    ##             ## ====================================================================
+    ##
+    ##             df <- list()
+    ##             for (nm in c("Quant", "L", "U")) {
+    ##                 RL1 <- RL[ , , nm, , drop = FALSE]
+    ##                 df[[nm]]  <- melt(RL1,
+    ##                                   value.name = nm,
+    ##                                   varnames = c("Date", "Period", "Type", "Level"))
+    ##             }
+    ##             RL <- data.frame(df[["Quant"]][, c("Date", "Period", "Level", "Quant")],
+    ##                              L = df[["L"]]$L, U = df[["U"]]$U)
+    ##
+    ##             RL$Date <- as.Date(RL$Date)
+    ##             ind <- with(RL, order(Date, Level, Period))
+    ##             RL <- RL[ind, , drop = FALSE]
+    ##         }
+    ##
+    ##     } else {
+    ##         stop("the package 'reshape2' could not be used")
+    ##     }
+    ##
+    ##     class(RL) <- c("predict.TVGEV", "data.frame")
+    ## }
+    
+    ## ## use fDate to display information in title?
+    ## attr(RL, "title") <- "Conditional Return Levels"
+    ## attr(RL, "diagno") <- diagno
+    ## attr(RL, "type") <- "conditional"
+    
+    ## return(RL)
+    
     
 }
 
@@ -896,6 +952,7 @@ autoplot.predict.TVGEV <- function(object, bw = TRUE, ... ) {
     } 
 
     confLev <- attr(object, "confLevel")
+    TSVars <- attr(object, "TSVars")
     
     if (nd <- length(unique(object$Date)) > 6L) {
         stop(nd, "dates found in 'object'. The maximum allowed is 6")
@@ -908,27 +965,27 @@ autoplot.predict.TVGEV <- function(object, bw = TRUE, ... ) {
     if (!is.null(object$L) && !is.null(object$U)) {
         g1 <- g1  + geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U,
                                               group = Level,
-                                    ## colour = Level,
-                                    fill = Level),
+                                              ## colour = Level,
+                                              fill = Level),
                                 ## group = type,
                                 alpha = 0.2)
-         if (bw) {
-             g1 <- g1 +
-                 geom_line(mapping = aes(x = Period, y = L, group = Level,
-                                         linetype = Level),
-                           colour = "gray20",
-                           alpha = 0.8)
+        if (bw) {
+            g1 <- g1 +
+                geom_line(mapping = aes(x = Period, y = L, group = Level,
+                                        linetype = Level),
+                          colour = "gray20",
+                          alpha = 0.8)
              g1 <- g1 +
                  geom_line(mapping = aes(x = Period, y = U, group = Level,
                                          linetype = Level),
                            colour = "gray20",
                            alpha = 0.8)
-         } else {
-             g1 <- g1 + geom_line(mapping = aes(x = Period, y = L, group = Level),
-                                  alpha = 0.2)
-             g1 <- g1 + geom_line(mapping = aes(x = Period, y = U, group = Level),
-                                  alpha = 0.2)
-         }
+        } else {
+            g1 <- g1 + geom_line(mapping = aes(x = Period, y = L, group = Level),
+                                 alpha = 0.2)
+            g1 <- g1 + geom_line(mapping = aes(x = Period, y = U, group = Level),
+                                 alpha = 0.2)
+        }
         
     }
     
@@ -958,8 +1015,10 @@ autoplot.predict.TVGEV <- function(object, bw = TRUE, ... ) {
     
     g1 <- g1 + xlab("Period") + ylab("Quantile") 
 
-    if (attr(object, "type") == "conditional") {       
-        g1 <- g1 + facet_wrap( ~ Date)
+    if (attr(object, "type") == "conditional") {
+        fm <- as.formula(paste("~", paste(c(" Date", TSVars), collapse  = "+")))
+        print(fm)
+        g1 <- g1 + facet_wrap(fm, labeller = label_both)
     }
     
     g1 <- g1  + ggtitle(attr(object, "title"))

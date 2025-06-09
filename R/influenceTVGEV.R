@@ -24,12 +24,12 @@
 ##'
 ##' @param which Identifies the observation which influence will be
 ##'     analysed. Can be: an integer giving the observation, the
-##'     character \code{"min"}, the character{"max"}, a character that
-##'     can be coerced to a date, or an object with class
-##'     \code{"Date"} that identifies the observation.  This argument
-##'     must define an observation existing in the data frame used to
-##'     create the object. So it can not be used e.g. to define a
-##'     future date.
+##'     character \code{"min"}, the character \code{"max"}, a
+##'     character that can be coerced to a date, or an object with
+##'     class \code{"Date"} that identifies the observation.  This
+##'     argument must define an observation existing in the data frame
+##'     used to create the object. So it can not be used e.g. to
+##'     define a future date.
 ##'
 ##' @param how Character specifying the type of (finite-sample)
 ##'     influence curve to use. For now only the only possibility is

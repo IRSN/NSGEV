@@ -4,8 +4,9 @@
 This is a temporary reminder list by YD. Not a planning for new
 development!
 
-- [ ] Make an alias of the `anova` method under a better name making
-      clear that this is for a Likelihood Ratio test.
+- [ ] **`anova` name** Make an alias of the `anova` method under a
+      better name making clear that this is for a Likelihood Ratio
+      test. May be `LR.test`.
  
 - [ ] **Profile Likelihood**. Speed up the computation of the profile
      likelihood intervals in `quantMax.TVGEV`. The initial values for
@@ -44,3 +45,9 @@ development!
      Google Colab notebook.
 
 - [ ] **Hexagon sticker**?
+
+- [ ] Change the name of `bs` or replace this generic function by a
+      generic bootstapping function from another package.
+
+- [ ] Get rid of the dependence to the **reshape2** package by replacing
+     `reshape2::melt` by `data.table::melt`.

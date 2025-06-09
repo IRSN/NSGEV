@@ -2,6 +2,14 @@
 **NSGEV** Package News
 ======================
 
+# New in version 0.3.0
+
+## Enhancements
+
+- Experimental changes on `TVGEV` to allow the use of Time Series
+  covariates along with functions of time. CAUTION This may have
+  created bugs!!!
+
 # New in version 0.2.0
 
 ## Enhancements

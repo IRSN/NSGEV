@@ -1,41 +1,47 @@
 
 
 ##*****************************************************************************
-##' Compute the GEV parameters for the marginal distributions of a
-##' \code{TVGEV} model.
+##' @description Compute the GEV parameters for the marginal
+##'     distributions of a \code{TVGEV} model.
 ##'
 ##' @title Compute the Matrix of GEV Parameters from the Vector of
-##' Model Parameters 'psi' and the Data
+##'     Model Parameters 'psi' and the Data
 ##'
 ##' @param model The \code{TVGEV} object.
 ##' 
 ##' @param psi A vector of parameters for \code{model}. By default the
-##' vector of estimates in \code{psi} will be used.
+##'     vector of estimates in \code{psi} will be used.
 ##'
 ##' @param date A vector that can be coerced to the \code{"Date"}
-##' class. Each element will correspond to a row of the matrix of GEV
-##' parameters.
+##'     class. Each element will correspond to a row of the matrix of
+##'     GEV parameters. If \code{model} contains TS covariables, this
+##'     must instead be a data frame containing the suitable
+##'     covariables, along with a column with name \code{model$name}
+##'     and class \code{Date}. Id \code{date} is \code{NULL}, the date
+##'     and possibly the TS covariables are extracted from
+##'     \code{model} and correspond to the information used in the
+##'     fit.
 ##' 
 ##' @param deriv Logical. If \code{TRUE} the returned object has an
-##' attribute names \code{"gradient"} which is the gradient
-##' array. 
+##'     attribute names \code{"gradient"} which is the gradient array.
 ##'
 ##' @param checkNames Logical. If \code{TRUE} it will be checked that
-##' the names of \code{psi} match the \code{parNames} element of
-##' \code{model}.
+##'     the names of \code{psi} match the \code{parNames} element of
+##'     \code{model}.
 ##'
 ##' @param \dots Not used yet.
 ##'
-##' @return A matrix with \code{length(date)} rows and \code{3} colums.
-##' The columns contain the location, the scale and the shape GEV parameters
-##' in that order.
+##' @return A matrix with \code{length(date)} rows and \code{3}
+##'     colums.  The columns contain the location, the scale and the
+##'     shape GEV parameters in that order.
 ##'
 ##' @seealso The \code{\link{GEV}} for the GEV probability functions.
 ##'
 ##' @note The \code{deriv} formal argument is mainly here to maintain
-##' a compatibility with the \code{NSGEV} method. However, the
-##' derivatives w.r.t. the parameter vector \code{psi} are obtained
-##' simply by using the \code{X} elements of the object \code{model}.
+##'     a compatibility with the \code{NSGEV} method. However, the
+##'     derivatives w.r.t. the parameter vector \code{psi} are
+##'     obtained simply by using the \code{X} elements of the object
+##'     \code{model}.
 ##'
 ##' @method psi2theta TVGEV
 ##' 
@@ -58,23 +64,33 @@ psi2theta.TVGEV <- function(model, psi = NULL, date = NULL,
             stop("'psi' must have named elements with ",
                  "the names 'parNames(model)'")
         }
-    } else {
-        names(psi) <- model$parNames
-    }
-
-    ## is date is NULL, we use the design matrices in the model
+    } else names(psi) <- model$parNames
+    
+    ## ========================================================================
+    ## is 'date' is 'NULL', we use the design matrices in the model
+    ## ========================================================================
+    
     if (is.null(date)) {
         X <- model$X
         n <- model$n
         ind <- model$ind
         fDate <- model$fDate
     } else {
-        n <- length(date)
+        date <- as.data.frame(date)
+        if (ncol(date) == 1) {
+            names(date) <- model$date
+        } else if (is.null(date[[model$date]])) {
+            stop("one must pass a data frame ",
+                 "with a '", model$date, "'column to  the 'modelMatrices'", 
+                 "function.")
+        } 
+        n <- nrow(date)
+        fDate <- format(date[[model$date]])
+        
         if (!all(model$isCst)) {
             L <- modelMatrices.TVGEV(model, date = date)
             X <- L$X
         } else X <- NULL
-        fDate <- format(date)
     }
     
     theta <- array(NA, dim = c(n, 3L),
@@ -733,16 +749,27 @@ bs.TVGEV <- function(object,
 ##' 
 modelMatrices.TVGEV  <- function(object, date = NULL, ...) {
     
-    
     if (is.null(date)) {
         return(list(dfAll = object$dfAll, X = object$X))
     }
     trm <- object$terms
-    date <- as.Date(date)
-    data <- data.frame(date)
-    colnames(data) <- object$date
-    parNames.GEV <- c("loc", "scale", "shape")
+    if (length(object$TSVars) == 0) {
+        ## One column data frame
+        data <- data.frame(date)
+        colnames(data) <- object$date
+        data[[object$date]] <- as.Date(data[[object$date]])
+    } else {
+        data <- as.data.frame(date)
+        date <- data[[object$date]]
+        if (is.null(data[[object$date]])) {
+            stop("'model' uses TSVars hence one must pass a data frame ",
+                 "with a '", object$date, "'column to  the 'modelMatrices'", 
+                 "function.")
+        } 
+    }
 
+    parNames.GEV <- c("loc", "scale", "shape")
+    
     ## Caution: here, 'dfAll' does not embed the response
     if (!is.null(object$design)) {
         if (is.call(object$design)) {
@@ -750,10 +777,13 @@ modelMatrices.TVGEV  <- function(object, date = NULL, ...) {
         } else {
             dfAll <- object$design
         }
-    } else dfAll <- object$data
+        dfAll[[object$date]] <- NULL
+        dfAll <- data.frame(data, dfAll)
+    } else dfAll <- data
 
     fDate <- format(date)
-    rownames(dfAll) <- fDate
+    ## XXX
+    ## rownames(dfAll) <- fDate
     
     X <- list()
     
@@ -763,7 +793,10 @@ modelMatrices.TVGEV  <- function(object, date = NULL, ...) {
         mf <- model.frame(trm[[nm]], dfAll, na.action = na.pass)
         X[[nm]] <- model.matrix(trm[[nm]], mf)
         ## X[[nm]] <- model.matrix(object$terms[[nm]], data = dfAll)
-        rownames(X[[nm]]) <- fDate
+        ## XXX
+        if (length(object$TSVars == 0)) {
+            rownames(X[[nm]]) <- fDate
+        }
     }
 
     list(dfAll = dfAll, X = X)
@@ -984,24 +1017,68 @@ TVGEV <- function(data,
 
     ## =======================================================================
     ## Build a data frame 'dfAll' containing ALL the required variables.
+    ##
+    ## - 'desVars' contains the "design variables" that are functions of the
+    ##   date coming from the design e.g. 't1'
+    ##
+    ## - 'TSVars' constains the variables that are not design
+    ##   variables, that are not the Date or the Response and appear
+    ##   in `allVars`.
+    ##
     ## =======================================================================
 
     tv[["design"]] <- mc[["design"]]
 
-    allVars <- union(union(all.vars(loc), all.vars(scale)),
-                     all.vars(shape))
+    allVars <- union(union(all.vars(loc), all.vars(scale)), all.vars(shape))
+    desVars <- setdiff(allVars, names(data))
     
     if (!is.null(tv$design)) {
         if (is.call(tv$design)) {
             dfAll <- as.data.frame(eval(tv$design, envir = data))
             ## dfAll <- data.frame(data[ , response], dfAll)
-            dfAll <- data.frame(data, dfAll)
             ## colnames(dfAll) <- c(response, colnames(dfAll)[-1])
         } else {
             dfAll <- tv$design
         }
-    } else dfAll <- tv$data
+        notFound <- setdiff(desVars, names(dfAll))
+        if (length(notFound)) {
+            notFound <- paste(paste0("'", notFound, "'"), collapse = ", ")
+            stop("Required variables not in 'data' nor in the design: ",
+                 notFound)
+        }
+        ## avoid the duplication of the date column.
+        dfAll[[date]] <- NULL
+        dup <- intersect(names(dfAll), names(data)) 
+        if (any(dup)) {
+            dup <- paste(paste0("'", dup, "'"), collapse = ", ")
+            stop("Variable names both in design and data: ",
+                 dup)
+        }
+        dfAll <- data.frame(data, dfAll)
+    } else {
+        dfAll <- tv$data
+        notFound <- setdiff(allVars, names(dfAll))
+        if (length(notFound)) {
+            notFound <- paste(paste0("'", notFound, "'"), collapse = ", ")
+            stop("Required variables not in 'data' nor in the design: ",
+                 notFound)
+        }
+    }
 
+    tv$TSVars <- setdiff(allVars, union(union(date, response), desVars))
+    if (trace > 1) {
+        cat("o Analysis of formulas\n")
+        cat("   - All Variables:    ",
+            paste(paste0("'", allVars, "'"), collapse = ", "),
+            "\n") 
+        cat("   - Design Variables: ",
+            paste(paste0("'", desVars, "'"), collapse = ", "),
+            "\n") 
+        cat("   - TS Covariates:    ",
+            paste(paste0("'", tv$TSVars, "'"), collapse = ", "),
+            "\n")
+    }
+    
     tv$fDate <- format(data[ , date])
     rownames(dfAll) <- tv$fDate
     

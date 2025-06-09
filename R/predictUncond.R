@@ -136,6 +136,10 @@ predictUncond <- function(object,
                           trace = 0,
                           ...) {
 
+    if (length(object$TSVars)) {
+        stop("'object' includes TSVars. It can not be used for unconditional",
+             " prediction")
+    }
     
     probL <- (1 - level) / 2
     probU <- 1 - probL
@@ -210,7 +214,7 @@ predictUncond <- function(object,
     }
 
     if (confintMethod == "none") {
-
+        
         RL <- array(NA, dim = c(np, 1),
                     dimnames = list("period" = period,
                         "Quant"))

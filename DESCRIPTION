@@ -2,7 +2,7 @@ Package: NSGEV
 Type: Package
 Title: Non-Stationary GEV Time Series
 Version: 0.2.0
-Date: 2024-12-02
+Date: 2025-06-09
 Authors@R:
     c(person(given = "Yves",
              family = "Deville",
