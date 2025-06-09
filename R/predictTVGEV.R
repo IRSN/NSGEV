@@ -166,7 +166,7 @@ predict.TVGEV <- function(object,
     ## newdate <- as.data.frame(newdate)
     ## names(newdate) <- object$date
     ## newdate <- data.frame(Id = 1:nrow(newdate), newdate)
-    newdate <- checkNewdata.TVGEV(fit, newdata = newdate)
+    newdate <- checkNewdata.TVGEV(object, newdata = newdate)
     n <- nrow(newdate)
     
     ## special case for non TV model

@@ -37,7 +37,7 @@ quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
                            psi = NULL, ...) {
 
     if (length(x$TSVars)) {
-        stop("'x' includes TSVars. It can not be used for now")
+        warning("'x' includes TSVars")
     }
     
     ## control (from  quantile.default)
@@ -131,7 +131,7 @@ density.TVGEV <- function(x, xValue = NULL,
                           log = FALSE, ...) {
 
     if (length(x$TSVars)) {
-        stop("'x' includes TSVars. It can not be used for now")
+        warning("'x' includes TSVars")
     }
 
     ## avoid using two many dates
@@ -186,7 +186,7 @@ cdf.TVGEV <- function(x,
                       log = FALSE, ...) {
 
     if (length(x$TSVars)) {
-        stop("'object' includes TSVars. It can not be used for now")
+        warning("'object' includes TSVars")
     }
 
     ## avoid using two many dates
@@ -263,7 +263,7 @@ mean.TVGEV <- function(x,
                        psi = NULL, ...) {
 
     if (length(x$TSVars)) {
-        stop("'x' includes TSVars. It can not be used for now")
+        warning("'x' includes TSVars")
     }
      
     ## Euler-Mascheroni constant
@@ -304,7 +304,7 @@ moment.TVGEV <- function(x,
                          date = NULL,
                          psi = NULL, ...) {
     if (length(x$TSVars)) {
-        stop("'x' includes TSVars. It can not be used for now")
+        warning("'x' includes TSVars")
     }
  
     if (which != "variance") {
