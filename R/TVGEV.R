@@ -35,7 +35,7 @@
 ##'     colums.  The columns contain the location, the scale and the
 ##'     shape GEV parameters in that order.
 ##'
-##' @seealso The \code{\link{GEV}} for the GEV probability functions.
+##' @seealso The \code{\link[nieve]{GEV}} for the GEV probability functions.
 ##'
 ##' @note The \code{deriv} formal argument is mainly here to maintain
 ##'     a compatibility with the \code{NSGEV} method. However, the

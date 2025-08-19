@@ -110,7 +110,7 @@ quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
 ##' functions are plotted with the x-y axes flipped in order to enhance
 ##' the time-varying feature of the model.
 ##' 
-##' @seealso \code{\link{GEV}} for the density and cdf of the GEV
+##' @seealso \code{\link[nieve]{GEV}} for the density and cdf of the GEV
 ##' distribution, \code{\link{plot.predict.TVGEV}} for the Return Level
 ##' plot.
 ##'

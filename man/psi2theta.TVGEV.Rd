@@ -56,5 +56,5 @@ The \code{deriv} formal argument is mainly here to maintain
     \code{model}.
 }
 \seealso{
-The \code{\link{GEV}} for the GEV probability functions.
+The \code{\link[nieve]{GEV}} for the GEV probability functions.
 }

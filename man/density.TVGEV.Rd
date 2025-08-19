@@ -55,7 +55,7 @@ plot(F)
 
 }
 \seealso{
-\code{\link{GEV}} for the density and cdf of the GEV
+\code{\link[nieve]{GEV}} for the density and cdf of the GEV
 distribution, \code{\link{plot.predict.TVGEV}} for the Return Level
 plot.
 }

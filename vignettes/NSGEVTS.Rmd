@@ -1,0 +1,429 @@
+---
+  title: "Timeseries Covariables with **NSGEV**"
+  author: Yves Deville
+  date: "`r Sys.Date()`"
+  output:
+    rmarkdown::html_vignette:
+      toc: true
+  vignette: >
+    %\VignetteIndexEntry{Timeseries Covariates with NSGEV}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+  bibliography: NSGEV.bib
+  linkcolor: blue
+--- 
+
+\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+
+
+
+```{r, echo=FALSE, eval=TRUE, message=FALSE, results="hide"}
+## library(remotes)
+## install_github("IRSN/NSGEV", ref = "influence")
+library(knitr)
+if (opts_knit$get("rmarkdown.pandoc.to") == "html") {
+   library(htmltools)
+}
+opts_knit$get("rmarkdown.pandoc.to")
+```
+  
+  
+  
+# Using timeseries covariates in **TVGEV** models
+
+In Time-Varying GEV models, a series $y(t)$ of block maxima is
+considered as formed by independent GEV observations with their
+marginal distribution depending on the time $t$.  In some cases one
+may want to further use one or several *timeseries covariate*
+$z(t)$. A typical example of such timeseries covariates is provided by
+so-called *climate indices* such as the *Southern Oscillation Index*
+(SOI) and the *North Atlantic Oscillation* (NAO) both available from
+the USA [National Oceanic and Atmospheric
+Administration](https://www.ncei.noaa.gov). The response $y(t)$
+usually being a timeseries of *annual* maxima, each covariate $z(t)$
+must also come with a yearly sampling, which may require some kind of
+aggregation using the annual mean or maximum. Most often, timeseries
+covariates should be used along with functions of time describing the
+trend, in order to avoid spurious regression, see below. Note that a
+covariate $z(t)$ does not need to have independent observations nor
+even to be stationary. The crucial assumption in the model is that the
+observations $y(t)$ are independent conditional on the series $z(t)$.
+
+# Example: Annual Sea Levels in Fremantle (AUS)
+
+The `fremantle` data of the **ismev** package contains the annual
+maxima of the sea level in Fremantle, Australia, in meters. This
+dataset is described in Chap. 1 of @Coles_ExtremeValues
+and is used in Chap. 6 of the book to provide examples of models
+for non-stationary extremes.
+
+```{r, label = "Fremantle", message=FALSE, warning=FALSE}
+library(NSGEV); library(ismev)
+data(fremantle)
+head(fremantle, n = 7)
+```
+
+The `SOI` column contains the annual value of the Southern Oscillation
+Index.  In order to use the `TVGEV` function with this data it helps
+to define a variable of class `"Date"` by using the
+`Year` column. 
+
+```{r, label="Fremantle2", message=FALSE, warning=FALSE}
+df <- within(fremantle, Date <- as.Date(paste0(Year, "-01-01")))
+```
+
+The variable `SeaLevel` contains the response timeseries $y(t)$ while
+$\texttt{SOI}(t)$ will be used as covariate $z(t)$. The series are shown
+below, along with a scatterplot with points $[z(t),\,y(t)]$. Note that
+some years are missing such as 1902. This will not affect the use of
+the `TVGEV` function. Moreover, the same results would be obtained if
+the missing years were added to the table with `NA` values for the two
+variables `SeaLevel` and `SOI`. This will be illustrated later
+ 
+
+```{r, label="Fremantle2a", message=FALSE, warning=FALSE, echo=FALSE}
+## opar <- par(mfrow = c(2, 2), cex = 0.5, mar = c(4, 4, 2, 2))
+## with(df, plot(x = Date, y = SeaLevel, type = "h", xlab = "",
+##              main = "Annual maxima of Sea levels in Fremantle (AUS)"))
+## with(df, plot(x = Date, y = SOI, type = "h", xlab = "",
+##               main = "SOI", col = "seagreen"))
+## with(df, plot(x = SOI, y = SeaLevel, type = "p", pch = 16,
+##      main = "Sea level against SOI index"))
+## par(opar)
+```
+
+```{r, ggplotly, message=FALSE, warning=FALSE}
+library(plotly); 
+g1 <- ggplot(data = df) + 
+  geom_segment(aes(x = Date, xend = Date, y = min(SeaLevel) - 0.1, yend = SeaLevel), colour = "orangered") +
+  geom_point(aes(x = Date, y = SeaLevel), colour = "orangered") + xlab("") + ylab("SeaLevel (m)") 
+g2 <- ggplot(data = df) + 
+  geom_segment(aes(x = Date, xend = Date, y = 0, yend = SOI), colour = "SeaGreen") + 
+  geom_point(aes(x = Date, y = SOI), colour = "SeaGreen") + xlab("") + ylab("SOI") 
+g3 <- ggplot(data = df) + 
+  geom_point(aes(x = SOI, y = SeaLevel, date = Date)) + xlab("SOI") + ylab("SeaLevel") 
+```
+
+```{r, ggplotlyOut, message=FALSE, warning=FALSE, fig.show='hold', out.width="50%", echo=FALSE}
+if (opts_knit$get("rmarkdown.pandoc.to") == "html") {
+    g <- list()
+	g[[1]] <- ggplotly(g1, width = 400, height = 340)
+	g[[2]] <- ggplotly(g2, width = 400, height = 340)
+	g[[3]] <- ggplotly(g3, width = 300, height = 340)
+	htmltools::tagList(g)
+} else {
+	print(g1 + ggtitle("SeaLevel"))
+	print(g2 + ggtitle("SOI"))
+	print(g3 + ggtitle("SeaLevel against SOI"))
+}
+```
+
+One may guess from the scatterplot that a larger level of the `SOI`
+results on average in a (slightly) larger sea level.
+
+
+# `TVGEV` models with timeseries covariates
+
+## Fitting the `TVGEV` models
+
+Using the `fremantle` data, we fit the following  three GEV models 
+$y(t) \sim \texttt{GEV}\{\mu(t),\, \sigma(t),\,\xi(t)\}$
+involving a parameter vector $\bs{\psi}$
+
+\begin{equation*}
+   (M_0) \quad
+   \left\{
+      \begin{aligned}
+        \mu(t) 
+        &= \psi^{\mu}_0 \\
+	    \sigma(t) 
+		  &= \psi^{\sigma}_0\\
+		  \xi(t)&= \psi^{\xi}_0, 
+      \end{aligned}
+      \right.
+	\qquad
+	(M_1) \quad
+	 \left\{
+      \begin{aligned}
+       \mu(t) 
+      &= \psi^{\mu}_0 + \psi^{\mu}_1 \, t \\
+	   \sigma(t) 
+	  &= \psi^{\sigma}_0\\
+	   \xi(t) &= \psi^{\xi}_0, 
+      \end{aligned}
+      \right.	
+	  \qquad
+	(M_2) \quad
+	 \left\{
+      \begin{aligned}
+       \mu(t) 
+      &= \psi^{\mu}_0 + \psi^{\mu}_1 \, t + \psi^\mu_2 \, \texttt{SOI}(t)\\
+		  \sigma(t) 
+		  &= \psi^{\sigma}_0\\
+		  \xi(t)&= \psi^{\xi}_0, 
+      \end{aligned}
+      \right.
+\end{equation*}
+	 
+So $M_0$ is a stationary model with i.i.d. GEV observations, $M_1$
+specifies a linear time trend for the location parameter $\mu$ and
+$M_2$ uses both a linear time trend term and a linear effect of the
+covariate $\texttt{SOI}(t)$. In all cases, the GEV scale $\sigma$ and
+the shape $\xi$ are both kept constant. The three models are nested.
+
+The linear time trend will be built by using the `polynomX` design
+function which returns a matrix of polynomials in $t$. The column `t1`
+can be used to describe the trend.  The (default) time origin is
+located at `1970-01-01` and the time is expressed in years.
+
+	
+```{r, label="fits", results="hide",fig.width=5, fig.height=4}
+fit0 <- TVGEV(data = df, response = "SeaLevel", date = "Date",
+              design = polynomX(date = Date, degree = 1),
+              loc = ~ 1)
+fit1 <- TVGEV(data = df, response = "SeaLevel", date = "Date",
+              design = polynomX(date = Date, degree = 1),
+              loc = ~ t1)
+fit2 <- TVGEV(data = df, response = "SeaLevel", date = "Date",
+              design = polynomX(date = Date, degree = 1),
+              loc = ~ t1 + SOI)
+autoplot(fit0)
+autoplot(fit1)
+autoplot(fit2)
+```
+
+The `autoplot` method builds a `ggplot` object showing the observed
+response against the date along with the fitted quantiles for three
+levels of the probability of non-exceedance $p$, namely $p=0.90$, $p =
+0.95$ and $p= 0.99$. These quantiles are those of the
+$\texttt{GEV}\{\mu(t),\,\sigma(t),\, \xi(t)\}$ distribution. When a
+timeseries covariate is used as for the object `fit2`, the quantiles
+are conditional on the value of the covariate for the corresponding
+year.
+
+The methods `coef`, `summary` can be used to extract the vector
+$\widehat{\bs{\psi}}$ of estimated coefficients or get to a summary.
+
+```{r, label="fits_summary"}
+coef(fit2)
+summary(fit2)
+```
+
+The output of `summary` suggests that the coefficient of
+$\texttt{SOI}(t)$ is significantly different from zero because in the
+row with label `mu_SOI`, the absolute value of the estimate
+$\widehat{\psi}^\mu_2$ is larger than twice the corresponding standard
+error. The trend coefficient `mu_t1` is in meter by year so its value is 
+`r round(1e4 * coef(fit2)["mu_t1"], digits = 2)` when expressed 
+in *centimeter by century*, maybe a more suitable unit.
+
+Note that the estimated GEV shape parameter in `fit2` is fairly
+negative implying a finite upper end-point for the marginal GEV
+distributions.
+
+
+## Generalised residuals
+
+The `resid` method of the `"TVGEV"` class computes the generalised
+residuals:
+
+```{r, label="resid"}
+gr <- list()
+gr[["0"]] <- autoplot(resid(fit0)) + ggtitle("fit0")
+gr[["1"]] <- autoplot(resid(fit1)) + ggtitle("fit1")
+gr[["2"]] <- autoplot(resid(fit2)) + ggtitle("fit2")
+```
+
+```{r, label="residShow", ech=FALSE, results="hide"}
+if (opts_knit$get("rmarkdown.pandoc.to") == "html") {
+	htmltools::tagList(lapply(gr, ggplotly, width = 300, height = 340))
+} else {
+    lapply(gr, identity)
+}
+```
+
+When a generalised residual falls far away in one of the two tails of
+the Gumbel distribution, it may be a good idea to check the influence
+of the corresponding observation on the fit.
+
+When the variable `SOI` is used, the two years `1903` and `1914` have
+quite different residual although they correspond to nearly the same
+value of the sea level, because they correspond to quite different
+values of `SOI`. Although they correspond to severe coastal floodings,
+the largest sea levels in the dataset correspond to somewhat of the
+residuals. This may mean that coastal flood defenses will have to be
+constantly improved.
+
+## Comparing nested models with likelihood-ratio tests
+
+The `anova` method can be used to compare two nested models with
+Likelihood-Ratio test, for instance $M_0$ and $M_1$.
+
+
+```{r, label="fits_anova1"}
+anova(fit0, fit1)
+```
+
+So the likelihood-ratio test indicates that the linear trend term is strongly
+significant.  Up to rounding, the maximised log-likelihoods are equal
+to those reported p. 113 in @Coles_ExtremeValues book. We can similarly compare the two
+fitted models $M_1$ and $M_2$
+
+
+```{r, label="fits_anova2"}
+anova(fit1, fit2)
+```
+
+So, as written p. 114 in @Coles_ExtremeValues book: *the effect of SOI
+is influential on annual maximum sea levels at Fremantle, even after
+the allowance for time variation*. Again, the maximised log-likelihoods
+found here are in good agreement with that reported in the book. 
+
+Note that it is important to assess the effect of a timeseries
+covariates $z(t)$ such as $\texttt{SOI}(t)$ only when the effect of time
+has been taken into account. Without this precaution any covariate
+with a linear time trend would be found to be influential by a
+spurious regression effect. It may indeed be the case that the series
+$y(t)$ and $z(t)$ have a common trend.
+
+## How `TVGEV` works
+
+When a `TVGEV` function is created, the `design` argument can receive
+a call to a function that creates covariates $x_i(t)$ which are
+functions of the time i.e. of the variable specified in `date`. A
+data frame is created with its columns being the timeseries covariates
+$z(t)$ and the functions time $x_i(t)$. All these columns can be used
+in the `lm`-style formulas for the GEV parameters.
+
+```{r DesignFit, echo=FALSE, fig.align="center", out.width="70%"}
+library(png); library(knitr)
+img1_path <- "images/Fit.png"
+knitr::include_graphics(img1_path)
+```
+For instance the "design" matrix corresponding to the GEV location 
+parameter $\mu$ can be extracted from the fitted model object.
+
+```{r}
+ head(fit2$X[["loc"]])
+```
+This object could be coerced if needed to a timeseries object such as an
+object with class `"xts"` from the **xts** package.
+
+
+# Return levels or "prediction"
+
+## Return levels
+
+Remind that the return levels are the quantiles of the GEV response
+$y(t)$.  The corresponding probability $p$ is often converted into a
+return period $T$ in years according to the rule $p = 1 - 1/T$. For
+instance the so-called *centennial* return level for $T=100$ years
+corresponds to $p=0.99$ i.e., to a probability of exceedance of 
+$0.01$. 
+
+
+## Conditional return levels
+
+
+As long as a `TVGEV` fitted model object involves only covariates that
+are functions of the time, the `predict` method only requires an
+argument `newdate` which defines the date(s) $t$ for which the
+quantiles are to be computed. For an object with no timeseries
+covariates, the value passed to this argument is usually a vector
+defining a future period: a set of years given by their beginning
+date.  When timeseries covariates are used, one must give as well the
+value of these covariates for each predicted year. Then `newdate` must
+be a data frame with all the variables required for the prediction.
+
+```{r, label="pred12", fig.width=8, fig.height=4, out.width="80%"}
+pred1 <- predict(fit1, newdate = c("2020-01-01", "2030-01-01"))
+autoplot(pred1) + ggtitle("No TS covariate")
+nd <- data.frame(Date = as.Date(c("2020-01-01", "2030-01-01")),
+                 SOI = c(1.5, 2.1))
+pred2 <- predict(fit2, newdate = nd)
+autoplot(pred2) + ggtitle("Using the TS covariate `SOI`")
+```
+
+By default the confidence intervals on the return levels are obtained
+by using the "delta method". Yet the `confintMethod` argument of the
+`predict` method can be used to get *profile likelihood* intervals
+instead. Partial matching can be used both for the argument and for
+its value: the choice `"proflik"` can be abbreviated as `"prof"` which
+is still well understood. Remind that the confidence intervals are
+approximate unless a very large sample is used. Still, profile
+likelihood intervals are known to have a better coverage those
+obtained by the delta method.
+
+ 
+```{r, fig.width=8, fig.height=4, out.width="80%" }
+predProf1 <- predict(fit1, newdate = c("2020-01-01", "2030-01-01"),
+                     conf = "prof", trace = 0)
+autoplot(predProf1) + ggtitle("No TS covariate. Conf.: Prof. Lik ")
+nd <- data.frame(Date = as.Date(c("2020-01-01", "2030-01-01")),
+                 SOI = c(1.5, 2.1))
+predProf2 <- predict(fit2, newdate = nd, conf = "prof", trace = 0)
+autoplot(predProf2) + ggtitle("Covariable TS `SOI`. Conf: Prof. Lik.")
+```
+
+Note that the use of the `SOI` covariate leads to slightly narrower
+confidence intervals on the quantiles.
+
+**Remark** In the previous code chunk `trace = 0` was used to avoid a
+verbose output. A grid of return periods is used for the computation
+and for each return period, the confidence limits are actually
+obtained by using a constrained optimisation. When the `trace`
+argument is not zero, convergence diagnostics are printed. It may
+happen that the optimisation fails to converge.
+
+
+## Marginal return levels 
+
+Rather than fixing a value for the covariates, one may want to
+"marginalise out" the return levels w.r.t the values of the covariate,
+or to "integrate out" these values, see @EastoeTawn_NSEV2009. The marginal
+return levels are not available yet but should be in a future version
+of the package.  The return level corresponding to a future date of
+interest $t^\star$ average over a number of possible values $z^{[j]}$
+or "scenarios" for the covariate $z(t^\star)$ that would be provided.
+
+```{r DesignNew, echo=FALSE, fig.align="center", out.width="70%"}
+img2_path <- "images/Pred.png"
+knitr::include_graphics(img2_path)
+```
+
+# Limitations and possible extensions
+
+For now the distribution of the maximum on a given period can not be
+computed when timeseries covariates are used.
+
+The **NSGEV** package does not allow for models including *latent
+variables*. Such models can be used with **INLA** or **rstan**.
+
+
+# Appendix : using `NA`s for missing observations
+
+Starting form the `fremantle` data frame, we can build a new data
+frame containing all the years between the first and the last year of
+the original data frame. The `merge` method can be used for this aim,
+with the `Date` as key. All the columns except `Date` will contain `NA`s
+for the missing years.
+
+```{r}
+Date = seq(from = df$Date[1], to = df$Date[nrow(df)], by = "year")
+dfNA <- merge(df, data.frame(Date), by = "Date", all.y = TRUE)
+summary(dfNA)
+```
+Then we can fit the same `TVGEV` model as before
+
+```{r, label="compareNA"}
+fit2NA <- TVGEV(data = dfNA, response = "SeaLevel", date = "Date",
+                design = polynomX(date = Date, degree = 1),
+                loc = ~ t1 + SOI)
+```
+
+We see that the results of the estimation with `NA` observations are
+identical to those obtained with the missing years.
+
+
+# References
