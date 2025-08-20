@@ -9,7 +9,6 @@ Authors@R:
              role = c("cre", "aut"),
              email = "deville.yves@alpestat.com",
 	     comment = c(ORCID = "0000-0002-1233-488X")))
-Maintainer: Yves Deville <deville.yves@alpestat.com>
 Description: Utility functions for Non-Stationary time series with GEV margins.
 License: GPL-3
 LazyData: yes

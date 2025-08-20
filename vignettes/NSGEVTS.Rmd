@@ -248,12 +248,12 @@ the Gumbel distribution, it may be a good idea to check the influence
 of the corresponding observation on the fit.
 
 When the variable `SOI` is used, the two years `1903` and `1914` have
-quite different residual although they correspond to nearly the same
-value of the sea level, because they correspond to quite different
-values of `SOI`. Although they correspond to severe coastal floodings,
-the largest sea levels in the dataset correspond to somewhat of the
-residuals. This may mean that coastal flood defenses will have to be
-constantly improved.
+different residuals although they correspond to the same value of the
+sea level, because they correspond to different values of
+`SOI`. Although they correspond to severe coastal floodings, the
+largest sea levels in the dataset correspond to somewhat "normal"
+values of the residuals. This may mean that coastal flood defenses
+will have to be constantly improved.
 
 ## Comparing nested models with likelihood-ratio tests
 

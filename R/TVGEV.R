@@ -1,5 +1,4 @@
 
-
 ##*****************************************************************************
 ##' @description Compute the GEV parameters for the marginal
 ##'     distributions of a \code{TVGEV} model.
@@ -201,7 +200,7 @@ parIni.TVGEV <- function(object, y = NULL) {
 ##'           psi0 = NULL, estim = c("optim", "nloptr"),
 ##'           coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
 ##'           coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
-##'           parTrack = FALSE)
+##'           parTrack = FALSE, trace = 0)
 ##' 
 ##' @param object A (possibly incomplete) \code{TVGEV} object.
 ##' 
@@ -212,14 +211,24 @@ parIni.TVGEV <- function(object, y = NULL) {
 ##' @param estim Character giving the optimisation to be used.
 ##'
 ##' @param coefLower,coefUpper Numeric vectors or \code{NULL} giving
-##' bounds on the parameters. These are used overwrite the "normal"
-##' values which are \code{-Inf} and \code{Inf}. These arguments are
-##' only used when \code{estim} is \code{"nloptr"}.
+##'     bounds on the parameters. These are used overwrite the
+##'     "normal" values which are \code{-Inf} and \code{Inf}. These
+##'     arguments are only used when \code{estim} is \code{"nloptr"}.
+##'     These vectors must have \emph{suitably named} elements. It
+##'     is not necessary to give values for all the elements: the
+##'     "normal" infinite values will continue to hold for the
+##'     parameters for which the bounds are not given. When the scale
+##'     parameter is constant it may help to give a positive value for
+##'     the element \code{"sigma_0"} of \code{coefLower}. When the
+##'     shape is constant it may help to give bounds such as such as
+##'     \code{-0.5} and \code{0.5} for the element \code{"xi_0"}.
 ##' 
 ##' @param parTrack \code{Logical}. If \code{TRUE}, all parameters at
 ##' which an evaluation of the log-Likelihood will be stored and
 ##' returned.
 ##'
+##' @param trace Integer level of verbosity.
+##' 
 ##' @return A list with elements that can be copied into those
 ##' of a \code{TVGEV} object.
 ##'
@@ -246,7 +255,8 @@ MLE.TVGEV <- function(object,
                       estim = c("optim", "nloptr"),
                       coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
                       coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
-                      parTrack = FALSE) {
+                      parTrack = FALSE,
+                      trace = 0) {
     
     parNames.GEV <- c("loc", "scale", "shape")
      
@@ -383,7 +393,7 @@ MLE.TVGEV <- function(object,
     
     if (parTrack) {
         negLogLikFun1 <- function(psi, deriv = FALSE, hessian = FALSE, object)  {
-            trackEnv$psi  <- c(trackEnv$psi, psi)
+            trackEnv$psi <- c(trackEnv$psi, psi)
             negLogLikFun(psi = psi, deriv = deriv, hessian = hessian, object = object)
         }
     } else {
@@ -393,12 +403,16 @@ MLE.TVGEV <- function(object,
     cvg <- TRUE
         
     if (estim == "optim") {
-        
+        if (trace) {
+            cat("o Mininimisation of the negative log-likelihood\n",
+                "  using `stats::optim`.\n")
+        }
         res$fit <- try(optim(par = psi0,
                              fn = negLogLikFun1,
                              deriv = FALSE,
                              hessian = FALSE,
-                             control = list(maxit = 1000),
+                             control = list(maxit = 1000,
+                                            trace = pmax(trace - 1, 0)),
                              ## hessian = TRUE,
                              object = object))
 
@@ -410,18 +424,25 @@ MLE.TVGEV <- function(object,
                 res$negLogLik <- res$fit$value
             } else {
                 cvg <- FALSE
+                cat("  The optimisation failed to converge.",
+                    "  Hints: give `psi0`, try using `estim = \"nloptr\",",
+                    "  give lower and upper bounds.\n")
             }
         }
             
     } else if (estim == "nloptr") {
-        
+        if (trace) {
+            cat("o Minimisation of the negative log-likelihood",
+                "  using `nloptr::nloptr`.\n")
+        }
         opts <- list("algorithm" = "NLOPT_LD_LBFGS",
                      "xtol_rel" = 1.0e-8,
                      "xtol_abs" = 1.0e-8,
                      "ftol_abs" = 1e-5,
-                     "maxeval" = 1000, "print_level" = 0,
+                     "maxeval" = 1000,
+                     "print_level" = pmax(trace - 1, 0),
                      "check_derivatives" = FALSE)
-
+        
         ## XXX caution! this works when the shape is constant only!!!
         p <- object$p
         
@@ -456,7 +477,7 @@ MLE.TVGEV <- function(object,
         }
     
         res$fit <- try(nloptr(x0 = psi0,
-                              eval_f = negLogLikFun,
+                              eval_f = negLogLikFun1,
                               lb = lb,
                               ub = ub,
                               deriv = TRUE,
@@ -477,6 +498,11 @@ MLE.TVGEV <- function(object,
                 res$negLogLik <- res$fit$objective
             } else {
                 cvg <- FALSE
+                if (trace) {
+                    cat("  The optimisation failed to converge.",
+                        "  Hints: try using `estim = \"optim\",",
+                        "  give `psi0`, give lower and upper bounds.\n")
+                }
             }
         }
         
@@ -497,21 +523,17 @@ MLE.TVGEV <- function(object,
         res$theta <- psi2theta(object, psi = psiHat, checkNames = FALSE)
         
         ## compute Hessian. 
-        ## res$hessian <- hessian(func = negLogLikFun,
-        ##                       x = res$estimate, deriv = FALSE,
-        ##                       object = object)
-
-        res$hessian <- optimHess(par = res$estimate,
-                                 fn = negLogLikFun,
-                                 deriv = FALSE,
-                                 object = object)
+        res$hessian <- negLogLikFun(psi = res$estimate,
+                                        deriv = TRUE, hessian = TRUE,
+                                        object = object)$hessian
         
         vcov <- try(solve(res$hessian), silent = TRUE)
-        
         if (!inherits(vcov, "try-error")) {
-            rownames(vcov) <- colnames(vcov) <- object$parNames
-            res$vcov <- vcov
-            res$sd <- sqrt(diag(vcov))
+                rownames(vcov) <- colnames(vcov) <- object$parNames
+                res$vcov <- vcov
+                res$sd <- sqrt(diag(vcov))
+        } else {
+            warning("The (exact) Hessian is not numerically invertible")
         }
     }
     
@@ -1155,7 +1177,8 @@ TVGEV <- function(data,
                          estim = estim,
                          coefLower = coefLower,
                          coefUpper = coefUpper,
-                         parTrack = parTrack) 
+                         parTrack = parTrack,
+                         trace = trace) 
         
         ## copy
         for (nm1 in names(res)) {

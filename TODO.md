@@ -4,6 +4,8 @@
 This is a temporary reminder list by YD. Not a planning for new
 development!
 
+- [ ] Make the `predictUncond` function deprecated?
+
 - [ ] **`anova` name** Make an alias of the `anova` method under a
       better name making clear that this is for a Likelihood Ratio
       test. May be `LR.test`.
