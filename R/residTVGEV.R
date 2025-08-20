@@ -12,23 +12,25 @@
 ##' @param object A \code{TVGEV} object.
 ##'
 ##' @param type The approximate distribution wanted. The choices
-##'     \code{c("unif", "exp", "gumbel")} correspond to the standard
-##'     uniform, the standard exponential and the standard Gumbel
-##'     distributions. Partial matching is allowed.
+##'     \code{c("gumbel", "exp", "unif", "gev4")} correspond to the
+##'     following distributions: standard Gumbel, the standard
+##'     exponential, the standard uniform, and the GEV with shape
+##'     \eqn{-0.25} distributions. Partial matching is allowed.
 ##'
 ##' @param ... Not used yet.
 ##' 
 ##' @return A vector of generalised residuals which should
 ##'     \emph{approximately} be independent and \emph{approximately}
 ##'     follow the target distribution: standard Gumbel, standard
-##'     exponential or standard uniform, depending on the value of
+##'     exponential or standard uniform, ... depending on the value of
 ##'     \code{type}.
 ##' 
 ##' @note The upper 95\% quantile of the standard Gumbel and the
 ##'     standard exponential is close to \eqn{3} which can be used to
 ##'     gauge "large residuals". Using \code{type = "gumbel"} seems
 ##'     better to diagnose abnormally small residuals as may result
-##'     from abnormally small block maxima.
+##'     from abnormally small block maxima. The generalised residuals
+##'     have no physical dimension.
 ##'
 ##' @references Cox, D.R. and Snell E.J. (1968) "A General Definition
 ##' of Residuals".  \emph{JRSS Ser. B}, \bold{30}(2), pp. 248-275,
@@ -63,26 +65,37 @@
 ##' plot(mu, e, type = "p", pch = 16, col = "darkcyan",
 ##'      main = "generalised residuals against 'loc'")
 residuals.TVGEV <- function(object,
-                            type = c("gumbel", "exp", "unif"),
+                            type = c("gumbel", "exp", "unif", "gev4"),
                             ...) {
 
     type <- match.arg(type)
     Y <- object$data[ , object$response]
     theta <- psi2theta(model = object, psi = NULL)
     
+    ## e <- nieve::pGEV(Y, loc = theta[, 1L], scale = theta[, 2L], 
+    ##                 shape = theta[, 3L], lower.tail = FALSE)
+
+    ## Apply the (fitted) GEV distribution) to transform to uniform
+    ## in an increasing fashion then apply the target quantile function
     e <- nieve::pGEV(Y, loc = theta[, 1L], scale = theta[, 2L], 
-                     shape = theta[, 3L], lower.tail = FALSE)
+                     shape = theta[, 3L], lower.tail = TRUE)
 
     lims95 <- c(0.025, 0.975)
     
     if (type == "exp") {
-        e <- -log(e)
+        ## e <- -log(e)
+        ## lims95 <- -log(1 - lims95)
+        e <- -log(1 - e)
         lims95 <- -log(1 - lims95)
     } else if (type == "gumbel") {
-        e <- log(-log(e))
-        lims95 <- log(-log(1 - lims95))
+        ## e <- log(-log(e))
+        ## lims95 <- log(-log(1 - lims95))
+        e <- -log(-log(e))
+        lims95 <- -log(-log(lims95))
+    } else if (type == "gev4") {
+        e <- nieve::qGEV(e, loc = 0, scale = 1, shape = -0.25)
+        lims95 <- nieve::qGEV(lims95, loc = 0, scale = 1, shape = -0.25)
     }
-        
     names(e) <- rownames(theta)
     attr(e, "date") <- object$data[ , object$date]
     attr(e, "type") <- type

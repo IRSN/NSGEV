@@ -12,6 +12,10 @@
   
 - New vignette *Timeseries Covariates with NSGEV*. DRAFT version.
   
+## Bug fixes
+ 
+- The generalised residuals computed with `"gumbel"` were 
+  actually *reversed* gumbel. 
 
 # New in version 0.2.0
 

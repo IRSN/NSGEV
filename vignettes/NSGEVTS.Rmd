@@ -235,7 +235,7 @@ gr[["1"]] <- autoplot(resid(fit1)) + ggtitle("fit1")
 gr[["2"]] <- autoplot(resid(fit2)) + ggtitle("fit2")
 ```
 
-```{r, label="residShow", ech=FALSE, results="hide"}
+```{r, label="residShow", echo=FALSE}
 if (opts_knit$get("rmarkdown.pandoc.to") == "html") {
 	htmltools::tagList(lapply(gr, ggplotly, width = 300, height = 340))
 } else {
