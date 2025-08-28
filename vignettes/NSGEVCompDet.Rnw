@@ -1,6 +1,6 @@
 \documentclass[11pt,a4paper]{article}
 
-%\VignetteIndexEntry{Mauna Loa Example from Rasmussen and Williams' Book}
+%\VignetteIndexEntry{Computing Details for NSGEV}
 %\VignetteEngine{knitr::knitr}
 \usepackage{makeidx}
 \usepackage{amsmath,amssymb,amsthm}

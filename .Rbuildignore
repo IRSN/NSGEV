@@ -7,4 +7,6 @@ TODO*
 ^README_files$
 ^\.github$
 ^vignettes/jss.bst
-^vignettes/*.Rnw
+^vignettes/NSGEVCompDet.Rnw
+^vignettes/NSGEVCompDet.R
+^vignettes/NSGEVCompDet.pdf
