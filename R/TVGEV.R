@@ -1055,10 +1055,23 @@ TVGEV <- function(data,
     desVars <- setdiff(allVars, names(data))
     
     if (!is.null(tv$design)) {
+        
         if (is.call(tv$design)) {
             dfAll <- as.data.frame(eval(tv$design, envir = data))
             ## dfAll <- data.frame(data[ , response], dfAll)
             ## colnames(dfAll) <- c(response, colnames(dfAll)[-1])
+            desVarsRaw <- all.vars(tv$design)
+            if (length(desVarsRaw)) {
+                ind <- is.na(match(desVarsRaw, names(data)))
+                if (any(ind)) {
+                    warning("'design' uses variables not in `data`: ",
+                            paste(sprintf("`%s`", desVarsRaw[ind]),
+                                  collapse = ", "),
+                            ".\n This may be a source of problems in scoping, ",
+                            "because these variables are\n at the best found ",
+                            "in an environment differing from `data`.")
+                }
+            }
         } else {
             dfAll <- tv$design
         }

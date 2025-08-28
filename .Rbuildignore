@@ -7,3 +7,4 @@ TODO*
 ^README_files$
 ^\.github$
 ^vignettes/jss.bst
+^vignettes/*.Rnw
