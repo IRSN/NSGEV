@@ -1,16 +1,16 @@
 ---
-  title: "Timeseries Covariates with NSGEV"
-  author: Yves Deville
-  date: "`r Sys.Date()`"
-  output:
-    rmarkdown::html_vignette:
-      toc: true
-  vignette: >
-    %\VignetteIndexEntry{Timeseries Covariates with NSGEV}
-    %\VignetteEngine{knitr::rmarkdown}
-    %\VignetteEncoding{UTF-8}
-  bibliography: NSGEV.bib
-  linkcolor: blue
+title: "Timeseries Covariates with NSGEV"
+author: Yves Deville
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Timeseries Covariates with NSGEV}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: NSGEV.bib
+linkcolor: blue
 --- 
 
 \newcommand{\m}[1]{\mathbf{#1}}
