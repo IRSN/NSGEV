@@ -78,7 +78,7 @@
 ##'
 ##' @importFrom utils getS3method
 ##' @importFrom nieve qGEV
-##' @import data.table
+##' @rawNamespace import(data.table, except = melt)
 ##' @importFrom reshape2 melt
 ##' @importFrom stats predict qnorm
 ##' @method predict TVGEV

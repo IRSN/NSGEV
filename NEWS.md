@@ -2,7 +2,7 @@
 **NSGEV** Package News
 ======================
 
-# New in version 0.2.0 (branch `influence`)
+# New in version 0.2.1
 
 ## Enhancements
 

@@ -400,9 +400,10 @@ predictUncond <- function(object,
                 df <- list()
                 for (nm in c("Quant", "L", "U")) {
                     RL1 <- RL[ , nm, , drop = FALSE]
-                    df[[nm]]  <- melt(RL1,
-                                      value.name = nm,
-                                      varnames = c("Period", "Type", "Level"))
+                    df[[nm]]  <-
+                        reshape2::melt(RL1,
+                                       value.name = nm,
+                                       varnames = c("Period", "Type", "Level"))
                 }
                 RL <- data.frame(df[["Quant"]][, c("Period", "Level", "Quant")],
                                  L = df[["L"]]$L, U = df[["U"]]$U)

@@ -48,7 +48,7 @@ autoplot.bts <- function(object, col1 = "darkgray", facets = FALSE, ...) {
         
         if (FALSE) {
             df <- data.frame(date = as.Date(attr(object, "date")), object)
-            df <- melt(df, id.vars = "date")
+            df <- reshape2::melt(df, id.vars = "date")
         } else {
             df <- as.data.frame(object, longFormat = TRUE)
             ## df <- reshape2::melt(df, id.vars = "Date")
@@ -98,7 +98,7 @@ autolayer.bts <- function(object, col1 = "darkgray", ...) {
         
         if (FALSE) {
             df <- data.frame(date = as.Date(attr(object, "date")), object)
-            df <- melt(df, id.vars = "date")
+            df <- reshape2::melt(df, id.vars = "date")
         } else {
             df <- as.data.frame(object, longFormat = TRUE)
         }

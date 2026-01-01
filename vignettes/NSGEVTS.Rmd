@@ -1,5 +1,5 @@
 ---
-  title: "Timeseries Covariables with **NSGEV**"
+  title: "Timeseries Covariates with NSGEV"
   author: Yves Deville
   date: "`r Sys.Date()`"
   output:
@@ -22,10 +22,10 @@
 ## library(remotes)
 ## install_github("IRSN/NSGEV", ref = "influence")
 library(knitr)
-if (opts_knit$get("rmarkdown.pandoc.to") == "html") {
-   library(htmltools)
+fmts <- rmarkdown::all_output_formats(knitr::current_input()) 
+if ("html" %in% fmts) {
+    library(htmltools)
 }
-opts_knit$get("rmarkdown.pandoc.to")
 ```
   
   
