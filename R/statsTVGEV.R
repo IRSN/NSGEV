@@ -35,6 +35,10 @@
 quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
                            date = NULL,
                            psi = NULL, ...) {
+
+    if (length(x$TSVars)) {
+        warning("'x' includes TSVars")
+    }
     
     ## control (from  quantile.default)
     if (any(is.na(probs))) stop ("NA not allowed yet in 'probs'")
@@ -42,17 +46,17 @@ quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
     
     eps <- 100 * .Machine$double.eps
     if (any(probs < -eps | probs > 1 + eps))  stop("'probs' outside [0,1]")
-    
-    if (is.null(date)) date <- x$fDate
-    if (is.null(psi)) psi <- x$estimate
-    
-    n <- length(date)
-    theta <- psi2theta(model = x, psi = psi, date = date)
 
+    if (is.null(psi)) psi <- x$estimate
+
+    newdate <- checkNewdata.TVGEV(object = x, newdata = date)
+    fDate <- format(newdate[[x$date]])
+    theta <- psi2theta(model = x, psi = psi, date = newdate)
+    n <- nrow(theta)
     fProbs <- formatPerc(probs)
     
     quant <- array(NA, dim = c(n, length(probs)),
-                   dimnames = list(date = format(date),
+                   dimnames = list(date = fDate,
                        paste("Q", fProbs, sep = "")))
 
     for (i in seq_along(probs)) {
@@ -61,7 +65,7 @@ quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
                                    shape = theta[ , 3L])
     }
     
-    rownames(quant) <- attr(quant, "date") <- format(date)
+    attr(quant, "date") <- fDate
     attr(quant, "collabels") <- fProbs
     attr(quant, "label") <- "quantile"
     class(quant) <- c("bts", "matrix")
@@ -106,7 +110,7 @@ quantile.TVGEV <- function(x, probs = c(0.90, 0.95, 0.99),
 ##' functions are plotted with the x-y axes flipped in order to enhance
 ##' the time-varying feature of the model.
 ##' 
-##' @seealso \code{\link{GEV}} for the density and cdf of the GEV
+##' @seealso \code{\link[nieve]{GEV}} for the density and cdf of the GEV
 ##' distribution, \code{\link{plot.predict.TVGEV}} for the Return Level
 ##' plot.
 ##'
@@ -125,33 +129,38 @@ density.TVGEV <- function(x, xValue = NULL,
                           date = NULL,
                           psi = NULL,
                           log = FALSE, ...) {
-    
-    if (is.null(date)) {
-        date <- selectDate(x$fDate)
+
+    if (length(x$TSVars)) {
+        warning("'x' includes TSVars")
     }
-    if (is.null(psi)) psi <- x$estimate
+
+    ## avoid using two many dates
+    if (is.null(date)) date <- selectDate(x$fDate)
+    newdate <- checkNewdata.TVGEV(object = x, newdata = date)
+    fDate <- format(newdate[[x$date]])
+    n <- nrow(newdate)
     
-    n <- length(date)
-    theta <- psi2theta(model = x, psi = psi, date = date)
+    if (is.null(psi)) psi <- x$estimate
+    theta <- psi2theta(model = x, psi = psi, date = newdate)
 
     if (is.null(xValue)) {
-        q <- quantile(x, probs = c(0.001, 0.999), date = date)
+        q <- quantile(x, probs = c(0.001, 0.999), date = newdate)
         rq <- range(q)
         xValue <- seq(from = rq[1L], to = rq[2L], length.out = 200)
     }
     fxValue <- format(xValue)
     dens <- array(NA, dim = c(n, length(xValue)),
-                  dimnames = list(date = format(date),
-                      paste("d", fxValue, sep = "")))
+                  dimnames = list(date = fDate,
+                                  paste("d", fxValue, sep = "")))
     
     for (i in seq_along(xValue)) {
         dens[ , i] <- nieve::dGEV(xValue[i], loc = theta[ , 1L],
                                   scale = theta[, 2L],
                                   shape = theta[, 3L], ...)
     }
-
+    
     attr(dens, "x") <- xValue
-    rownames(dens) <- attr(dens, "date") <- format(date)
+    rownames(dens) <- attr(dens, "date") <- fDate
     attr(dens, "collabels") <- fxValue
     attr(dens, "label") <- "density"
     class(dens) <- c("bfts", "bts", "matrix")
@@ -175,17 +184,23 @@ cdf.TVGEV <- function(x,
                       date = NULL,
                       psi = NULL,
                       log = FALSE, ...) {
-    
-    if (is.null(date)) {
-        date <- selectDate(x$fDate)
+
+    if (length(x$TSVars)) {
+        warning("'object' includes TSVars")
     }
-    if (is.null(psi)) psi <- x$estimate
+
+    ## avoid using two many dates
+    if (is.null(date)) date <- selectDate(x$fDate)
+    newdate <- checkNewdata.TVGEV(object = x, newdata = date)
+    fDate <- format(newdate[[x$date]])
+    n <- nrow(newdate)
     
-    n <- length(date)
-    theta <- psi2theta(model = x, psi = psi, date = date)
+    if (is.null(psi)) psi <- x$estimate
+  
+    theta <- psi2theta(model = x, psi = psi, date = newdate)
     
     if (is.null(qValue)) {
-        q <- quantile(x, probs = c(0.005, 0.995), date = date)
+        q <- quantile(x, probs = c(0.005, 0.995), date = newdate)
         rq <- range(q)
         qValue <- seq(from = rq[1L], to = rq[2L], length.out = 200)
     }
@@ -202,7 +217,7 @@ cdf.TVGEV <- function(x,
     }
     
     attr(cdf, "x") <- qValue
-    rownames(cdf) <- attr(cdf, "date") <- format(date)
+    rownames(cdf) <- attr(cdf, "date") <- fDate
     attr(cdf, "collabels") <- fqValue
     attr(cdf, "label") <- "cdf"
     class(cdf) <- c("bfts", "bts", "matrix")
@@ -247,19 +262,26 @@ mean.TVGEV <- function(x,
                        date = NULL,
                        psi = NULL, ...) {
 
+    if (length(x$TSVars)) {
+        warning("'x' includes TSVars")
+    }
+     
     ## Euler-Mascheroni constant
     gam <- - digamma(1) 
-    if (is.null(date)) date <- x$fDate
     if (is.null(psi)) psi <- x$estimate
-    
-    n <- length(date)
-    theta <- psi2theta(model = x, psi = psi, date = date)
+
+    newdate <- checkNewdata.TVGEV(object = x, newdata = date)
+    fDate <- format(newdate[[x$date]])
+    n <- nrow(newdate)
+   
+    theta <- psi2theta(model = x, psi = psi, date = newdate)
 
     E <-  theta[ , 1, drop = FALSE] + gam * theta[ , 2, drop = FALSE]
     colnames(E) <- "expectation"
     ind <- theta[ , 3] != 0.0
     E[ind, 1L] <- theta[ , 1] + theta[ind, 2] * (gamma(1 - theta[ind, 3]) - 1.0 ) / theta[ind, 3]
-    rownames(E) <- attr(E, "date") <- format(date)
+    
+    rownames(E) <- attr(E, "date") <- fDate
     attr(E, "collabels") <- "expectation"
     attr(E, "label") <- "expectation"
     class(E) <- c("bts", "matrix")
@@ -281,8 +303,10 @@ moment.TVGEV <- function(x,
                          which = "variance",
                          date = NULL,
                          psi = NULL, ...) {
-
-
+    if (length(x$TSVars)) {
+        warning("'x' includes TSVars")
+    }
+ 
     if (which != "variance") {
         stop("'which' can only be \"variance\" for now.")
     }
@@ -290,14 +314,16 @@ moment.TVGEV <- function(x,
     ## Euler-Mascheroni constant
     gam <- - digamma(1)
     
-    if (is.null(date)) date <- x$fDate
     if (is.null(psi)) psi <- x$estimate
     
-    n <- length(date)
-    theta <- psi2theta(model = x, psi = psi, date = date)
+    newdate <- checkNewdata.TVGEV(object = x, newdata = date)
+    fDate <- format(newdate[[x$date]])
+    n <- nrow(newdate)
+  
+    theta <- psi2theta(model = x, psi = psi, date = newdate)
     
     M <-  array(pi * pi / 6, dim = c(n, 1L),
-                dimnames = list(date = format(date),
+                dimnames = list(date = fDate,
                     "moment" = "variance"))
     ## \xi >= 1/2
     ind <- (theta[ , 3L] >= 0.5)
@@ -309,7 +335,7 @@ moment.TVGEV <- function(x,
         (gamma(1 - 2 * theta[ind, 3L]) - gamma(1 - theta[ind, 3L])^2 ) /
             theta[ind, 3] / theta[ind, 3]
     
-    attr(M, "date") <- format(date)
+    attr(M, "date") <- fDate
     attr(M, "collabels") <- "variance"
     attr(M, "label") <- "variance"
     class(M) <- c("bts", "matrix")

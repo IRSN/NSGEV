@@ -3,7 +3,7 @@
 \name{psi2theta.TVGEV}
 \alias{psi2theta.TVGEV}
 \title{Compute the Matrix of GEV Parameters from the Vector of
-Model Parameters 'psi' and the Data}
+    Model Parameters 'psi' and the Data}
 \usage{
 \method{psi2theta}{TVGEV}(
   model,
@@ -21,12 +21,17 @@ Model Parameters 'psi' and the Data}
 vector of estimates in \code{psi} will be used.}
 
 \item{date}{A vector that can be coerced to the \code{"Date"}
-class. Each element will correspond to a row of the matrix of GEV
-parameters.}
+class. Each element will correspond to a row of the matrix of
+GEV parameters. If \code{model} contains TS covariables, this
+must instead be a data frame containing the suitable
+covariables, along with a column with name \code{model$name}
+and class \code{Date}. Id \code{date} is \code{NULL}, the date
+and possibly the TS covariables are extracted from
+\code{model} and correspond to the information used in the
+fit.}
 
 \item{deriv}{Logical. If \code{TRUE} the returned object has an
-attribute names \code{"gradient"} which is the gradient
-array.}
+attribute names \code{"gradient"} which is the gradient array.}
 
 \item{checkNames}{Logical. If \code{TRUE} it will be checked that
 the names of \code{psi} match the \code{parNames} element of
@@ -35,20 +40,21 @@ the names of \code{psi} match the \code{parNames} element of
 \item{\dots}{Not used yet.}
 }
 \value{
-A matrix with \code{length(date)} rows and \code{3} colums.
-The columns contain the location, the scale and the shape GEV parameters
-in that order.
+A matrix with \code{length(date)} rows and \code{3}
+    colums.  The columns contain the location, the scale and the
+    shape GEV parameters in that order.
 }
 \description{
-Compute the GEV parameters for the marginal distributions of a
-\code{TVGEV} model.
+Compute the GEV parameters for the marginal
+    distributions of a \code{TVGEV} model.
 }
 \note{
 The \code{deriv} formal argument is mainly here to maintain
-a compatibility with the \code{NSGEV} method. However, the
-derivatives w.r.t. the parameter vector \code{psi} are obtained
-simply by using the \code{X} elements of the object \code{model}.
+    a compatibility with the \code{NSGEV} method. However, the
+    derivatives w.r.t. the parameter vector \code{psi} are
+    obtained simply by using the \code{X} elements of the object
+    \code{model}.
 }
 \seealso{
-The \code{\link{GEV}} for the GEV probability functions.
+The \code{\link[nieve]{GEV}} for the GEV probability functions.
 }

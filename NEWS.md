@@ -2,6 +2,43 @@
 **NSGEV** Package News
 ======================
 
+# New in version 0.2.0 (branch `influence`)
+
+## Enhancements
+
+- Experimental changes on `TVGEV` to allow the use of Time Series
+  covariates along with functions of time. CAUTION This may have
+  created bugs!!!
+  
+- New vignette *Timeseries Covariates with NSGEV*. DRAFT version.
+
+- A warning is cast when the `design` argument of `TVGEV` is a call
+  using variables not in `names(data)`. These variables may or may not
+  be found in the parent environment.
+  
+## Bug fixes
+ 
+- The generalised residuals computed with `"gumbel"` were actually
+  following the *reversed* Gumbel, not the Gumbel. New (experimental)
+  choice `"gev4"` for the target distribution.
+  
+- When `TVGEV` was used with `optim = "nloptr"`, the choice `parTrack
+  = TRUE` did not work as expected.
+
+## Changes
+ 
+- The (non-exported) `MLE.TVGEV` function now has a `trace` argument
+  which is set to the value of `trace` argument of `TVGEV`.  When
+  `estim = "nloptr"` and a value `> 2` is given the values of the 
+  parameter and of the objective are traced.
+  
+- The Hessian of the negalive log-likelihood is now exact and no longer 
+  computed with `optimHessian`.
+  
+- The `.Rnw` vignettes, such as the technical vignette `CompDet.Rnw`
+  should no longer be built. Only the pdf will be shipped with the 
+  package tarball.
+
 # New in version 0.2.0
 
 ## Enhancements

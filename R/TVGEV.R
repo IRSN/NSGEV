@@ -1,41 +1,46 @@
 
-
 ##*****************************************************************************
-##' Compute the GEV parameters for the marginal distributions of a
-##' \code{TVGEV} model.
+##' @description Compute the GEV parameters for the marginal
+##'     distributions of a \code{TVGEV} model.
 ##'
 ##' @title Compute the Matrix of GEV Parameters from the Vector of
-##' Model Parameters 'psi' and the Data
+##'     Model Parameters 'psi' and the Data
 ##'
 ##' @param model The \code{TVGEV} object.
 ##' 
 ##' @param psi A vector of parameters for \code{model}. By default the
-##' vector of estimates in \code{psi} will be used.
+##'     vector of estimates in \code{psi} will be used.
 ##'
 ##' @param date A vector that can be coerced to the \code{"Date"}
-##' class. Each element will correspond to a row of the matrix of GEV
-##' parameters.
+##'     class. Each element will correspond to a row of the matrix of
+##'     GEV parameters. If \code{model} contains TS covariables, this
+##'     must instead be a data frame containing the suitable
+##'     covariables, along with a column with name \code{model$name}
+##'     and class \code{Date}. Id \code{date} is \code{NULL}, the date
+##'     and possibly the TS covariables are extracted from
+##'     \code{model} and correspond to the information used in the
+##'     fit.
 ##' 
 ##' @param deriv Logical. If \code{TRUE} the returned object has an
-##' attribute names \code{"gradient"} which is the gradient
-##' array. 
+##'     attribute names \code{"gradient"} which is the gradient array.
 ##'
 ##' @param checkNames Logical. If \code{TRUE} it will be checked that
-##' the names of \code{psi} match the \code{parNames} element of
-##' \code{model}.
+##'     the names of \code{psi} match the \code{parNames} element of
+##'     \code{model}.
 ##'
 ##' @param \dots Not used yet.
 ##'
-##' @return A matrix with \code{length(date)} rows and \code{3} colums.
-##' The columns contain the location, the scale and the shape GEV parameters
-##' in that order.
+##' @return A matrix with \code{length(date)} rows and \code{3}
+##'     colums.  The columns contain the location, the scale and the
+##'     shape GEV parameters in that order.
 ##'
-##' @seealso The \code{\link{GEV}} for the GEV probability functions.
+##' @seealso The \code{\link[nieve]{GEV}} for the GEV probability functions.
 ##'
 ##' @note The \code{deriv} formal argument is mainly here to maintain
-##' a compatibility with the \code{NSGEV} method. However, the
-##' derivatives w.r.t. the parameter vector \code{psi} are obtained
-##' simply by using the \code{X} elements of the object \code{model}.
+##'     a compatibility with the \code{NSGEV} method. However, the
+##'     derivatives w.r.t. the parameter vector \code{psi} are
+##'     obtained simply by using the \code{X} elements of the object
+##'     \code{model}.
 ##'
 ##' @method psi2theta TVGEV
 ##' 
@@ -58,23 +63,33 @@ psi2theta.TVGEV <- function(model, psi = NULL, date = NULL,
             stop("'psi' must have named elements with ",
                  "the names 'parNames(model)'")
         }
-    } else {
-        names(psi) <- model$parNames
-    }
-
-    ## is date is NULL, we use the design matrices in the model
+    } else names(psi) <- model$parNames
+    
+    ## ========================================================================
+    ## is 'date' is 'NULL', we use the design matrices in the model
+    ## ========================================================================
+    
     if (is.null(date)) {
         X <- model$X
         n <- model$n
         ind <- model$ind
         fDate <- model$fDate
     } else {
-        n <- length(date)
+        date <- as.data.frame(date)
+        if (ncol(date) == 1) {
+            names(date) <- model$date
+        } else if (is.null(date[[model$date]])) {
+            stop("one must pass a data frame ",
+                 "with a '", model$date, "'column to  the 'modelMatrices'", 
+                 "function.")
+        } 
+        n <- nrow(date)
+        fDate <- format(date[[model$date]])
+        
         if (!all(model$isCst)) {
             L <- modelMatrices.TVGEV(model, date = date)
             X <- L$X
         } else X <- NULL
-        fDate <- format(date)
     }
     
     theta <- array(NA, dim = c(n, 3L),
@@ -185,7 +200,7 @@ parIni.TVGEV <- function(object, y = NULL) {
 ##'           psi0 = NULL, estim = c("optim", "nloptr"),
 ##'           coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
 ##'           coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
-##'           parTrack = FALSE)
+##'           parTrack = FALSE, trace = 0)
 ##' 
 ##' @param object A (possibly incomplete) \code{TVGEV} object.
 ##' 
@@ -196,14 +211,24 @@ parIni.TVGEV <- function(object, y = NULL) {
 ##' @param estim Character giving the optimisation to be used.
 ##'
 ##' @param coefLower,coefUpper Numeric vectors or \code{NULL} giving
-##' bounds on the parameters. These are used overwrite the "normal"
-##' values which are \code{-Inf} and \code{Inf}. These arguments are
-##' only used when \code{estim} is \code{"nloptr"}.
+##'     bounds on the parameters. These are used overwrite the
+##'     "normal" values which are \code{-Inf} and \code{Inf}. These
+##'     arguments are only used when \code{estim} is \code{"nloptr"}.
+##'     These vectors must have \emph{suitably named} elements. It
+##'     is not necessary to give values for all the elements: the
+##'     "normal" infinite values will continue to hold for the
+##'     parameters for which the bounds are not given. When the scale
+##'     parameter is constant it may help to give a positive value for
+##'     the element \code{"sigma_0"} of \code{coefLower}. When the
+##'     shape is constant it may help to give bounds such as such as
+##'     \code{-0.5} and \code{0.5} for the element \code{"xi_0"}.
 ##' 
 ##' @param parTrack \code{Logical}. If \code{TRUE}, all parameters at
 ##' which an evaluation of the log-Likelihood will be stored and
 ##' returned.
 ##'
+##' @param trace Integer level of verbosity.
+##' 
 ##' @return A list with elements that can be copied into those
 ##' of a \code{TVGEV} object.
 ##'
@@ -230,7 +255,8 @@ MLE.TVGEV <- function(object,
                       estim = c("optim", "nloptr"),
                       coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
                       coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
-                      parTrack = FALSE) {
+                      parTrack = FALSE,
+                      trace = 0) {
     
     parNames.GEV <- c("loc", "scale", "shape")
      
@@ -367,7 +393,7 @@ MLE.TVGEV <- function(object,
     
     if (parTrack) {
         negLogLikFun1 <- function(psi, deriv = FALSE, hessian = FALSE, object)  {
-            trackEnv$psi  <- c(trackEnv$psi, psi)
+            trackEnv$psi <- c(trackEnv$psi, psi)
             negLogLikFun(psi = psi, deriv = deriv, hessian = hessian, object = object)
         }
     } else {
@@ -377,12 +403,16 @@ MLE.TVGEV <- function(object,
     cvg <- TRUE
         
     if (estim == "optim") {
-        
+        if (trace) {
+            cat("o Mininimisation of the negative log-likelihood\n",
+                "  using `stats::optim`.\n")
+        }
         res$fit <- try(optim(par = psi0,
                              fn = negLogLikFun1,
                              deriv = FALSE,
                              hessian = FALSE,
-                             control = list(maxit = 1000),
+                             control = list(maxit = 1000,
+                                            trace = pmax(trace - 1, 0)),
                              ## hessian = TRUE,
                              object = object))
 
@@ -394,18 +424,25 @@ MLE.TVGEV <- function(object,
                 res$negLogLik <- res$fit$value
             } else {
                 cvg <- FALSE
+                cat("  The optimisation failed to converge.",
+                    "  Hints: give `psi0`, try using `estim = \"nloptr\",",
+                    "  give lower and upper bounds.\n")
             }
         }
             
     } else if (estim == "nloptr") {
-        
+        if (trace) {
+            cat("o Minimisation of the negative log-likelihood",
+                "  using `nloptr::nloptr`.\n")
+        }
         opts <- list("algorithm" = "NLOPT_LD_LBFGS",
                      "xtol_rel" = 1.0e-8,
                      "xtol_abs" = 1.0e-8,
                      "ftol_abs" = 1e-5,
-                     "maxeval" = 1000, "print_level" = 0,
+                     "maxeval" = 1000,
+                     "print_level" = pmax(trace - 1, 0),
                      "check_derivatives" = FALSE)
-
+        
         ## XXX caution! this works when the shape is constant only!!!
         p <- object$p
         
@@ -440,7 +477,7 @@ MLE.TVGEV <- function(object,
         }
     
         res$fit <- try(nloptr(x0 = psi0,
-                              eval_f = negLogLikFun,
+                              eval_f = negLogLikFun1,
                               lb = lb,
                               ub = ub,
                               deriv = TRUE,
@@ -461,6 +498,11 @@ MLE.TVGEV <- function(object,
                 res$negLogLik <- res$fit$objective
             } else {
                 cvg <- FALSE
+                if (trace) {
+                    cat("  The optimisation failed to converge.",
+                        "  Hints: try using `estim = \"optim\",",
+                        "  give `psi0`, give lower and upper bounds.\n")
+                }
             }
         }
         
@@ -481,21 +523,17 @@ MLE.TVGEV <- function(object,
         res$theta <- psi2theta(object, psi = psiHat, checkNames = FALSE)
         
         ## compute Hessian. 
-        ## res$hessian <- hessian(func = negLogLikFun,
-        ##                       x = res$estimate, deriv = FALSE,
-        ##                       object = object)
-
-        res$hessian <- optimHess(par = res$estimate,
-                                 fn = negLogLikFun,
-                                 deriv = FALSE,
-                                 object = object)
+        res$hessian <- negLogLikFun(psi = res$estimate,
+                                        deriv = TRUE, hessian = TRUE,
+                                        object = object)$hessian
         
         vcov <- try(solve(res$hessian), silent = TRUE)
-        
         if (!inherits(vcov, "try-error")) {
-            rownames(vcov) <- colnames(vcov) <- object$parNames
-            res$vcov <- vcov
-            res$sd <- sqrt(diag(vcov))
+                rownames(vcov) <- colnames(vcov) <- object$parNames
+                res$vcov <- vcov
+                res$sd <- sqrt(diag(vcov))
+        } else {
+            warning("The (exact) Hessian is not numerically invertible")
         }
     }
     
@@ -733,16 +771,27 @@ bs.TVGEV <- function(object,
 ##' 
 modelMatrices.TVGEV  <- function(object, date = NULL, ...) {
     
-    
     if (is.null(date)) {
         return(list(dfAll = object$dfAll, X = object$X))
     }
     trm <- object$terms
-    date <- as.Date(date)
-    data <- data.frame(date)
-    colnames(data) <- object$date
-    parNames.GEV <- c("loc", "scale", "shape")
+    if (length(object$TSVars) == 0) {
+        ## One column data frame
+        data <- data.frame(date)
+        colnames(data) <- object$date
+        data[[object$date]] <- as.Date(data[[object$date]])
+    } else {
+        data <- as.data.frame(date)
+        date <- data[[object$date]]
+        if (is.null(data[[object$date]])) {
+            stop("'model' uses TSVars hence one must pass a data frame ",
+                 "with a '", object$date, "'column to  the 'modelMatrices'", 
+                 "function.")
+        } 
+    }
 
+    parNames.GEV <- c("loc", "scale", "shape")
+    
     ## Caution: here, 'dfAll' does not embed the response
     if (!is.null(object$design)) {
         if (is.call(object$design)) {
@@ -750,10 +799,13 @@ modelMatrices.TVGEV  <- function(object, date = NULL, ...) {
         } else {
             dfAll <- object$design
         }
-    } else dfAll <- object$data
+        dfAll[[object$date]] <- NULL
+        dfAll <- data.frame(data, dfAll)
+    } else dfAll <- data
 
     fDate <- format(date)
-    rownames(dfAll) <- fDate
+    ## XXX
+    ## rownames(dfAll) <- fDate
     
     X <- list()
     
@@ -763,7 +815,10 @@ modelMatrices.TVGEV  <- function(object, date = NULL, ...) {
         mf <- model.frame(trm[[nm]], dfAll, na.action = na.pass)
         X[[nm]] <- model.matrix(trm[[nm]], mf)
         ## X[[nm]] <- model.matrix(object$terms[[nm]], data = dfAll)
-        rownames(X[[nm]]) <- fDate
+        ## XXX
+        if (length(object$TSVars == 0)) {
+            rownames(X[[nm]]) <- fDate
+        }
     }
 
     list(dfAll = dfAll, X = X)
@@ -984,20 +1039,81 @@ TVGEV <- function(data,
 
     ## =======================================================================
     ## Build a data frame 'dfAll' containing ALL the required variables.
+    ##
+    ## - 'desVars' contains the "design variables" that are functions of the
+    ##   date coming from the design e.g. 't1'
+    ##
+    ## - 'TSVars' constains the variables that are not design
+    ##   variables, that are not the Date or the Response and appear
+    ##   in `allVars`.
+    ##
     ## =======================================================================
 
     tv[["design"]] <- mc[["design"]]
 
+    allVars <- union(union(all.vars(loc), all.vars(scale)), all.vars(shape))
+    desVars <- setdiff(allVars, names(data))
+    
     if (!is.null(tv$design)) {
+        
         if (is.call(tv$design)) {
             dfAll <- as.data.frame(eval(tv$design, envir = data))
-            dfAll <- data.frame(data[ , response], dfAll)
-            colnames(dfAll) <- c(response, colnames(dfAll)[-1])
+            ## dfAll <- data.frame(data[ , response], dfAll)
+            ## colnames(dfAll) <- c(response, colnames(dfAll)[-1])
+            desVarsRaw <- all.vars(tv$design)
+            if (length(desVarsRaw)) {
+                ind <- is.na(match(desVarsRaw, names(data)))
+                if (any(ind)) {
+                    warning("'design' uses variables not in `data`: ",
+                            paste(sprintf("`%s`", desVarsRaw[ind]),
+                                  collapse = ", "),
+                            ".\n This may be a source of problems in scoping, ",
+                            "because these variables are\n at the best found ",
+                            "in an environment differing from `data`.")
+                }
+            }
         } else {
             dfAll <- tv$design
         }
-    } else dfAll <- tv$data
+        notFound <- setdiff(desVars, names(dfAll))
+        if (length(notFound)) {
+            notFound <- paste(paste0("'", notFound, "'"), collapse = ", ")
+            stop("Required variables not in 'data' nor in the design: ",
+                 notFound)
+        }
+        ## avoid the duplication of the date column.
+        dfAll[[date]] <- NULL
+        dup <- intersect(names(dfAll), names(data)) 
+        if (any(dup)) {
+            dup <- paste(paste0("'", dup, "'"), collapse = ", ")
+            stop("Variable names both in design and data: ",
+                 dup)
+        }
+        dfAll <- data.frame(data, dfAll)
+    } else {
+        dfAll <- tv$data
+        notFound <- setdiff(allVars, names(dfAll))
+        if (length(notFound)) {
+            notFound <- paste(paste0("'", notFound, "'"), collapse = ", ")
+            stop("Required variables not in 'data' nor in the design: ",
+                 notFound)
+        }
+    }
 
+    tv$TSVars <- setdiff(allVars, union(union(date, response), desVars))
+    if (trace > 1) {
+        cat("o Analysis of formulas\n")
+        cat("   - All Variables:    ",
+            paste(paste0("'", allVars, "'"), collapse = ", "),
+            "\n") 
+        cat("   - Design Variables: ",
+            paste(paste0("'", desVars, "'"), collapse = ", "),
+            "\n") 
+        cat("   - TS Covariates:    ",
+            paste(paste0("'", tv$TSVars, "'"), collapse = ", "),
+            "\n")
+    }
+    
     tv$fDate <- format(data[ , date])
     rownames(dfAll) <- tv$fDate
     
@@ -1074,7 +1190,8 @@ TVGEV <- function(data,
                          estim = estim,
                          coefLower = coefLower,
                          coefUpper = coefUpper,
-                         parTrack = parTrack) 
+                         parTrack = parTrack,
+                         trace = trace) 
         
         ## copy
         for (nm1 in names(res)) {

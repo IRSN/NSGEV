@@ -5,15 +5,16 @@
 \alias{resid.TVGEV}
 \title{Generalised Residuals for a \code{TVGEV} Model}
 \usage{
-\method{residuals}{TVGEV}(object, type = c("gumbel", "exp", "unif"), ...)
+\method{residuals}{TVGEV}(object, type = c("gumbel", "exp", "unif", "gev4"), ...)
 }
 \arguments{
 \item{object}{A \code{TVGEV} object.}
 
 \item{type}{The approximate distribution wanted. The choices
-\code{c("unif", "exp", "gumbel")} correspond to the standard
-uniform, the standard exponential and the standard Gumbel
-distributions. Partial matching is allowed.}
+\code{c("gumbel", "exp", "unif", "gev4")} correspond to the
+following distributions: standard Gumbel, the standard
+exponential, the standard uniform, and the GEV with shape
+\eqn{-0.25} distributions. Partial matching is allowed.}
 
 \item{...}{Not used yet.}
 }
@@ -21,7 +22,7 @@ distributions. Partial matching is allowed.}
 A vector of generalised residuals which should
     \emph{approximately} be independent and \emph{approximately}
     follow the target distribution: standard Gumbel, standard
-    exponential or standard uniform, depending on the value of
+    exponential or standard uniform, ... depending on the value of
     \code{type}.
 }
 \description{
@@ -37,7 +38,8 @@ The upper 95\% quantile of the standard Gumbel and the
     standard exponential is close to \eqn{3} which can be used to
     gauge "large residuals". Using \code{type = "gumbel"} seems
     better to diagnose abnormally small residuals as may result
-    from abnormally small block maxima.
+    from abnormally small block maxima. The generalised residuals
+    have no physical dimension.
 }
 \examples{
 df <- within(TXMax_Dijon, Date <- as.Date(sprintf("\%4d-01-01", Year)))

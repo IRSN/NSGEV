@@ -2,20 +2,19 @@ Package: NSGEV
 Type: Package
 Title: Non-Stationary GEV Time Series
 Version: 0.2.0
-Date: 2024-12-02
+Date: 2025-08-20
 Authors@R:
     c(person(given = "Yves",
              family = "Deville",
              role = c("cre", "aut"),
              email = "deville.yves@alpestat.com",
 	     comment = c(ORCID = "0000-0002-1233-488X")))
-Maintainer: Yves Deville <deville.yves@alpestat.com>
 Description: Utility functions for Non-Stationary time series with GEV margins.
 License: GPL-3
 LazyData: yes
 Imports: utils, methods, splines, numDeriv, nloptr, data.table, reshape2, tidyr, forecast, scales, grDevices
 Depends: ismev, extRemes, nieve, ggplot2
-Suggests: parallel, doParallel, foreach, testthat, rmarkdown, knitr, png, deSolve
+Suggests: parallel, doParallel, foreach, testthat, rmarkdown, knitr, png, deSolve, htmltools, plotly
 Encoding: UTF-8
 URL: https://github.com/IRSN/NSGEV/
 BugReports: https://github.com/IRSN/NSGEV/issues/

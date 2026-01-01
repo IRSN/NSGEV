@@ -8,7 +8,7 @@ MLE.TVGEV(object, y = NULL,
           psi0 = NULL, estim = c("optim", "nloptr"),
           coefLower = if (estim != "nloptr") numeric(0) else c("xi_0" = -0.9),
           coefUpper = if (estim != "nloptr") numeric(0) else c("xi_0" = 2.0),
-          parTrack = FALSE)
+          parTrack = FALSE, trace = 0)
 }
 \arguments{
 \item{object}{A (possibly incomplete) \code{TVGEV} object.}
@@ -20,13 +20,23 @@ MLE.TVGEV(object, y = NULL,
 \item{estim}{Character giving the optimisation to be used.}
 
 \item{coefLower, coefUpper}{Numeric vectors or \code{NULL} giving
-bounds on the parameters. These are used overwrite the "normal"
-values which are \code{-Inf} and \code{Inf}. These arguments are
-only used when \code{estim} is \code{"nloptr"}.}
+bounds on the parameters. These are used overwrite the
+"normal" values which are \code{-Inf} and \code{Inf}. These
+arguments are only used when \code{estim} is \code{"nloptr"}.
+These vectors must have \emph{suitably named} elements. It
+is not necessary to give values for all the elements: the
+"normal" infinite values will continue to hold for the
+parameters for which the bounds are not given. When the scale
+parameter is constant it may help to give a positive value for
+the element \code{"sigma_0"} of \code{coefLower}. When the
+shape is constant it may help to give bounds such as such as
+\code{-0.5} and \code{0.5} for the element \code{"xi_0"}.}
 
 \item{parTrack}{\code{Logical}. If \code{TRUE}, all parameters at
 which an evaluation of the log-Likelihood will be stored and
 returned.}
+
+\item{trace}{Integer level of verbosity.}
 }
 \value{
 A list with elements that can be copied into those
