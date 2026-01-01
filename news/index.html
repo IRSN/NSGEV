@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -36,6 +36,9 @@
     </li>
     <li>
       <a href="../articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="../articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="../articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -69,9 +72,29 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href="https://github.com/IRSN/NSGEV/blob/0.2.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/IRSN/NSGEV/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.1" id="new-in-version-021">New in version 0.2.1<a class="anchor" aria-label="anchor" href="#new-in-version-021"></a></h2>
+<div class="section level3">
+<h3 id="enhancements-0-2-1">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-2-1"></a></h3>
+<ul><li><p>Experimental changes on <code>TVGEV</code> to allow the use of Time Series covariates along with functions of time. CAUTION This may have created bugs!!!</p></li>
+<li><p>New vignette <em>Timeseries Covariates with NSGEV</em>. DRAFT version.</p></li>
+<li><p>A warning is cast when the <code>design</code> argument of <code>TVGEV</code> is a call using variables not in <code>names(data)</code>. These variables may or may not be found in the parent environment.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-2-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-1"></a></h3>
+<ul><li><p>The generalised residuals computed with <code>"gumbel"</code> were actually following the <em>reversed</em> Gumbel, not the Gumbel. New (experimental) choice <code>"gev4"</code> for the target distribution.</p></li>
+<li><p>When <code>TVGEV</code> was used with <code>optim = "nloptr"</code>, the choice <code>parTrack   = TRUE</code> did not work as expected.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-0-2-1">Changes<a class="anchor" aria-label="anchor" href="#changes-0-2-1"></a></h3>
+<ul><li><p>The (non-exported) <code>MLE.TVGEV</code> function now has a <code>trace</code> argument which is set to the value of <code>trace</code> argument of <code>TVGEV</code>. When <code>estim = "nloptr"</code> and a value <code>&gt; 2</code> is given the values of the parameter and of the objective are traced.</p></li>
+<li><p>The Hessian of the negalive log-likelihood is now exact and no longer computed with <code>optimHessian</code>.</p></li>
+<li><p>The <code>.Rnw</code> vignettes, such as the technical vignette <code>CompDet.Rnw</code> should no longer be built. Only the pdf will be shipped with the package tarball.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.0" id="new-in-version-020">New in version 0.2.0<a class="anchor" aria-label="anchor" href="#new-in-version-020"></a></h2>
 <div class="section level3">
@@ -145,7 +168,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

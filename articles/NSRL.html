@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -53,6 +53,9 @@
     </li>
     <li>
       <a href="../articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="../articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="../articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -95,7 +98,7 @@
       <h1 data-toc-skip>TVGEV: Check Return Levels</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/0.2.0/vignettes/NSRL.Rmd" class="external-link"><code>vignettes/NSRL.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/vignettes/NSRL.Rmd" class="external-link"><code>vignettes/NSRL.Rmd</code></a></small>
       <div class="hidden name"><code>NSRL.Rmd</code></div>
 
     </div>
@@ -246,13 +249,20 @@ following code computes the NSRL for several periods of time.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pu</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in plot.predict.TVGEV(pu): Inasmuch the plot is actually a 'ggplot', it</span></span>
 <span><span class="co">## is better to use the 'autoplot' method for consistency</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `linewidth` instead.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">NSGEV</span> package.</span></span>
+<span><span class="co">##   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/IRSN/NSGEV/issues/&gt;</span>.</span></span>
+<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
 <p>For instance, for the period of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>B</mi><mi>j</mi></msub><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">B_j = 40</annotation></semantics></math>
 years beginning at the date <code>"2020-01-01"</code>, the level
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>j</mi></msub><mo>=</mo><mn>40.65</mn></mrow><annotation encoding="application/x-tex">u_j =40.65</annotation></semantics></math>
 Celsius is expected to be exceeded once (in average) across a large
 number of paths.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/check_predictUncond.html">check_predictUncond</a></span><span class="op">(</span><span class="va">res2</span>, newdateFrom <span class="op">=</span> <span class="st">"2020-01-01"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         5        10        20        30        40        50        70       100 </span></span>
@@ -285,7 +295,7 @@ is in good accordance with the definition.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

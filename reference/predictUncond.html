@@ -18,7 +18,7 @@ TVGEV or a NSGEV object."><!-- mathjax --><script src="https://cdnjs.cloudflare.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -37,6 +37,9 @@ TVGEV or a NSGEV object."><!-- mathjax --><script src="https://cdnjs.cloudflare.
     </li>
     <li>
       <a href="../articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="../articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="../articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -70,7 +73,7 @@ TVGEV or a NSGEV object."><!-- mathjax --><script src="https://cdnjs.cloudflare.
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Prediction of Unconditional or Non-Stationary Return Levels for a <code>TVGEV</code> or a <code>NSGEV</code> Object</h1>
-    <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/0.2.0/R/predictUncond.R" class="external-link"><code>R/predictUncond.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/R/predictUncond.R" class="external-link"><code>R/predictUncond.R</code></a></small>
     <div class="hidden name"><code>predictUncond.Rd</code></div>
     </div>
 
@@ -320,14 +323,14 @@ as they do for conditional predictions.</p></li>
 <span class="r-in"><span><span class="va">pu</span> <span class="op">&lt;-</span> <span class="fu">predictUncond</span><span class="op">(</span><span class="va">res2</span>, newdateFrom <span class="op">=</span> <span class="st">"2020-01-01"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pu</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         Date Period Level    Quant        L        U</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2020-01-01      5   95% 37.14826 35.95345 38.34308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2020-01-01     10   95% 38.22615 36.90582 39.54648</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 2020-01-01     20   95% 39.30897 37.74285 40.87508</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 2020-01-01     30   95% 40.03631 38.22455 41.84808</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 2020-01-01     40   95% 40.64957 38.58461 42.71454</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 2020-01-01     50   95% 41.21583 38.88623 43.54543</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 2020-01-01     70   95% 42.29923 39.40572 45.19275</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 2020-01-01    100   95% 43.90088 40.10939 47.69237</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2020-01-01      5   95% 37.14826 35.95343 38.34309</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2020-01-01     10   95% 38.22615 36.90577 39.54653</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 2020-01-01     20   95% 39.30897 37.74275 40.87519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 2020-01-01     30   95% 40.03631 38.22441 41.84821</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 2020-01-01     40   95% 40.64957 38.58444 42.71471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 2020-01-01     50   95% 41.21583 38.88603 43.54563</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 2020-01-01     70   95% 42.29923 39.40547 45.19299</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 2020-01-01    100   95% 43.90088 40.10909 47.69266</span>
 </code></pre></div>
     </div>
   </div>
@@ -342,7 +345,7 @@ as they do for conditional predictions.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

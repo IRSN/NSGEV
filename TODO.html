@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -36,6 +36,9 @@
     </li>
     <li>
       <a href="articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -74,17 +77,21 @@
 <div class="section level3">
 <h3 id="nsgev-todo-list">NSGEV TODO List<a class="anchor" aria-label="anchor" href="#nsgev-todo-list"></a></h3>
 <p>This is a temporary reminder list by YD. Not a planning for new development!</p>
-<ul class="task-list"><li><p><label><input type="checkbox">Make an alias of the <code>anova</code> method under a better name making clear that this is for a Likelihood Ratio test.</label></p></li>
+<ul><li><p><label><input type="checkbox">Make the <code>predictUncond</code> function deprecated?</label></p></li>
+<li><p><label><input type="checkbox"><strong><code>anova</code> name</strong> Make an alias of the <code>anova</code> method under a better name making clear that this is for a Likelihood Ratio test. May be <code>LR.test</code>.</label></p></li>
 <li><p><label><input type="checkbox"><strong>Profile Likelihood</strong>. Speed up the computation of the profile likelihood intervals in <code>quantMax.TVGEV</code>. The initial values for the constrained optimisation could be better.</label></p></li>
 <li><p><label><input type="checkbox" checked><strong>Profile Likelihood</strong>. Experiment on the computation of profile likelihood intervals with the ODE method? EXPERIMENTAL.</label></p></li>
 <li><p><label><input type="checkbox" checked><strong>Profile Likelihood</strong>. Experiment on the computation of profile <em>contours</em> for some or all of the couples of parameters in a fitted <code>TVGEV</code> model.</label></p></li>
+<li><p>[] <strong>Return level plots</strong> Allow the return level plot to use an horizontal axis with a probability of exceedance (and a Gumbel scale) rather than a return period as done for the quantile of the maximum. So the plot for a conditional return level would be nearly identical to that given for the quantile of the maximum on a one-year period.</p></li>
 <li><p><label><input type="checkbox"><strong>Improve Numerical Treatment</strong>. Improve by using the QR method on the design matrices. So the vector of parameters will be internally <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐑</mi><mi>𝛙</mi></mrow><annotation encoding="application/x-tex">\mathbf{R}\boldsymbol{\psi}</annotation></semantics></math> instead of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛙</mi><annotation encoding="application/x-tex">\boldsymbol{\psi}</annotation></semantics></math>. This should eliminate some of the problems met when the covariates are poorly scaled and/or are correlated.</label></p></li>
 <li><p><label><input type="checkbox" checked><strong>Tests</strong>. Improve the code coverage by adding new tests. IN PROGRESS.</label></p></li>
 <li><p><label><input type="checkbox" checked><strong>Continuous Integration/Github Actions</strong>. Add an action for the check, and an action for the build to produce a release when a tag is used on for the commit.</label></p></li>
-<li><p><label><input type="checkbox" checked><strong>Vignettes</strong>. In the Introduction vignette enhance the part on the quantile of the maximum by adding profile likelihood intervals. Complete the citations and introduce the expression <em>Design Life Level</em>.</label></p></li>
-<li><p><label><input type="checkbox" checked><strong>Vignettes</strong>. In the Introduction vignette, include the fixes that were by Jesper Rydén (mail 2024-03-06).</label></p></li>
+<li><p><label><input type="checkbox" checked><strong>Vignettes</strong>. In the <em>Introduction</em> vignette enhance the part on the quantile of the maximum by adding profile likelihood intervals. Complete the citations and introduce the expression <em>Design Life Level</em>.</label></p></li>
+<li><p><label><input type="checkbox" checked><strong>Vignettes</strong>. In the <em>Introduction</em> vignette, include the fixes that were by Jesper Rydén (mail 2024-03-06).</label></p></li>
 <li><p><label><input type="checkbox"><strong>README</strong> file. Make the installation part shortest, and include a small example with plots that will be converted into a small Google Colab notebook.</label></p></li>
 <li><p><label><input type="checkbox"><strong>Hexagon sticker</strong>?</label></p></li>
+<li><p><label><input type="checkbox">Change the name of <code>bs</code> or replace this generic function by a generic bootstapping function from another package.</label></p></li>
+<li><p><label><input type="checkbox">Get rid of the dependence to the <strong>reshape2</strong> package by replacing <code><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">reshape2::melt</a></code> by <code><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">data.table::melt</a></code>.</label></p></li>
 </ul></div>
 
   </div>
@@ -102,7 +109,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

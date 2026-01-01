@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -53,6 +53,9 @@
     </li>
     <li>
       <a href="../articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="../articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="../articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -95,7 +98,7 @@
       <h1 data-toc-skip>TVGEV: Check Profile Likelihood</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/0.2.0/vignettes/ProfLik.Rmd" class="external-link"><code>vignettes/ProfLik.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/vignettes/ProfLik.Rmd" class="external-link"><code>vignettes/ProfLik.Rmd</code></a></small>
       <div class="hidden name"><code>ProfLik.Rmd</code></div>
 
     </div>
@@ -116,7 +119,7 @@ by <strong>NSGEV</strong> with those of other packages, mainly
 <h3 id="ml-estimation">ML Estimation<a class="anchor" aria-label="anchor" href="#ml-estimation"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.ral.ucar.edu/~ericg/softextreme.php" class="external-link">ismev</a></span><span class="op">)</span>   </span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ismev</span><span class="op">)</span>   </span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">portpirie</span>, package <span class="op">=</span> <span class="st">"ismev"</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">portpirie</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%4d-01-01"</span>, <span class="va">Year</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -183,7 +186,7 @@ horizontal blue line.</p>
 <span><span class="co">##    Constraint &amp; value -0.0000000,    -2.4183</span></span>
 <span><span class="co">## If routine fails, try changing plotting interval</span></span></code></pre>
 <div class="figure">
-<img src="Rgraphics%2Fproflik-pp2a-1.png" alt="Confidence level 95%." width="384"><p class="caption">
+<img src="Rgraphics/proflik-pp2a-1.png" class="r-plt" alt="Confidence level 95%." width="384"><p class="caption">
 Confidence level 95%.
 </p>
 </div>
@@ -215,7 +218,7 @@ Confidence level 95%.
 <span><span class="co">##    Constraint &amp; value  0.0000000,    -3.8020</span></span>
 <span><span class="co">## If routine fails, try changing plotting interval</span></span></code></pre>
 <div class="figure">
-<img src="Rgraphics%2Fproflik-ppb-1.png" alt="Confidence level 70%." width="576"><p class="caption">
+<img src="Rgraphics/proflik-ppb-1.png" class="r-plt" alt="Confidence level 70%." width="576"><p class="caption">
 Confidence level 70%.
 </p>
 </div>
@@ -233,14 +236,14 @@ an ordinate matching the lowest horizontal blue line.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/check_predict.html">check_predict</a></span><span class="op">(</span><span class="va">fitNSGEV</span>, ref <span class="op">=</span> <span class="va">fitismev</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="Rgraphics%2Fproflik-pp3a-1.png" alt="Confidence level 95%." width="768"><p class="caption">
+<img src="Rgraphics/proflik-pp3a-1.png" class="r-plt" alt="Confidence level 95%." width="768"><p class="caption">
 Confidence level 95%.
 </p>
 </div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/check_predict.html">check_predict</a></span><span class="op">(</span><span class="va">fitNSGEV</span>, ref <span class="op">=</span> <span class="va">fitismev</span>, level <span class="op">=</span> <span class="fl">0.70</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="Rgraphics%2Fproflik-pp3b-1.png" alt="Confidence level 70%." width="768"><p class="caption">
+<img src="Rgraphics/proflik-pp3b-1.png" class="r-plt" alt="Confidence level 70%." width="768"><p class="caption">
 Confidence level 70%.
 </p>
 </div>
@@ -255,7 +258,7 @@ hidden.</p>
 <h3 id="ml-estimation-1">ML Estimation<a class="anchor" aria-label="anchor" href="#ml-estimation-1"></a>
 </h3>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.ral.ucar.edu/~ericg/softextreme.php" class="external-link">ismev</a></span><span class="op">)</span>   </span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ismev</span><span class="op">)</span>   </span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">fremantle</span>, package <span class="op">=</span> <span class="st">"ismev"</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">fremantle</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%4d-01-01"</span>, <span class="va">Year</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -314,7 +317,7 @@ hidden.</p>
 <span><span class="co">##    Constraint &amp; value -0.0000000,   -41.6459</span></span>
 <span><span class="co">## If routine fails, try changing plotting interval</span></span></code></pre>
 <div class="figure">
-<img src="Rgraphics%2Fproflik-fmt2a-1.png" alt="Confidence level 95%." width="384"><p class="caption">
+<img src="Rgraphics/proflik-fmt2a-1.png" class="r-plt" alt="Confidence level 95%." width="384"><p class="caption">
 Confidence level 95%.
 </p>
 </div>
@@ -346,7 +349,7 @@ Confidence level 95%.
 <span><span class="co">##    Constraint &amp; value -0.0000000,   -43.0295</span></span>
 <span><span class="co">## If routine fails, try changing plotting interval</span></span></code></pre>
 <div class="figure">
-<img src="Rgraphics%2Fproflik-fmt2b-1.png" alt="Confidence level 70%." width="384"><p class="caption">
+<img src="Rgraphics/proflik-fmt2b-1.png" class="r-plt" alt="Confidence level 70%." width="384"><p class="caption">
 Confidence level 70%.
 </p>
 </div>
@@ -357,14 +360,14 @@ Confidence level 70%.
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/check_predict.html">check_predict</a></span><span class="op">(</span><span class="va">fitNSGEV</span>, ref <span class="op">=</span> <span class="va">fitismev</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="Rgraphics%2Fproflik-fmt3a-1.png" alt="Condidence level 95%." width="768"><p class="caption">
+<img src="Rgraphics/proflik-fmt3a-1.png" class="r-plt" alt="Condidence level 95%." width="768"><p class="caption">
 Condidence level 95%.
 </p>
 </div>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/check_predict.html">check_predict</a></span><span class="op">(</span><span class="va">fitNSGEV</span>, ref <span class="op">=</span> <span class="va">fitismev</span>, level <span class="op">=</span> <span class="fl">0.70</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="Rgraphics%2Fproflik-fmt3b-1.png" alt="Confidence level 70%." width="768"><p class="caption">
+<img src="Rgraphics/proflik-fmt3b-1.png" class="r-plt" alt="Confidence level 70%." width="768"><p class="caption">
 Confidence level 70%.
 </p>
 </div>
@@ -394,7 +397,7 @@ for the lower bound.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

@@ -19,7 +19,7 @@ Utility functions for Non-Stationary time series with GEV margins."><!-- mathjax
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -38,6 +38,9 @@ Utility functions for Non-Stationary time series with GEV margins."><!-- mathjax
     </li>
     <li>
       <a href="../articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="../articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="../articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -115,7 +118,8 @@ Utility functions for Non-Stationary time series with GEV margins."><!-- mathjax
     <h2>Author</h2>
 
 
-<p>Yves Deville [cre, aut] (&lt;https://orcid.org/0000-0002-1233-488X&gt;)</p>
+<p>Yves Deville [cre, aut] (ORCID:
+    &lt;https://orcid.org/0000-0002-1233-488X&gt;)</p>
 <p>Maintainer: Yves Deville &lt;deville.yves@alpestat.com&gt;</p>
     </div>
     <div id="references">
@@ -131,10 +135,10 @@ Utility functions for Non-Stationary time series with GEV margins."><!-- mathjax
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/IRSN/NSGEV/" class="external-link">NSGEV</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"TVGEV"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] anova         autoplot      bs            cdf           cdfMaxFun    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] coef          confint       density       logLik        mean         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] modelMatrices moment        plot          predict       print        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] profLik       psi2theta     quantMax      quantMaxFun   quantile     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21] residuals     simulate      summary       vcov         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] coef          confint       density       influence     logLik       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] mean          modelMatrices moment        plot          predict      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] print         profLik       psi2theta     quantMax      quantMaxFun  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] quantile      residuals     simulate      summary       vcov         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> see '?methods' for accessing help and source code</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -151,7 +155,7 @@ Utility functions for Non-Stationary time series with GEV margins."><!-- mathjax
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

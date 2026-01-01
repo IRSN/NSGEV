@@ -2,6 +2,7 @@
 <url><loc>/404.html</loc></url>
 <url><loc>/TODO.html</loc></url>
 <url><loc>/articles/IntroTVGEV.html</loc></url>
+<url><loc>/articles/NSGEVTS.html</loc></url>
 <url><loc>/articles/NSGEV_Val.html</loc></url>
 <url><loc>/articles/NSRL.html</loc></url>
 <url><loc>/articles/ProfLik.html</loc></url>
@@ -29,6 +30,7 @@
 <url><loc>/reference/autoplot.TVGEV.html</loc></url>
 <url><loc>/reference/autoplot.bfts.html</loc></url>
 <url><loc>/reference/autoplot.bts.html</loc></url>
+<url><loc>/reference/autoplot.influence.TVGEV.html</loc></url>
 <url><loc>/reference/autoplot.predict.TVGEV.html</loc></url>
 <url><loc>/reference/autoplot.quantMax.TVGEV.html</loc></url>
 <url><loc>/reference/autoplot.resid.TVGEV.html</loc></url>
@@ -40,6 +42,7 @@
 <url><loc>/reference/cdf.html</loc></url>
 <url><loc>/reference/cdfMaxFun.TVGEV.html</loc></url>
 <url><loc>/reference/cdfMaxFun.html</loc></url>
+<url><loc>/reference/checkNewdata.TVGEV.html</loc></url>
 <url><loc>/reference/check_confint.html</loc></url>
 <url><loc>/reference/check_predict.html</loc></url>
 <url><loc>/reference/check_predictUncond.html</loc></url>
@@ -54,6 +57,7 @@
 <url><loc>/reference/dot-qMaxL.TVGEV.html</loc></url>
 <url><loc>/reference/dot-qMaxU.TVGEV.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/influence.TVGEV.html</loc></url>
 <url><loc>/reference/logLik.TVGEV.html</loc></url>
 <url><loc>/reference/mean.TVGEV.html</loc></url>
 <url><loc>/reference/modelMatrices.TVGEV.html</loc></url>
@@ -69,6 +73,7 @@
 <url><loc>/reference/plot.NSGEV.html</loc></url>
 <url><loc>/reference/plot.bfts.html</loc></url>
 <url><loc>/reference/plot.bts.html</loc></url>
+<url><loc>/reference/plot.influence.TVGEV.html</loc></url>
 <url><loc>/reference/plot.predict.TVGEV.html</loc></url>
 <url><loc>/reference/plot.resid.TVGEV.html</loc></url>
 <url><loc>/reference/polynomX.html</loc></url>

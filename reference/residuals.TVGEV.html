@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -36,6 +36,9 @@
     </li>
     <li>
       <a href="../articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="../articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="../articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -69,7 +72,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generalised Residuals for a <code>TVGEV</code> Model</h1>
-    <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/0.2.0/R/residTVGEV.R" class="external-link"><code>R/residTVGEV.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/R/residTVGEV.R" class="external-link"><code>R/residTVGEV.R</code></a></small>
     <div class="hidden name"><code>residuals.TVGEV.Rd</code></div>
     </div>
 
@@ -79,7 +82,7 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'TVGEV'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">object</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gumbel"</span>, <span class="st">"exp"</span>, <span class="st">"unif"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">object</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gumbel"</span>, <span class="st">"exp"</span>, <span class="st">"unif"</span>, <span class="st">"gev4"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -92,9 +95,10 @@
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>The approximate distribution wanted. The choices
-<code>c("unif", "exp", "gumbel")</code> correspond to the standard
-uniform, the standard exponential and the standard Gumbel
-distributions. Partial matching is allowed.</p></dd>
+<code>c("gumbel", "exp", "unif", "gev4")</code> correspond to the
+following distributions: standard Gumbel, the standard
+exponential, the standard uniform, and the GEV with shape
+\(-0.25\) distributions. Partial matching is allowed.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -106,7 +110,7 @@ distributions. Partial matching is allowed.</p></dd>
     <p>A vector of generalised residuals which should
     <em>approximately</em> be independent and <em>approximately</em>
     follow the target distribution: standard Gumbel, standard
-    exponential or standard uniform, depending on the value of
+    exponential or standard uniform, ... depending on the value of
     <code>type</code>.</p>
     </div>
     <div id="details">
@@ -121,7 +125,8 @@ observation \(y_b\) an increasing function depending on the
     standard exponential is close to \(3\) which can be used to
     gauge "large residuals". Using <code>type = "gumbel"</code> seems
     better to diagnose abnormally small residuals as may result
-    from abnormally small block maxima.</p>
+    from abnormally small block maxima. The generalised residuals
+    have no physical dimension.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -176,7 +181,7 @@ of Residuals".  <em>JRSS Ser. B</em>, <b>30</b>(2), pp. 248-275,
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -36,6 +36,9 @@
     </li>
     <li>
       <a href="../articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="../articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="../articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -69,7 +72,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Non-Stationary GEV Model</h1>
-    <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/0.2.0/R/NSGEV.R" class="external-link"><code>R/NSGEV.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/R/NSGEV.R" class="external-link"><code>R/NSGEV.R</code></a></small>
     <div class="hidden name"><code>NSGEV.Rd</code></div>
     </div>
 
@@ -172,7 +175,7 @@ can not for now use these names for its columns.</p>
 <span class="r-in"><span>             data <span class="op">=</span> <span class="va">df2</span>, response <span class="op">=</span> <span class="st">"y"</span>, psi <span class="op">=</span> <span class="va">psi</span>, est <span class="op">=</span> <span class="st">"optim"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## compare the estimation with that of ismev::gev.fit</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="http://www.ral.ucar.edu/~ericg/softextreme.php" class="external-link">ismev</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va">ismev</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ns1.ismev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ismev/man/gev.fit.html" class="external-link">gev.fit</a></span><span class="op">(</span>xdat <span class="op">=</span> <span class="va">df2</span><span class="op">$</span><span class="va">y</span>, ydat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, mul <span class="op">=</span> <span class="fl">1</span>, show <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="st">"NSGEV"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ns1</span><span class="op">$</span><span class="va">estimate</span>, <span class="st">"negLogL"</span> <span class="op">=</span> <span class="va">ns1</span><span class="op">$</span><span class="va">negLogL</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>       <span class="st">"ismev"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ns1.ismev</span><span class="op">$</span><span class="va">mle</span>, <span class="st">"negLogL"</span> <span class="op">=</span> <span class="va">ns1.ismev</span><span class="op">$</span><span class="va">nllh</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -201,7 +204,7 @@ can not for now use these names for its columns.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

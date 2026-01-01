@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -53,6 +53,9 @@
     </li>
     <li>
       <a href="../articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="../articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="../articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -95,7 +98,7 @@
       <h1 data-toc-skip>TVGEV: Check Venice Example</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/0.2.0/vignettes/Venice.Rmd" class="external-link"><code>vignettes/Venice.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/vignettes/Venice.Rmd" class="external-link"><code>vignettes/Venice.Rmd</code></a></small>
       <div class="hidden name"><code>Venice.Rmd</code></div>
 
     </div>
@@ -121,7 +124,7 @@ column 2 of the matrix object.</p>
 <span>                 SeaLevel <span class="op">=</span> <span class="va">venice</span><span class="op">[</span> , <span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%4d-01-01"</span>, <span class="va">Year</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">SeaLevel</span> <span class="op">~</span> <span class="va">date</span>, data <span class="op">=</span> <span class="va">df</span>, type <span class="op">=</span> <span class="st">"o"</span>, pch <span class="op">=</span> <span class="fl">16</span>, xlab <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2Fvenice1-1.png" width="576"></p>
+<p><img src="Rgraphics/venice1-1.png" class="r-plt" alt="" width="576"></p>
 </div>
 <div class="section level3">
 <h3 id="fitting-stationary-gev-models">Fitting stationary GEV models<a class="anchor" aria-label="anchor" href="#fitting-stationary-gev-models"></a>
@@ -247,15 +250,254 @@ time origin.</p>
 <span>                        degree <span class="op">=</span> <span class="fl">2</span>, origin <span class="op">=</span> <span class="st">"1950-01-01"</span><span class="op">)</span>,</span>
 <span>                    estim <span class="op">=</span> <span class="va">estim</span>,</span>
 <span>                    trace <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>                    loc <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">t1</span> <span class="op">+</span> <span class="va">t2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="st">"NSGEV"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fitTVGEV2b</span><span class="op">)</span>,</span>
+<span>                    loc <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">t1</span> <span class="op">+</span> <span class="va">t2</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## o Analysis of formulas</span></span>
+<span><span class="co">##    - All Variables:     't1', 't2' </span></span>
+<span><span class="co">##    - Design Variables:  't1', 't2' </span></span>
+<span><span class="co">##    - TS Covariates:     '' </span></span>
+<span><span class="co">## o Mininimisation of the negative log-likelihood</span></span>
+<span><span class="co">##    using `stats::optim`.</span></span>
+<span><span class="co">##   Nelder-Mead direct search function minimizer</span></span>
+<span><span class="co">## function value for initial parameters = 216.189225</span></span>
+<span><span class="co">##   Scaled convergence tolerance is 3.22147e-06</span></span>
+<span><span class="co">## Stepsize computed as 10.733734</span></span>
+<span><span class="co">## BUILD              6 99999999999999996863366107917975552.000000 216.189225</span></span>
+<span><span class="co">## LO-REDUCTION       8 99999999999999996863366107917975552.000000 216.189225</span></span>
+<span><span class="co">## SHRINK            15 99999999999999996863366107917975552.000000 216.189225</span></span>
+<span><span class="co">## SHRINK            22 99999999999999996863366107917975552.000000 216.189225</span></span>
+<span><span class="co">## SHRINK            29 99999999999999996863366107917975552.000000 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      31 395.055639 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      33 345.170389 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      35 326.717234 216.189225</span></span>
+<span><span class="co">## LO-REDUCTION      37 293.660970 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      39 260.206192 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      41 252.579402 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      43 245.565293 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      45 242.037453 216.189225</span></span>
+<span><span class="co">## LO-REDUCTION      47 237.911955 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      49 232.543335 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      51 226.024758 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      53 222.924849 216.189225</span></span>
+<span><span class="co">## LO-REDUCTION      55 220.136778 216.189225</span></span>
+<span><span class="co">## HI-REDUCTION      57 217.498223 216.189225</span></span>
+<span><span class="co">## LO-REDUCTION      59 217.234803 216.181666</span></span>
+<span><span class="co">## HI-REDUCTION      61 217.036130 216.181666</span></span>
+<span><span class="co">## HI-REDUCTION      63 216.637215 216.181666</span></span>
+<span><span class="co">## LO-REDUCTION      65 216.438856 216.145144</span></span>
+<span><span class="co">## HI-REDUCTION      67 216.368823 216.145144</span></span>
+<span><span class="co">## LO-REDUCTION      69 216.290062 216.126208</span></span>
+<span><span class="co">## HI-REDUCTION      71 216.214517 216.126208</span></span>
+<span><span class="co">## REFLECTION        73 216.189225 216.090001</span></span>
+<span><span class="co">## REFLECTION        75 216.181666 216.086023</span></span>
+<span><span class="co">## HI-REDUCTION      77 216.151985 216.086023</span></span>
+<span><span class="co">## LO-REDUCTION      79 216.145144 216.077084</span></span>
+<span><span class="co">## LO-REDUCTION      81 216.126208 216.077084</span></span>
+<span><span class="co">## HI-REDUCTION      83 216.096534 216.077084</span></span>
+<span><span class="co">## LO-REDUCTION      85 216.090001 216.068836</span></span>
+<span><span class="co">## HI-REDUCTION      87 216.086023 216.068836</span></span>
+<span><span class="co">## HI-REDUCTION      89 216.082751 216.068836</span></span>
+<span><span class="co">## HI-REDUCTION      91 216.077997 216.068836</span></span>
+<span><span class="co">## HI-REDUCTION      93 216.077084 216.068836</span></span>
+<span><span class="co">## REFLECTION        95 216.071708 216.062770</span></span>
+<span><span class="co">## LO-REDUCTION      97 216.071403 216.062770</span></span>
+<span><span class="co">## LO-REDUCTION      99 216.070698 216.062770</span></span>
+<span><span class="co">## REFLECTION       101 216.069431 216.062323</span></span>
+<span><span class="co">## LO-REDUCTION     103 216.068836 216.062323</span></span>
+<span><span class="co">## LO-REDUCTION     105 216.066577 216.062082</span></span>
+<span><span class="co">## REFLECTION       107 216.065654 216.061685</span></span>
+<span><span class="co">## LO-REDUCTION     109 216.064333 216.061073</span></span>
+<span><span class="co">## REFLECTION       111 216.062770 216.060887</span></span>
+<span><span class="co">## REFLECTION       113 216.062323 216.059933</span></span>
+<span><span class="co">## LO-REDUCTION     115 216.062082 216.059933</span></span>
+<span><span class="co">## LO-REDUCTION     117 216.061685 216.059933</span></span>
+<span><span class="co">## HI-REDUCTION     119 216.061073 216.059933</span></span>
+<span><span class="co">## REFLECTION       121 216.060887 216.059139</span></span>
+<span><span class="co">## LO-REDUCTION     123 216.060257 216.059139</span></span>
+<span><span class="co">## REFLECTION       125 216.060079 216.059036</span></span>
+<span><span class="co">## LO-REDUCTION     127 216.060019 216.058951</span></span>
+<span><span class="co">## HI-REDUCTION     129 216.059933 216.058951</span></span>
+<span><span class="co">## LO-REDUCTION     131 216.059423 216.058910</span></span>
+<span><span class="co">## HI-REDUCTION     133 216.059265 216.058910</span></span>
+<span><span class="co">## REFLECTION       135 216.059139 216.058821</span></span>
+<span><span class="co">## REFLECTION       137 216.059036 216.058710</span></span>
+<span><span class="co">## LO-REDUCTION     139 216.059026 216.058710</span></span>
+<span><span class="co">## REFLECTION       141 216.058951 216.058606</span></span>
+<span><span class="co">## REFLECTION       143 216.058910 216.058555</span></span>
+<span><span class="co">## LO-REDUCTION     145 216.058821 216.058555</span></span>
+<span><span class="co">## LO-REDUCTION     147 216.058789 216.058555</span></span>
+<span><span class="co">## REFLECTION       149 216.058710 216.058408</span></span>
+<span><span class="co">## LO-REDUCTION     151 216.058606 216.058408</span></span>
+<span><span class="co">## LO-REDUCTION     153 216.058568 216.058408</span></span>
+<span><span class="co">## LO-REDUCTION     155 216.058559 216.058408</span></span>
+<span><span class="co">## REFLECTION       157 216.058555 216.058372</span></span>
+<span><span class="co">## LO-REDUCTION     159 216.058456 216.058364</span></span>
+<span><span class="co">## EXTENSION        161 216.058435 216.058311</span></span>
+<span><span class="co">## REFLECTION       163 216.058432 216.058308</span></span>
+<span><span class="co">## EXTENSION        165 216.058408 216.058245</span></span>
+<span><span class="co">## REFLECTION       167 216.058372 216.058212</span></span>
+<span><span class="co">## LO-REDUCTION     169 216.058364 216.058212</span></span>
+<span><span class="co">## REFLECTION       171 216.058311 216.058208</span></span>
+<span><span class="co">## REFLECTION       173 216.058308 216.058159</span></span>
+<span><span class="co">## LO-REDUCTION     175 216.058245 216.058150</span></span>
+<span><span class="co">## LO-REDUCTION     177 216.058237 216.058150</span></span>
+<span><span class="co">## LO-REDUCTION     179 216.058212 216.058150</span></span>
+<span><span class="co">## LO-REDUCTION     181 216.058208 216.058148</span></span>
+<span><span class="co">## REFLECTION       183 216.058174 216.058140</span></span>
+<span><span class="co">## HI-REDUCTION     185 216.058159 216.058140</span></span>
+<span><span class="co">## LO-REDUCTION     187 216.058150 216.058135</span></span>
+<span><span class="co">## HI-REDUCTION     189 216.058150 216.058135</span></span>
+<span><span class="co">## LO-REDUCTION     191 216.058148 216.058130</span></span>
+<span><span class="co">## LO-REDUCTION     193 216.058143 216.058130</span></span>
+<span><span class="co">## REFLECTION       195 216.058140 216.058122</span></span>
+<span><span class="co">## HI-REDUCTION     197 216.058135 216.058122</span></span>
+<span><span class="co">## REFLECTION       199 216.058135 216.058119</span></span>
+<span><span class="co">## HI-REDUCTION     201 216.058130 216.058119</span></span>
+<span><span class="co">## HI-REDUCTION     203 216.058130 216.058119</span></span>
+<span><span class="co">## LO-REDUCTION     205 216.058126 216.058119</span></span>
+<span><span class="co">## REFLECTION       207 216.058125 216.058118</span></span>
+<span><span class="co">## LO-REDUCTION     209 216.058124 216.058118</span></span>
+<span><span class="co">## LO-REDUCTION     211 216.058122 216.058118</span></span>
+<span><span class="co">## EXTENSION        213 216.058120 216.058113</span></span>
+<span><span class="co">## EXTENSION        215 216.058119 216.058111</span></span>
+<span><span class="co">## LO-REDUCTION     217 216.058119 216.058111</span></span>
+<span><span class="co">## LO-REDUCTION     219 216.058119 216.058111</span></span>
+<span><span class="co">## LO-REDUCTION     221 216.058118 216.058111</span></span>
+<span><span class="co">## EXTENSION        223 216.058113 216.058102</span></span>
+<span><span class="co">## LO-REDUCTION     225 216.058113 216.058102</span></span>
+<span><span class="co">## LO-REDUCTION     227 216.058112 216.058102</span></span>
+<span><span class="co">## EXTENSION        229 216.058112 216.058100</span></span>
+<span><span class="co">## REFLECTION       231 216.058111 216.058099</span></span>
+<span><span class="co">## EXTENSION        233 216.058107 216.058085</span></span>
+<span><span class="co">## LO-REDUCTION     235 216.058102 216.058085</span></span>
+<span><span class="co">## LO-REDUCTION     237 216.058102 216.058085</span></span>
+<span><span class="co">## LO-REDUCTION     239 216.058100 216.058085</span></span>
+<span><span class="co">## LO-REDUCTION     241 216.058099 216.058085</span></span>
+<span><span class="co">## LO-REDUCTION     243 216.058094 216.058085</span></span>
+<span><span class="co">## EXTENSION        245 216.058093 216.058075</span></span>
+<span><span class="co">## LO-REDUCTION     247 216.058092 216.058075</span></span>
+<span><span class="co">## EXTENSION        249 216.058087 216.058070</span></span>
+<span><span class="co">## EXTENSION        251 216.058086 216.058064</span></span>
+<span><span class="co">## EXTENSION        253 216.058085 216.058053</span></span>
+<span><span class="co">## EXTENSION        255 216.058076 216.058034</span></span>
+<span><span class="co">## LO-REDUCTION     257 216.058075 216.058034</span></span>
+<span><span class="co">## LO-REDUCTION     259 216.058070 216.058034</span></span>
+<span><span class="co">## EXTENSION        261 216.058064 216.058014</span></span>
+<span><span class="co">## LO-REDUCTION     263 216.058053 216.058014</span></span>
+<span><span class="co">## EXTENSION        265 216.058040 216.058001</span></span>
+<span><span class="co">## REFLECTION       267 216.058036 216.058000</span></span>
+<span><span class="co">## EXTENSION        269 216.058034 216.057967</span></span>
+<span><span class="co">## LO-REDUCTION     271 216.058022 216.057967</span></span>
+<span><span class="co">## LO-REDUCTION     273 216.058014 216.057967</span></span>
+<span><span class="co">## LO-REDUCTION     275 216.058001 216.057967</span></span>
+<span><span class="co">## LO-REDUCTION     277 216.058000 216.057967</span></span>
+<span><span class="co">## LO-REDUCTION     279 216.057991 216.057967</span></span>
+<span><span class="co">## LO-REDUCTION     281 216.057991 216.057967</span></span>
+<span><span class="co">## EXTENSION        283 216.057981 216.057950</span></span>
+<span><span class="co">## LO-REDUCTION     285 216.057980 216.057950</span></span>
+<span><span class="co">## EXTENSION        287 216.057973 216.057938</span></span>
+<span><span class="co">## LO-REDUCTION     289 216.057970 216.057938</span></span>
+<span><span class="co">## EXTENSION        291 216.057967 216.057933</span></span>
+<span><span class="co">## LO-REDUCTION     293 216.057957 216.057933</span></span>
+<span><span class="co">## LO-REDUCTION     295 216.057950 216.057933</span></span>
+<span><span class="co">## LO-REDUCTION     297 216.057949 216.057933</span></span>
+<span><span class="co">## REFLECTION       299 216.057940 216.057930</span></span>
+<span><span class="co">## EXTENSION        301 216.057938 216.057925</span></span>
+<span><span class="co">## HI-REDUCTION     303 216.057937 216.057925</span></span>
+<span><span class="co">## EXTENSION        305 216.057935 216.057922</span></span>
+<span><span class="co">## LO-REDUCTION     307 216.057933 216.057922</span></span>
+<span><span class="co">## EXTENSION        309 216.057931 216.057912</span></span>
+<span><span class="co">## LO-REDUCTION     311 216.057930 216.057912</span></span>
+<span><span class="co">## LO-REDUCTION     313 216.057925 216.057912</span></span>
+<span><span class="co">## EXTENSION        315 216.057925 216.057907</span></span>
+<span><span class="co">## EXTENSION        317 216.057922 216.057899</span></span>
+<span><span class="co">## EXTENSION        319 216.057922 216.057881</span></span>
+<span><span class="co">## LO-REDUCTION     321 216.057916 216.057881</span></span>
+<span><span class="co">## LO-REDUCTION     323 216.057912 216.057881</span></span>
+<span><span class="co">## REFLECTION       325 216.057907 216.057879</span></span>
+<span><span class="co">## EXTENSION        327 216.057899 216.057850</span></span>
+<span><span class="co">## LO-REDUCTION     329 216.057891 216.057850</span></span>
+<span><span class="co">## EXTENSION        331 216.057881 216.057818</span></span>
+<span><span class="co">## LO-REDUCTION     333 216.057881 216.057818</span></span>
+<span><span class="co">## LO-REDUCTION     335 216.057879 216.057818</span></span>
+<span><span class="co">## EXTENSION        337 216.057857 216.057764</span></span>
+<span><span class="co">## LO-REDUCTION     339 216.057850 216.057764</span></span>
+<span><span class="co">## EXTENSION        341 216.057836 216.057727</span></span>
+<span><span class="co">## LO-REDUCTION     343 216.057832 216.057727</span></span>
+<span><span class="co">## EXTENSION        345 216.057818 216.057632</span></span>
+<span><span class="co">## LO-REDUCTION     347 216.057796 216.057632</span></span>
+<span><span class="co">## EXTENSION        349 216.057764 216.057543</span></span>
+<span><span class="co">## LO-REDUCTION     351 216.057741 216.057543</span></span>
+<span><span class="co">## EXTENSION        353 216.057727 216.057423</span></span>
+<span><span class="co">## EXTENSION        355 216.057677 216.057326</span></span>
+<span><span class="co">## EXTENSION        357 216.057632 216.057110</span></span>
+<span><span class="co">## LO-REDUCTION     359 216.057568 216.057110</span></span>
+<span><span class="co">## LO-REDUCTION     361 216.057543 216.057110</span></span>
+<span><span class="co">## EXTENSION        363 216.057423 216.056893</span></span>
+<span><span class="co">## EXTENSION        365 216.057326 216.056826</span></span>
+<span><span class="co">## EXTENSION        367 216.057210 216.056575</span></span>
+<span><span class="co">## LO-REDUCTION     369 216.057114 216.056575</span></span>
+<span><span class="co">## REFLECTION       371 216.057110 216.056543</span></span>
+<span><span class="co">## LO-REDUCTION     373 216.056893 216.056543</span></span>
+<span><span class="co">## LO-REDUCTION     375 216.056826 216.056543</span></span>
+<span><span class="co">## LO-REDUCTION     377 216.056750 216.056543</span></span>
+<span><span class="co">## EXTENSION        379 216.056594 216.056419</span></span>
+<span><span class="co">## LO-REDUCTION     381 216.056575 216.056419</span></span>
+<span><span class="co">## EXTENSION        383 216.056574 216.056323</span></span>
+<span><span class="co">## LO-REDUCTION     385 216.056550 216.056323</span></span>
+<span><span class="co">## EXTENSION        387 216.056543 216.056157</span></span>
+<span><span class="co">## REFLECTION       389 216.056421 216.056146</span></span>
+<span><span class="co">## LO-REDUCTION     391 216.056419 216.056146</span></span>
+<span><span class="co">## EXTENSION        393 216.056325 216.056035</span></span>
+<span><span class="co">## EXTENSION        395 216.056323 216.055849</span></span>
+<span><span class="co">## LO-REDUCTION     397 216.056183 216.055849</span></span>
+<span><span class="co">## EXTENSION        399 216.056157 216.055657</span></span>
+<span><span class="co">## LO-REDUCTION     401 216.056146 216.055657</span></span>
+<span><span class="co">## LO-REDUCTION     403 216.056035 216.055657</span></span>
+<span><span class="co">## LO-REDUCTION     405 216.055964 216.055657</span></span>
+<span><span class="co">## LO-REDUCTION     407 216.055849 216.055657</span></span>
+<span><span class="co">## LO-REDUCTION     409 216.055783 216.055657</span></span>
+<span><span class="co">## REFLECTION       411 216.055770 216.055656</span></span>
+<span><span class="co">## EXTENSION        413 216.055741 216.055597</span></span>
+<span><span class="co">## LO-REDUCTION     415 216.055737 216.055597</span></span>
+<span><span class="co">## REFLECTION       417 216.055689 216.055577</span></span>
+<span><span class="co">## REFLECTION       419 216.055657 216.055546</span></span>
+<span><span class="co">## LO-REDUCTION     421 216.055656 216.055546</span></span>
+<span><span class="co">## LO-REDUCTION     423 216.055609 216.055546</span></span>
+<span><span class="co">## REFLECTION       425 216.055597 216.055539</span></span>
+<span><span class="co">## REFLECTION       427 216.055577 216.055499</span></span>
+<span><span class="co">## HI-REDUCTION     429 216.055553 216.055499</span></span>
+<span><span class="co">## LO-REDUCTION     431 216.055547 216.055499</span></span>
+<span><span class="co">## HI-REDUCTION     433 216.055546 216.055499</span></span>
+<span><span class="co">## LO-REDUCTION     435 216.055539 216.055499</span></span>
+<span><span class="co">## LO-REDUCTION     437 216.055534 216.055499</span></span>
+<span><span class="co">## EXTENSION        439 216.055521 216.055469</span></span>
+<span><span class="co">## LO-REDUCTION     441 216.055520 216.055469</span></span>
+<span><span class="co">## LO-REDUCTION     443 216.055509 216.055469</span></span>
+<span><span class="co">## LO-REDUCTION     445 216.055505 216.055469</span></span>
+<span><span class="co">## EXTENSION        447 216.055499 216.055446</span></span>
+<span><span class="co">## LO-REDUCTION     449 216.055497 216.055446</span></span>
+<span><span class="co">## REFLECTION       451 216.055472 216.055440</span></span>
+<span><span class="co">## LO-REDUCTION     453 216.055470 216.055440</span></span>
+<span><span class="co">## REFLECTION       455 216.055469 216.055439</span></span>
+<span><span class="co">## REFLECTION       457 216.055453 216.055435</span></span>
+<span><span class="co">## REFLECTION       459 216.055449 216.055433</span></span>
+<span><span class="co">## LO-REDUCTION     461 216.055446 216.055432</span></span>
+<span><span class="co">## LO-REDUCTION     463 216.055440 216.055432</span></span>
+<span><span class="co">## HI-REDUCTION     465 216.055439 216.055432</span></span>
+<span><span class="co">## REFLECTION       467 216.055436 216.055431</span></span>
+<span><span class="co">## LO-REDUCTION     469 216.055435 216.055431</span></span>
+<span><span class="co">## LO-REDUCTION     471 216.055434 216.055431</span></span>
+<span><span class="co">## Exiting from Nelder Mead minimizer</span></span>
+<span><span class="co">##     473 function evaluations used</span></span></code></pre>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="st">"NSGEV"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fitTVGEV2b</span><span class="op">)</span>,</span>
 <span>      <span class="st">"ismev"</span> <span class="op">=</span> <span class="va">fitismev2</span><span class="op">$</span><span class="va">mle</span>,</span>
 <span>      <span class="st">"extRemes"</span> <span class="op">=</span> <span class="va">fitextRemes2</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">par</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               mu_0     mu_t1        mu_t2  sigma_0        xi_0</span></span>
 <span><span class="co">## NSGEV    108.50613 0.5793764 -0.001374096 14.55759 -0.02535797</span></span>
 <span><span class="co">## ismev     96.38501 0.6325000 -0.001340599 14.56492 -0.02547159</span></span>
 <span><span class="co">## extRemes  96.37645 0.6330981 -0.001347965 14.56132 -0.02545380</span></span></code></pre>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NSGEV"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik</a></span><span class="op">(</span><span class="va">fitTVGEV2b</span><span class="op">)</span>,</span>
 <span>  <span class="st">"ismev"</span> <span class="op">=</span> <span class="op">-</span><span class="va">fitismev2</span><span class="op">$</span><span class="va">nllh</span>,</span>
 <span>  <span class="st">"extRemes"</span> <span class="op">=</span> <span class="op">-</span><span class="va">fitextRemes2</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">value</span><span class="op">)</span></span></code></pre></div>
@@ -269,7 +511,7 @@ the other packages needs some care because the trends for the location
 parameter are no longer identical. The new parameterisation facilitates
 the maximisation. To complete the comparison we can use 1950 as an
 origin for all models.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dfismevb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></span><span class="op">(</span><span class="va">df</span>, <span class="op">{</span><span class="va">t1num</span> <span class="op">&lt;-</span> <span class="va">Year</span> <span class="op">-</span> <span class="fl">1950</span>; <span class="va">t2num</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">Year</span> <span class="op">-</span> <span class="fl">1950</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span> <span class="op">}</span><span class="op">)</span></span>
 <span><span class="va">fitismev2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ismev/man/gev.fit.html" class="external-link">gev.fit</a></span><span class="op">(</span>xdat <span class="op">=</span> <span class="va">dfismevb</span><span class="op">$</span><span class="va">SeaLev</span>,</span>
 <span>                      ydat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">dfismevb</span><span class="op">[</span> , <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"t1num"</span>, <span class="st">"t2num"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
@@ -278,7 +520,7 @@ origin for all models.</p>
 <span>                                data <span class="op">=</span> <span class="va">dfismevb</span>,</span>
 <span>                                type <span class="op">=</span> <span class="st">"GEV"</span>,</span>
 <span>                                location.fun <span class="op">=</span> <span class="op">~</span><span class="va">t1num</span> <span class="op">+</span> <span class="va">t2num</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="st">"NSGEV"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fitTVGEV2b</span><span class="op">)</span>,</span>
 <span>      <span class="st">"ismev"</span> <span class="op">=</span> <span class="va">fitismev2b</span><span class="op">$</span><span class="va">mle</span>,</span>
 <span>      <span class="st">"extRemes"</span> <span class="op">=</span> <span class="va">fitextRemes2b</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">par</span><span class="op">)</span></span></code></pre></div>
@@ -286,14 +528,14 @@ origin for all models.</p>
 <span><span class="co">## NSGEV    108.5061 0.5793764 -0.001374096 14.55759 -0.02535797</span></span>
 <span><span class="co">## ismev    108.5073 0.5798072 -0.001392904 14.55171 -0.02536854</span></span>
 <span><span class="co">## extRemes 108.5062 0.5791653 -0.001358444 14.56185 -0.02550671</span></span></code></pre>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NSGEV"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik</a></span><span class="op">(</span><span class="va">fitTVGEV2b</span><span class="op">)</span>,</span>
 <span>  <span class="st">"ismev"</span> <span class="op">=</span> <span class="op">-</span><span class="va">fitismev2b</span><span class="op">$</span><span class="va">nllh</span>,</span>
 <span>  <span class="st">"extRemes"</span> <span class="op">=</span> <span class="op">-</span><span class="va">fitextRemes2b</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">value</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##     NSGEV     ismev  extRemes </span></span>
 <span><span class="co">## -216.0554 -216.0555 -216.0555</span></span></code></pre>
 <p>We now can proceed to the likelihood ratio test.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">fitTVGEV1</span>, <span class="va">fitTVGEV2b</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Analysis of Deviance Table</span></span>
 <span><span class="co">## </span></span>
@@ -349,7 +591,7 @@ scale, which can be quite tedious to implement.</p></li>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

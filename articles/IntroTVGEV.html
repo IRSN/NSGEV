@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -53,6 +53,9 @@
     </li>
     <li>
       <a href="../articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="../articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="../articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -96,16 +99,16 @@
                         <h4 data-toc-skip class="author">Yves
 Deville</h4>
             
-            <h4 data-toc-skip class="date">2024-12-10</h4>
+            <h4 data-toc-skip class="date">2026-01-01</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/0.2.0/vignettes/IntroTVGEV.Rmd" class="external-link"><code>vignettes/IntroTVGEV.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/vignettes/IntroTVGEV.Rmd" class="external-link"><code>vignettes/IntroTVGEV.Rmd</code></a></small>
       <div class="hidden name"><code>IntroTVGEV.Rmd</code></div>
 
     </div>
 
     
     
-<p>This document was created with <strong>NSGEV</strong> 0.2.0.</p>
+<p>This document was created with <strong>NSGEV</strong> 0.2.1.</p>
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
 </h2>
@@ -161,7 +164,7 @@ the package.</p>
 (<code>TX</code>) in Dijon (France). The time series is shown on the
 next plot (R code not shown). The data are provided by <a href="https://www.ecad.eu" class="external-link">European Climate Assessment and
 Dataset</a>.</p>
-<p><img src="Rgraphics%2FDijon0b-1.png" width="576"></p>
+<p><img src="Rgraphics/Dijon0b-1.png" class="r-plt" alt="" width="576"></p>
 <p>The observations from 1980 on seem to be larger than that of the
 beginning of the series, motivating the use of a time-varying model.</p>
 </div>
@@ -276,10 +279,10 @@ implemented</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"TVGEV"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] anova         autoplot      bs            cdf           cdfMaxFun    </span></span>
-<span><span class="co">##  [6] coef          confint       density       logLik        mean         </span></span>
-<span><span class="co">## [11] modelMatrices moment        plot          predict       print        </span></span>
-<span><span class="co">## [16] profLik       psi2theta     quantile      quantMax      quantMaxFun  </span></span>
-<span><span class="co">## [21] residuals     simulate      summary       vcov         </span></span>
+<span><span class="co">##  [6] coef          confint       density       influence     logLik       </span></span>
+<span><span class="co">## [11] mean          modelMatrices moment        plot          predict      </span></span>
+<span><span class="co">## [16] print         profLik       psi2theta     quantile      quantMax     </span></span>
+<span><span class="co">## [21] quantMaxFun   residuals     simulate      summary       vcov         </span></span>
 <span><span class="co">## see '?methods' for accessing help and source code</span></span></code></pre>
 <p>For example we can use the classical <code>confint</code> method to
 display confidence intervals on the parameters</p>
@@ -406,7 +409,7 @@ splines, namely the function <code>breaksX</code></p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/breaksX.html">breaksX</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">Date</span>, breaks <span class="op">=</span> <span class="st">"1970-01-01"</span>, degree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">X</span>, facets <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2FDesign0b-1.png" width="576"></p>
+<p><img src="Rgraphics/Design0b-1.png" class="r-plt" alt="" width="576"></p>
 <p>The basis functions are now splines with degree
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>.
 The first function named <code>t1</code> is a linear function and for
@@ -436,7 +439,7 @@ the GEV parameters to the columns of the design matrix</em>.</p></li>
 and therefore can use it on a “new” period of time to make a
 prediction.</p></li>
 </ul>
-<p><img src="images%2FDesignC.png" width="80%"></p>
+<p><img src="images/DesignC.png" class="r-plt" alt="" width="80%"></p>
 </div>
 <div class="section level3">
 <h3 id="broken-line-trend-on-the-location">Broken line trend on the location<a class="anchor" aria-label="anchor" href="#broken-line-trend-on-the-location"></a>
@@ -488,7 +491,7 @@ For instance we can use the <code>quantile</code> method, which produces
 a <code>bts</code> block time-series that can be autoplotted</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">fitNBreak</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">0.99</span>, <span class="fl">1.00</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2FfitNBreak-2-1.png" width="576"></p>
+<p><img src="Rgraphics/fitNBreak-2-1.png" class="r-plt" alt="" width="576"></p>
 <p>Since the estimated value of the shape parameter
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ξ</mi><annotation encoding="application/x-tex">\xi</annotation></semantics></math>
 is negative, all the GEV distributions for the observations
@@ -551,7 +554,7 @@ small amount of extrapolation.</p>
 <code class="sourceCode R"><span><span class="va">X1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/natSplineX.html">natSplineX</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">Date</span>, knots <span class="op">=</span> <span class="st">"1970-01-01"</span>,</span>
 <span>                 boundaryKnots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1921-01-01"</span>, <span class="st">"2017-01-01"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">X1</span>, facets <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2FfitNNS-design-1.png" width="576"></p>
+<p><img src="Rgraphics/fitNNS-design-1.png" class="r-plt" alt="" width="576"></p>
 <p>The basis functions are linearly independent but they span a linear
 space which contains the constant
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>;
@@ -630,7 +633,16 @@ specific time.</p>
 <span><span class="co">## Use the 'newdate' formal to change this.</span></span></code></pre>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">pBreak</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2FfitNBreakpredict-1.png" width="576"></p>
+<pre><code><span><span class="co">## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `linewidth` instead.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">NSGEV</span> package.</span></span>
+<span><span class="co">##   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/IRSN/NSGEV/issues/&gt;</span>.</span></span>
+<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
+<pre><code><span><span class="co">## ~Date</span></span>
+<span><span class="co">## &lt;environment: 0x5645694884d8&gt;</span></span></code></pre>
+<p><img src="Rgraphics/fitNBreakpredict-1.png" class="r-plt" alt="" width="576"></p>
 <p>As suggested by the warning message, three “round” values are chosen
 by default for the time
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
@@ -653,15 +665,17 @@ bootstrap. With the profile-likelihood method, a constrained
 optimization method is repeatedly used and convergence diagnostics are
 printed by default. To save space we remove these by setting the
 <code>trace</code> argument.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pBreakPL</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fitNBreak</span>, confintMethod <span class="op">=</span> <span class="st">"proflik"</span>, trace <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Since 'object' is really time-varying, the Return Levels</span></span>
 <span><span class="co">## depend on the date. A default choice of dates is made here.</span></span>
 <span><span class="co">## Use the 'newdate' formal to change this.</span></span></code></pre>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pBreakPL</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in plot.predict.TVGEV(pBreakPL): Inasmuch the plot is actually a</span></span>
 <span><span class="co">## 'ggplot', it is better to use the 'autoplot' method for consistency</span></span></code></pre>
+<pre><code><span><span class="co">## ~Date</span></span>
+<span><span class="co">## &lt;environment: 0x56456ba50028&gt;</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="unconditional-return-levels">Unconditional return levels<a class="anchor" aria-label="anchor" href="#unconditional-return-levels"></a>
@@ -687,13 +701,13 @@ in the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝔼</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathbb{E}(N) = 1</annotation></semantics></math>.
 The notion of “next” year is relative to a time origin that can be
 chosen.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pUCBreak</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictUncond.html">predictUncond</a></span><span class="op">(</span><span class="va">fitNBreak</span>, newdateFrom <span class="op">=</span> <span class="st">"2020-01-01"</span>,</span>
 <span>                          confintMethod <span class="op">=</span> <span class="st">"proflik"</span>, trace <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pUCBreak</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in plot.predict.TVGEV(pUCBreak): Inasmuch the plot is actually a</span></span>
 <span><span class="co">## 'ggplot', it is better to use the 'autoplot' method for consistency</span></span></code></pre>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">kable</span><span class="op">(</span><span class="va">pUCBreak</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -843,13 +857,13 @@ used to produce a table of values for the quantile function from a
 <code>TVGEV</code> object. Such a table is given the S3 class
 <code>"quantMax.TVGEV"</code> for which an <code>autoplot</code> method
 has been implemented</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">newDate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%4d-01-01"</span>, <span class="fl">2025</span><span class="op">:</span><span class="fl">2054</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">qM</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quantMax.html">quantMax</a></span><span class="op">(</span><span class="va">fitNBreak</span>, date <span class="op">=</span> <span class="va">newDate</span>, level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.70</span>, <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">gqM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">qM</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Maximum on years 2025-2054 with delta confidence intervals"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">gqM</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2FquantMax1-1.png" width="576"></p>
+<p><img src="Rgraphics/quantMax1-1.png" class="r-plt" alt="" width="576"></p>
 <p>The plot shows the quantile
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><msup><mi>M</mi><mo>⋆</mo></msup></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>p</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">q_{M^\star}(p)</annotation></semantics></math>
 against the probability of exceedance
@@ -876,13 +890,13 @@ This approximation is acceptable when
 <p>On the previous plot, confidence intervals based on the delta method
 are shown. It is now possible to use profile likelihood intervals, at
 the price of an increased computation time.</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qM2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quantMax.html">quantMax</a></span><span class="op">(</span><span class="va">fitNBreak</span>, date <span class="op">=</span> <span class="va">newDate</span>, level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.70</span>, <span class="fl">0.95</span><span class="op">)</span>,</span>
 <span>                confint <span class="op">=</span> <span class="st">"proflik"</span><span class="op">)</span></span>
 <span><span class="va">gqM2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">qM2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Maximum on years 2025-2054 with profile likelihood  intervals"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">gqM2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2FquantMax2-1.png" width="576"></p>
+<p><img src="Rgraphics/quantMax2-1.png" class="r-plt" alt="" width="576"></p>
 <p>Needless to say, for a small probability of exceedance, the upper
 bound of the profile likelihood
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>95</mn><mi>%</mi></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math>
@@ -897,15 +911,15 @@ with the aim to simulate new data from a given model. It has been
 implemented for the <code>TVGEV</code> class. A fitted model object can
 be used to simulate new paths either for the fitting time period or for
 a new one.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/simulate.html" class="external-link">simulate</a></span><span class="op">(</span><span class="va">fitNBreak</span>, nsim <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2Fsimulate1-1.png" width="576"></p>
+<p><img src="Rgraphics/simulate1-1.png" class="r-plt" alt="" width="576"></p>
 <p>We can use a different period to better understand how the model
 anticipates new data</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2020-01-01"</span><span class="op">)</span>, length <span class="op">=</span> <span class="fl">10</span>, by <span class="op">=</span> <span class="st">"years"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/simulate.html" class="external-link">simulate</a></span><span class="op">(</span><span class="va">fitNBreak</span>, nsim <span class="op">=</span> <span class="fl">10</span>, newdate <span class="op">=</span> <span class="va">nd</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2Fsimulate2-1.png" width="576"></p>
+<p><img src="Rgraphics/simulate2-1.png" class="r-plt" alt="" width="576"></p>
 <p>The simulated paths are here drawn in colour with a legend because
 their number is small enough. Note that <code>simulate</code> is
 functionally close to a prediction: the mean of a large number of
@@ -948,9 +962,9 @@ GEV marginal distributions have a nearly exponential tail
 using the standard Gumbel target for the generalized residuals can be
 preferred because this will use a milder transformation of the data.
 This is now the default choice.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="va">fitNBreak</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2Fresid-1.png" width="576"></p>
+<p><img src="Rgraphics/resid-1.png" class="r-plt" alt="" width="576"></p>
 <p>The horizontal lines show an interval with approximate probability
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>95</mn><mi>%</mi></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math>.
 The use of these residuals is similar to that in the usual linear
@@ -992,10 +1006,10 @@ is dimensionless - so we have better show each series in a facet with
 its own
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
 axis.</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">thetas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fitNBreak</span>, type <span class="op">=</span> <span class="st">"theta"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">thetas</span>, facets <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2FfitNBreakthetas-1.png" width="576"></p>
+<p><img src="Rgraphics/fitNBreakthetas-1.png" class="r-plt" alt="" width="576"></p>
 </div>
 <div class="section level3">
 <h3 id="marginal-distributions">Marginal distributions<a class="anchor" aria-label="anchor" href="#marginal-distributions"></a>
@@ -1014,9 +1028,9 @@ displayed in the usual way, e.g. with <code><a href="../reference/quantile.TVGEV
 <p>The <code>density</code> and <code>cdf</code> methods both return a
 functional time series: a collection of functions depending on the date.
 These can be autoplotted as well.</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="va">fitNBreak</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2FfitNBreakDens-1.png" width="576"></p>
+<p><img src="Rgraphics/fitNBreakDens-1.png" class="r-plt" alt="" width="576"></p>
 <p>If needed, the time series with class <code>"bts"</code> can be
 coerced into a standard time series inheriting from <code>"ts"</code>
 for which many methods have been written in different packages.</p>
@@ -1055,14 +1069,15 @@ first argument and computes the bootstrapped “psi” parameters
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mover><mi>𝛙</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">[</mo><mi>r</mi><mo stretchy="true" form="postfix">]</mo></mrow></msup><annotation encoding="application/x-tex">\widehat{\boldsymbol{\psi}}^{[r]}</annotation></semantics></math>.
 These bootstrapped parameters are in fact stored as the rows of the
 <code>estimate</code> element of the returned list.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">myBoot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bs.html">bs</a></span><span class="op">(</span><span class="va">fitNBreak</span><span class="op">)</span>      </span></code></pre></div>
+<pre><code><span><span class="co">##   The optimisation failed to converge.   Hints: give `psi0`, try using `estim = "nloptr",   give lower and upper bounds.</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in MLE.TVGEV(object, y = y[, b], estim = estim, ...): convergence not</span></span>
 <span><span class="co">## reached in optimisation</span></span></code></pre>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">myBoot</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "estimate"  "negLogLik" "R"         "optim"     "type"</span></span></code></pre>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">myBoot</span><span class="op">$</span><span class="va">estimate</span>, n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          mu_0       mu_t1 mu_t1_1970  sigma_0       xi_0</span></span>
 <span><span class="co">## [1,] 32.18540 -0.02209687 0.07976180 1.901520 -0.2294907</span></span>
@@ -1072,24 +1087,24 @@ These bootstrapped parameters are in fact stored as the rows of the
 small and has been set for a purely illustrative use. A well-accepted
 choice
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≥</mo><mn>3000</mn></mrow><annotation encoding="application/x-tex">\geqslant 3000</annotation></semantics></math>.</p>
-<p><img src="images%2FBootC.png" width="80%"></p>
+<p><img src="images/BootC.png" class="r-plt" alt="" width="80%"></p>
 <p>It is easy to derive from the theta parameters the corresponding
 block times series of “thetas”
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mover><mi>𝛉</mi><mo accent="true">̂</mo></mover><mi>b</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>r</mi><mo stretchy="true" form="postfix">]</mo></mrow></msubsup><annotation encoding="application/x-tex">\widehat{\boldsymbol{\theta}}_b^{[r]}</annotation></semantics></math>.
 Broadly speaking we have to apply the function <code>psi2theta</code> to
 each line of the matrix returned as the <code>estimate</code> element of
 the result.</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">myBoot</span><span class="op">$</span><span class="va">estimate</span>, MARGIN <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>            FUN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">model</span><span class="op">)</span> <span class="fu"><a href="../reference/psi2theta.html">psi2theta</a></span><span class="op">(</span>psi <span class="op">=</span> <span class="va">x</span>, model <span class="op">=</span> <span class="va">model</span><span class="op">)</span><span class="op">[</span> , <span class="fl">1</span><span class="op">]</span>,</span>
 <span>            model <span class="op">=</span> <span class="va">fitNBreak</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="fu"><a href="../reference/bts.html">bts</a></span><span class="op">(</span><span class="va">mu</span>, date <span class="op">=</span> <span class="va">fitNBreak</span><span class="op">$</span><span class="va">fDate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"bootstrapped values for mu"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2Fboostrap1-1.png" width="576"></p>
+<p><img src="Rgraphics/boostrap1-1.png" class="r-plt" alt="" width="576"></p>
 <p>One the bootstrapped values for the “psi” parameters have been
 computed, they can be used to later infer on the return periods at a
 short computing cost. In that aim, a new element named <code>boot</code>
 must be added to the fitted model.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fitNBreak</span><span class="op">$</span><span class="va">boot</span> <span class="op">&lt;-</span> <span class="va">myBoot</span></span></code></pre></div>
 <p>Note however that this is a kind of “hack”. Some care is needed to
 ensure that the new <code>boot</code> element is consistent with the
@@ -1207,21 +1222,21 @@ and the POSIX format <code>"yyyy-mm-dd"</code> or in R
 <code>"%Y-%m-%d"</code> will be favored. The R <strong>base</strong>
 package has a <code>"Date"</code> class which is used by
 <strong>NSGEV</strong></p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">myDate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2020-01-01"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">myDate</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Date"</span></span></code></pre>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">myDate</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "2020-01-01"</span></span></code></pre>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">myDate</span>, <span class="st">"%d %B %Y"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "01 January 2020"</span></span></code></pre>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">myDate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"1980-01-01"</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"years"</span>, length <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">myDate</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">myDate</span>, <span class="va">x</span>, type <span class="op">=</span> <span class="st">"o"</span>, xlab <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2Fdate1-1.png" width="576"></p>
+<p><img src="Rgraphics/date1-1.png" class="r-plt" alt="" width="576"></p>
 <p>The <strong>lubridate</strong> package <span class="citation">(Grolemund and Wickham 2011)</span> has functions that
 can help to cope with date.</p>
 </div>
@@ -1262,7 +1277,7 @@ by maximizing the log-likelihood over a vector of candidate values:
 estimating a <code>TVGEV</code> model for each value will provide the
 corresponding log-likelihoods. For a given year we can create a suitable
 formatted date with the <code>sprintf</code> function as follows</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">yearBreaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1940</span>, <span class="fl">1950</span>, <span class="fl">1955</span>, <span class="fl">1960</span><span class="op">:</span><span class="fl">2000</span>, <span class="fl">2005</span>, <span class="fl">2010</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -1273,12 +1288,150 @@ formatted date with the <code>sprintf</code> function as follows</p>
 <span>                      design <span class="op">=</span> <span class="fu"><a href="../reference/breaksX.html">breaksX</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">Date</span>, breaks <span class="op">=</span> <span class="va">d</span>, degree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                      loc <span class="op">=</span> <span class="va">floc</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span>
+<span><span class="co">## Warning in TVGEV(data = df, response = "TXMax", date = "Date", design = breaksX(date = Date, : 'design' uses variables not in `data`: `d`.</span></span>
+<span><span class="co">##  This may be a source of problems in scoping, because these variables are</span></span>
+<span><span class="co">##  at the best found in an environment differing from `data`.</span></span></code></pre>
 <p>We now have a list <code>res</code> of
 <code>length(yearBreaks)</code> objects and the log-likelihood of each
 object can be extracted by using <code>logLik</code>. So we can plot the
 log-likelihood against the year and find the “best” object with maximal
 log-likelihood.</p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ll</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">logLik</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">yearBreaks</span>, <span class="va">ll</span>, type <span class="op">=</span> <span class="st">"o"</span>, pch <span class="op">=</span> <span class="fl">21</span>, col <span class="op">=</span> <span class="st">"orangered"</span>,</span>
 <span>     lwd <span class="op">=</span> <span class="fl">2</span>, bg <span class="op">=</span> <span class="st">"gold"</span>, xlab <span class="op">=</span> <span class="st">"break"</span>, ylab <span class="op">=</span> <span class="st">"log-lik"</span><span class="op">)</span></span>
@@ -1287,7 +1440,7 @@ log-likelihood.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="va">yearBreaks</span><span class="op">[</span><span class="va">iMax</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h <span class="op">=</span> <span class="va">ll</span><span class="op">[</span><span class="va">iMax</span><span class="op">]</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">qchisq</a></span><span class="op">(</span><span class="fl">0.95</span>, df <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">/</span><span class="fl">2</span><span class="op">)</span>,</span>
 <span>       col <span class="op">=</span> <span class="st">"SpringGreen3"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Rgraphics%2Fkink2-1.png" width="576"></p>
+<p><img src="Rgraphics/kink2-1.png" class="r-plt" alt="" width="576"></p>
 <p>Although the points show a profiled log-likelihood, the regularity
 conditions that must hold in ML estimation are not fulfilled, because
 the log-likelihood is not differentiable w.r.t.
@@ -1317,19 +1470,19 @@ and
 <p>In practice, the constraints are given by using a named vector, and
 hence the names of the parameters must be known. These names can be
 retrieved if needed by first using <code>estim = "none"</code>.</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fitNBreak2</span> <span class="op">&lt;-</span></span>
 <span>    <span class="fu"><a href="../reference/TVGEV.html">TVGEV</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, response <span class="op">=</span> <span class="st">"TXMax"</span>, date <span class="op">=</span> <span class="st">"Date"</span>,</span>
 <span>          design <span class="op">=</span> <span class="fu"><a href="../reference/breaksX.html">breaksX</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">Date</span>, breaks <span class="op">=</span> <span class="st">"1970-01-01"</span>, degree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>          loc <span class="op">=</span> <span class="op">~</span> <span class="va">t1</span> <span class="op">+</span> <span class="va">t1_1970</span>,</span>
 <span>          estim <span class="op">=</span> <span class="st">"nloptr"</span>,</span>
 <span>          coefLower <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xi_0"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.15</span><span class="op">)</span>, coefUpper <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xi_0"</span> <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in MLE.TVGEV(object = tv, y = NULL, psi0 = psi0, estim = estim, :</span></span>
-<span><span class="co">## convergence not reached in optimisation</span></span></code></pre>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## Warning in MLE.TVGEV(object = tv, y = NULL, psi0 = psi0, estim = estim, : some</span></span>
+<span><span class="co">## estimated parameters at the bounds, inference results are misleading</span></span></code></pre>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fitNBreak2</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##       mu_0      mu_t1 mu_t1_1970    sigma_0       xi_0 </span></span>
-<span><span class="co">##         NA         NA         NA         NA         NA</span></span></code></pre>
+<pre><code><span><span class="co">##        mu_0       mu_t1  mu_t1_1970     sigma_0        xi_0 </span></span>
+<span><span class="co">## 32.02318423 -0.02420594  0.07812270  1.72977928 -0.15000000</span></span></code></pre>
 <p>The GEV shape parameter
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ξ</mi><annotation encoding="application/x-tex">\xi</annotation></semantics></math>
 is usually taken as constant, not time-varying; inasmuch the
@@ -1351,7 +1504,7 @@ by taking
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>ψ</mi><mi>i</mi><mtext mathvariant="normal">L</mtext></msubsup><mo>:=</mo><msubsup><mi>ψ</mi><mi>i</mi><mo>⋆</mo></msubsup></mrow><annotation encoding="application/x-tex">\psi^{\text{L}}_i := \psi_i^\star</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>ψ</mi><mi>i</mi><mtext mathvariant="normal">U</mtext></msubsup><mo>:=</mo><msubsup><mi>ψ</mi><mi>i</mi><mo>⋆</mo></msubsup></mrow><annotation encoding="application/x-tex">\psi^{\text{U}}_i := \psi_i^\star</annotation></semantics></math>.</p>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fitNBreak3</span> <span class="op">&lt;-</span></span>
 <span>    <span class="fu"><a href="../reference/TVGEV.html">TVGEV</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, response <span class="op">=</span> <span class="st">"TXMax"</span>, date <span class="op">=</span> <span class="st">"Date"</span>,</span>
 <span>          design <span class="op">=</span> <span class="fu"><a href="../reference/breaksX.html">breaksX</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">Date</span>, breaks <span class="op">=</span> <span class="st">"1970-01-01"</span>, degree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
@@ -1361,7 +1514,7 @@ and
 <span>          coefUpper <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu_t1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.02</span>, <span class="st">"xi_0"</span> <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in MLE.TVGEV(object = tv, y = NULL, psi0 = psi0, estim = estim, : some</span></span>
 <span><span class="co">## estimated parameters at the bounds, inference results are misleading</span></span></code></pre>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fitNBreak3</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        mu_0       mu_t1  mu_t1_1970     sigma_0        xi_0 </span></span>
 <span><span class="co">## 32.13623265 -0.02000000  0.07108756  1.75700613 -0.18234029</span></span></code></pre>
@@ -1415,8 +1568,7 @@ Climate</span>.”</span> <em><span>Water Resources Research</span></em>
 </div>
 <div id="ref-Rpack_evd" class="csl-entry">
 Stephenson, Alec G. 2002. <span>“<span class="nocase">evd: Extreme Value
-Distributions</span>.”</span> <em><span>The R Journal</span></em> 2 (2):
-0. <a href="http://CRAN.R-project.org/doc/Rnews/" class="external-link">http://CRAN.R-project.org/doc/Rnews/</a>.
+Distributions</span>.”</span> <em><span>R News</span></em> 2 (2): 31–32.
 </div>
 <div id="ref-RPack_ggplot2" class="csl-entry">
 Wickham, Hadley. 2016. <em><span class="nocase"><span class="nocase">ggplot2</span>: Elegant Graphics for Data
@@ -1441,7 +1593,7 @@ Analysis</span></em>. Springer-Verlag New York. <a href="https://doi.org/10.1007
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

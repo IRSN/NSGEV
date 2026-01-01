@@ -18,7 +18,7 @@ collection of blocks of interest."><!-- mathjax --><script src="https://cdnjs.cl
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -37,6 +37,9 @@ collection of blocks of interest."><!-- mathjax --><script src="https://cdnjs.cl
     </li>
     <li>
       <a href="../articles/NSGEV_Val.html">TVGEV: Checks</a>
+    </li>
+    <li>
+      <a href="../articles/NSGEVTS.html">Timeseries Covariates with NSGEV</a>
     </li>
     <li>
       <a href="../articles/NSRL.html">TVGEV: Check Return Levels</a>
@@ -70,7 +73,7 @@ collection of blocks of interest."><!-- mathjax --><script src="https://cdnjs.cl
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Quantiles of the Maximum on a Period of Time</h1>
-    <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/0.2.0/R/quantMax.R" class="external-link"><code>R/quantMax.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/R/quantMax.R" class="external-link"><code>R/quantMax.R</code></a></small>
     <div class="hidden name"><code>quantMax.TVGEV.Rd</code></div>
     </div>
 
@@ -200,12 +203,12 @@ the inference e.g., using the "delta method".</p>
 <span class="r-in"><span><span class="va">qM2</span> <span class="op">&lt;-</span> <span class="fu"><a href="quantMax.html">quantMax</a></span><span class="op">(</span><span class="va">tv</span>, date <span class="op">=</span> <span class="va">date2</span>, level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">0.70</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">qM2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Prob ProbExc    Quant        L        U Level</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.80    0.20 41.59590 40.39165 42.80014   0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.81    0.19 41.63825 40.42609 42.85041   0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.82    0.18 41.68217 40.46162 42.90272   0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.83    0.17 41.72783 40.49836 42.95730   0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.84    0.16 41.77542 40.53644 43.01440   0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.85    0.15 41.82519 40.57603 43.07435   0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.80    0.20 41.59590 40.39152 42.80028   0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.81    0.19 41.63825 40.42595 42.85055   0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.82    0.18 41.68217 40.46148 42.90287   0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.83    0.17 41.72783 40.49821 42.95744   0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.84    0.16 41.77542 40.53629 43.01455   0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.85    0.15 41.82519 40.57588 43.07450   0.7</span>
 <span class="r-in"><span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">qM2</span>, fillConf <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="va">gg</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Quantile of the maximum over years 2025-2054 with \"delta\" intervals"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">gg</span></span></span>
@@ -248,7 +251,7 @@ the inference e.g., using the "delta method".</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>
