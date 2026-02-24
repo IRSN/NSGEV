@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
@@ -76,14 +76,16 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.2" id="new-in-version-022">New in version 0.2.2<a class="anchor" aria-label="anchor" href="#new-in-version-022"></a></h2>
+<ul><li>New vignette about the use of variables or parameters in the <code>design</code> argument of the <code>TSGEV</code> function.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.1" id="new-in-version-021">New in version 0.2.1<a class="anchor" aria-label="anchor" href="#new-in-version-021"></a></h2>
-<div class="section level3">
-<h3 id="enhancements-0-2-1">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-2-1"></a></h3>
+<p>1 ## Enhancements</p>
 <ul><li><p>Experimental changes on <code>TVGEV</code> to allow the use of Time Series covariates along with functions of time. CAUTION This may have created bugs!!!</p></li>
 <li><p>New vignette <em>Timeseries Covariates with NSGEV</em>. DRAFT version.</p></li>
 <li><p>A warning is cast when the <code>design</code> argument of <code>TVGEV</code> is a call using variables not in <code>names(data)</code>. These variables may or may not be found in the parent environment.</p></li>
-</ul></div>
-<div class="section level3">
+</ul><div class="section level3">
 <h3 id="bug-fixes-0-2-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-1"></a></h3>
 <ul><li><p>The generalised residuals computed with <code>"gumbel"</code> were actually following the <em>reversed</em> Gumbel, not the Gumbel. New (experimental) choice <code>"gev4"</code> for the target distribution.</p></li>
 <li><p>When <code>TVGEV</code> was used with <code>optim = "nloptr"</code>, the choice <code>parTrack   = TRUE</code> did not work as expected.</p></li>
