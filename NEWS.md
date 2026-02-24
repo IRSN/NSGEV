@@ -2,8 +2,13 @@
 **NSGEV** Package News
 ======================
 
-# New in version 0.2.1
+# New in version 0.2.2
 
+- New vignette about the use of variables or parameters in the
+  `design` argument of the `TSGEV` function.
+
+# New in version 0.2.1
+1
 ## Enhancements
 
 - Experimental changes on `TVGEV` to allow the use of Time Series
