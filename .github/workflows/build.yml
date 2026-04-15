@@ -26,6 +26,11 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
 
+      - name: Install additional packages to compile devtools
+        shell: bash
+        run: sudo apt install -y libpng-dev libjpeg-dev
+        if: matrix.os == 'ubuntu-latest'
+	
       - run: |
           cd ..; R CMD INSTALL --build NSGEV 
           mkdir NSGEV/R-${{ matrix.R }}
