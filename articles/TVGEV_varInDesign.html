@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.3</span>
       </span>
     </div>
 
@@ -101,10 +101,10 @@
       <h1 data-toc-skip>Using variables in the <code>design</code>
 argument of <code>TVGEV</code>
 </h1>
-                        <h4 data-toc-skip class="author">Yves Deville <a href="mailto:deville.yves@alpestat.com" class="email">deville.yves@alpestat.com</a> and Nathan Bengaouer <a href="mailto:nath.bengaouer@asnr.fr" class="email">nath.bengaouer@asnr.fr</a>
+                        <h4 data-toc-skip class="author">Yves Deville <a href="mailto:deville.yves@alpestat.com" class="email">deville.yves@alpestat.com</a> and Nathan Bengaouer <a href="mailto:nathan.bengaouer@asnr.fr" class="email">nathan.bengaouer@asnr.fr</a>
 </h4>
             
-            <h4 data-toc-skip class="date">2026-02-25</h4>
+            <h4 data-toc-skip class="date">2026-04-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/IRSN/NSGEV/blob/main/vignettes/TVGEV_varInDesign.Rmd" class="external-link"><code>vignettes/TVGEV_varInDesign.Rmd</code></a></small>
       <div class="hidden name"><code>TVGEV_varInDesign.Rmd</code></div>
@@ -126,10 +126,10 @@ from within a function.</p>
 <h2 id="example-change-of-slope-in-a-broken-line-trend">Example change of slope in a broken line trend<a class="anchor" aria-label="anchor" href="#example-change-of-slope-in-a-broken-line-trend"></a>
 </h2>
 <p>As an example, we will consider the case where a time trend is
-specified as a broken line with a slope zero before the time of change
+specified as a broken line with a slope zero before the time of change,
 say
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>u</mi><annotation encoding="application/x-tex">u</annotation></semantics></math>
-and an unknown slope after the time
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>u</mi><annotation encoding="application/x-tex">u</annotation></semantics></math>,
+and with an unknown slope after the time
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>u</mi><annotation encoding="application/x-tex">u</annotation></semantics></math>.
 This is similar to a <em>kink regression</em> in the linear regression
 framework.</p>
@@ -138,8 +138,8 @@ framework.</p>
 as a model parameter because <code>TVGEV</code> models are assumed to
 link each of the three GEV parameters to a linear predictor having the
 form
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐱</mi><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><mi>𝛙</mi></mrow><annotation encoding="application/x-tex">\mathbf{x}(t)^\top \boldsymbol{\psi}</annotation></semantics></math>.
-Incidentally, would
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐱</mi><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><mi>𝛙</mi></mrow><annotation encoding="application/x-tex">\mathbf{x}(t)^\top
+\boldsymbol{\psi}</annotation></semantics></math>. Incidentally, would
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>u</mi><annotation encoding="application/x-tex">u</annotation></semantics></math>
 be considered as a model parameter, the log-likelihood would no longer
 be differentiable w.r.t.
@@ -161,11 +161,11 @@ choose the value of
 as the grid value with maximal log-likelihood. It is convenient to write
 a function inside which the loop on the candidate values is found. The
 broken line can be obtained with the <code>breaksX</code> design
-function: the <code>breaks</code> argument correspond to the knots of
-truncated power splines. By using a single knot one gets two basis
-functions (see the help for <code>breaksX</code>). One only needs to use
-the broken line basis function with name <code>t_1990</code> if for
-example the change of slope
+function: its <code>breaks</code> argument corresponds to the vector of
+knots for the truncated power splines. By using a single knot, one gets
+two basis functions - see the help for <code>breaksX</code>. One only
+needs to use the broken line basis function with name
+<code>"t_1990"</code> if for example the change of slope
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>u</mi><annotation encoding="application/x-tex">u</annotation></semantics></math>
 is located at year 1990. A possible problem arises from the fact that
 the candidate value
@@ -244,12 +244,12 @@ data frame <code>maxData</code>.</p>
 normally a <em>call</em> to a function, which is internally used with
 <code>do.call</code>. If a R object such as <code>d</code> is used in
 the call, it is first looked for in the environment of the call (here,
-the data frame), then in the environment of the function (hre,
-<code>fitbreaks</code>). In both cases <code>d</code> does not
-exist.</p>
+the data frame), then in the environment of the function (here,
+<code>fitbreaks</code>). In both cases the object <code>d</code> does
+not exist.</p>
 <p>We could turn <code>d</code> into a (constant) column of the data
 fame: this would make the estimation successful. Yet the fitted object
-would require for a prediction with <code>oredict</code> that the column
+would require for a prediction with <code>predict</code> that the column
 <code>d</code> is found in the provided <code>new</code> data, which is
 tedious. The solution chosen here is to parse a code with the variables
 replaced by their value. We see that the returned <code>TVGEV</code>

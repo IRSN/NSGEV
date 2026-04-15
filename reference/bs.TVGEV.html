@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NSGEV</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.3</span>
       </span>
     </div>
 
@@ -244,6 +244,7 @@ target number as given in <code>R</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TVGEV&gt; </span>
 <span class="r-in"><span><span class="va">bsb</span> <span class="op">&lt;-</span> <span class="fu"><a href="bs.html">bs</a></span><span class="op">(</span><span class="va">res2</span>, R <span class="op">=</span> <span class="fl">50</span>, estim <span class="op">=</span> <span class="st">"nloptr"</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>convergence not reached in optimisation</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>convergence not reached in optimisation</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span>   <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span></span></span>
@@ -273,33 +274,33 @@ target number as given in <code>R</code>.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 'object' embeds a bootstrap distribution. Formal arguments</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  intented to be passed to `bs` (if any) will be ignored</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Period Level Id       Date        L    Quant        U</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       5   95%  1 1920-01-01 34.37176 35.56868 36.78309</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       5   95%  2 1970-01-01 33.71856 34.37272 34.94116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       5   95%  3 2020-01-01 35.83685 37.04025 38.05875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      10   95%  1 1920-01-01 35.32215 36.50728 37.74905</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      10   95%  2 1970-01-01 34.52955 35.31131 35.89317</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      10   95%  3 2020-01-01 36.75191 37.97884 39.01963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      20   95%  1 1920-01-01 35.93496 37.29520 38.63042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      20   95%  2 1970-01-01 35.16045 36.09924 36.84051</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      20   95%  3 2020-01-01 37.53289 38.76677 39.80647</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10     50   95%  1 1920-01-01 36.40651 38.17369 39.50825</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11     50   95%  2 1970-01-01 35.86145 36.97773 37.83633</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12     50   95%  3 2020-01-01 38.16569 39.64526 40.70356</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13    100   95%  1 1920-01-01 36.67347 38.74128 40.17186</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14    100   95%  2 1970-01-01 36.09604 37.54532 38.63932</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15    100   95%  3 2020-01-01 38.45821 40.21285 41.39201</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16    150   95%  1 1920-01-01 36.80239 39.04056 40.53249</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17    150   95%  2 1970-01-01 36.20348 37.84460 39.08296</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18    150   95%  3 2020-01-01 38.60104 40.51213 41.80834</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19    200   95%  1 1920-01-01 36.86953 39.23966 40.77621</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20    200   95%  2 1970-01-01 36.26991 38.04370 39.38652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21    200   95%  3 2020-01-01 38.69160 40.71123 42.09230</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22    500   95%  1 1920-01-01 37.02903 39.80798 41.52190</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23    500   95%  2 1970-01-01 36.44974 38.61202 40.19845</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24    500   95%  3 2020-01-01 38.93005 41.27955 42.97116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25   1000   95%  1 1920-01-01 37.11605 40.17894 42.05897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26   1000   95%  2 1970-01-01 36.58897 38.98298 40.93577</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27   1000   95%  3 2020-01-01 39.06924 41.65051 43.60238</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       5   95%  1 1920-01-01 34.40283 35.56868 36.70862</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       5   95%  2 1970-01-01 33.61482 34.37272 35.08380</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       5   95%  3 2020-01-01 35.99741 37.04025 37.99838</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      10   95%  1 1920-01-01 35.10215 36.50728 37.62304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      10   95%  2 1970-01-01 34.43236 35.31131 36.12135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      10   95%  3 2020-01-01 36.80525 37.97884 38.98024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      20   95%  1 1920-01-01 35.64051 37.29520 38.38083</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      20   95%  2 1970-01-01 34.96320 36.09924 36.88258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      20   95%  3 2020-01-01 37.45658 38.76677 39.85426</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     50   95%  1 1920-01-01 36.19521 38.17369 39.26103</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     50   95%  2 1970-01-01 35.57076 36.97773 38.05899</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     50   95%  3 2020-01-01 38.18984 39.64526 40.97480</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13    100   95%  1 1920-01-01 36.52632 38.74128 40.04032</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14    100   95%  2 1970-01-01 35.87252 37.54532 38.84859</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15    100   95%  3 2020-01-01 38.42933 40.21285 41.79163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16    150   95%  1 1920-01-01 36.69177 39.04056 40.50191</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17    150   95%  2 1970-01-01 36.01994 37.84460 39.24527</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18    150   95%  3 2020-01-01 38.53748 40.51213 42.23067</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19    200   95%  1 1920-01-01 36.79820 39.23966 40.86563</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20    200   95%  2 1970-01-01 36.11345 38.04370 39.52152</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21    200   95%  3 2020-01-01 38.61801 40.71123 42.53170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22    500   95%  1 1920-01-01 37.08047 39.80798 42.02426</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23    500   95%  2 1970-01-01 36.38916 38.61202 40.46518</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24    500   95%  3 2020-01-01 38.90997 41.27955 43.43640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25   1000   95%  1 1920-01-01 37.24078 40.17894 42.80501</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26   1000   95%  2 1970-01-01 36.55484 38.98298 41.27275</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27   1000   95%  3 2020-01-01 39.08470 41.65051 44.06985</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
