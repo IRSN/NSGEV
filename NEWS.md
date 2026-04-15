@@ -2,6 +2,11 @@
 **NSGEV** Package News
 ======================
 
+# New in version 0.2.3
+
+- Fix typos in the vignette *Using variables in the `design` argument
+  of `TVGEV`*.
+
 # New in version 0.2.2
 
 - New vignette about the use of variables or parameters in the

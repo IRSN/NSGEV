@@ -1069,7 +1069,10 @@ TVGEV <- function(data,
                                   collapse = ", "),
                             ".\n This may be a source of problems in scoping, ",
                             "because these variables are\n at the best found ",
-                            "in an environment differing from `data`.")
+                            "in an environment differing from `data`. See the ",
+                            "vignette `Using variables in the design argument of ",
+                            "TVGEV`."
+                            )
                 }
             }
         } else {

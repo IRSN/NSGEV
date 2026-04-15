@@ -1,7 +1,7 @@
 
 ---
 title: "Using variables in the `design` argument of `TVGEV`"
-author: "Yves Deville <deville.yves@alpestat.com> and Nathan Bengaouer <nath.bengaouer@asnr.fr>"
+author: "Yves Deville <deville.yves@alpestat.com> and Nathan Bengaouer <nathan.bengaouer@asnr.fr>"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -28,31 +28,29 @@ function.
 
 As an example, we will consider the case where a time trend is
 specified as a broken line with a slope zero before the time of
-change say $u$ and an unknown slope after the time $u$. This is
+change, say $u$, and with an unknown slope after the time $u$. This is
 similar to a *kink regression* in the linear regression framework.
 
-It is not possible with `{NSGEV}` to consider $u$ as a model
-parameter because `TVGEV` models are assumed to link each of the
-three GEV parameters to a linear predictor having the form
-$\m{x}(t)^\top \bs{\psi}$. Incidentally, would $u$ be considered
-as a model parameter, the log-likelihood would no longer be
-differentiable w.r.t. $u$, and adjustments would be required in
-the likelihood-based inference. However we can think of using a
-grid of candidate values for the change of slope time $u$: by
-fitting the model with $u$ fixed to each grid value say $u_i$ for
-$i=1$, $2$, ... we can compute the corresponding maximised
-log-likelihoods and then choose the value of $u$ as the grid value
-with maximal log-likelihood. It is convenient to write a function
-inside which the loop on the candidate values is found. The broken
-line can be obtained with the `breaksX` design function: the
-`breaks` argument correspond to the knots of truncated power
-splines. By using a single knot one gets two basis functions (see
-the help for `breaksX`). One only needs to use the broken line
-basis function with name `t_1990` if for example the change of
-slope $u$ is located at year 1990. A possible problem arises from
-the fact that the candidate value $u_i$ has to be passed to the
+It is not possible with `{NSGEV}` to consider $u$ as a model parameter
+because `TVGEV` models are assumed to link each of the three GEV
+parameters to a linear predictor having the form $\m{x}(t)^\top
+\bs{\psi}$. Incidentally, would $u$ be considered as a model
+parameter, the log-likelihood would no longer be differentiable
+w.r.t. $u$, and adjustments would be required in the likelihood-based
+inference. However we can think of using a grid of candidate values
+for the change of slope time $u$: by fitting the model with $u$ fixed
+to each grid value say $u_i$ for $i=1$, $2$, ... we can compute the
+corresponding maximised log-likelihoods and then choose the value of
+$u$ as the grid value with maximal log-likelihood. It is convenient to
+write a function inside which the loop on the candidate values is
+found. The broken line can be obtained with the `breaksX` design
+function: its `breaks` argument corresponds to the vector of knots for
+the truncated power splines. By using a single knot, one gets two basis
+functions - see the help for `breaksX`. One only needs to use the
+broken line basis function with name `"t_1990"` if for example the
+change of slope $u$ is located at year 1990. A possible problem arises
+from the fact that the candidate value $u_i$ has to be passed to the
 design function.
-
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(NSGEV)
@@ -114,16 +112,16 @@ names(TXMax_Dijon) <- c("year", "TXMax")
 
 # Explanation
 
-The object given in the `design` formal argument is normally a
-*call* to a function, which is internally used with `do.call`. If
-a R object such as `d` is used in the call, it is first looked for
-in the environment of the call (here, the data frame), then in the
-environment of the function (hre, `fitbreaks`). In both cases `d`
-does not exist.
+The object given in the `design` formal argument is normally a *call*
+to a function, which is internally used with `do.call`. If a R object
+such as `d` is used in the call, it is first looked for in the
+environment of the call (here, the data frame), then in the
+environment of the function (here, `fitbreaks`). In both cases the
+object `d` does not exist.
 
 We could turn `d` into a (constant) column of the data fame: this
 would make the estimation successful. Yet the fitted object would
-require for a prediction with `oredict` that the column `d` is
+require for a prediction with `predict` that the column `d` is
 found in the provided `new` data, which is tedious. The solution
 chosen here is to parse a code with the variables replaced by
 their value. We see that the returned `TVGEV` object contains the
